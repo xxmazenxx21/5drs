@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<ruleset name="5drs">
+	<description>Coding standards for the 5drs theme.</description>
+
+	<file>.</file>
+
+	<exclude-pattern>*/dist/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/languages/*</exclude-pattern>
+
+	<arg name="extensions" value="php"/>
+	<arg name="colors"/>
+	<arg value="sp"/>
+	<arg name="parallel" value="8"/>
+
+	<config name="minimum_wp_version" value="6.5"/>
+	<config name="testVersion" value="8.2-"/>
+
+	<rule ref="WordPress">
+		<!-- The theme ships no inline CSS/JS; file naming follows WP conventions. -->
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+	</rule>
+
+	<rule ref="PHPCompatibilityWP"/>
+
+	<!--
+		PHP identifiers cannot start with a digit, so the theme slug "5drs"
+		becomes the "fivedrs_" prefix in code. The text domain stays "5drs".
+	-->
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="fivedrs"/>
+				<element value="FIVEDRS"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="5drs"/>
+			</property>
+		</properties>
+	</rule>
+</ruleset>

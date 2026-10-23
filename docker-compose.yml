@@ -1,0 +1,131 @@
+# 5drs - local development stack
+# All configuration lives in .env (see .env.example).
+# Note: ":z" on bind mounts is required because the host runs SELinux in
+# enforcing mode; without it Apache inside the container cannot read wp-content.
+
+name: ${COMPOSE_PROJECT_NAME:-5drs}
+
+# Shared WordPress environment.
+# The official image eval()s WORDPRESS_CONFIG_EXTRA from the *runtime*
+# environment on every request, so WP-CLI needs the exact same block as Apache
+# - otherwise constants like WP_ENVIRONMENT_TYPE are missing under WP-CLI and
+# things such as the Mailpit mu-plugin silently do not apply.
+x-wp-environment: &wp-environment
+  WORDPRESS_DB_HOST: ${DB_HOST}
+  WORDPRESS_DB_NAME: ${DB_NAME}
+  WORDPRESS_DB_USER: ${DB_USER}
+  WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+  WORDPRESS_TABLE_PREFIX: ${DB_TABLE_PREFIX:-wp_}
+  # The image's wp-config.php defines WP_DEBUG from this variable before
+  # WORDPRESS_CONFIG_EXTRA is eval'd, so WP_DEBUG must be switched on here.
+  WORDPRESS_DEBUG: 1
+  # Every define() is guarded: WP-CLI defines some of these itself before
+  # wp-config.php is loaded, and redefining them raises PHP warnings.
+  WORDPRESS_CONFIG_EXTRA: |
+    defined( 'WP_HOME' )                  || define( 'WP_HOME', '${WP_URL}' );
+    defined( 'WP_SITEURL' )               || define( 'WP_SITEURL', '${WP_URL}' );
+    defined( 'WP_DEBUG' )                 || define( 'WP_DEBUG', true );
+    defined( 'WP_DEBUG_LOG' )             || define( 'WP_DEBUG_LOG', true );
+    defined( 'WP_DEBUG_DISPLAY' )         || define( 'WP_DEBUG_DISPLAY', false );
+    defined( 'SCRIPT_DEBUG' )             || define( 'SCRIPT_DEBUG', true );
+    defined( 'WP_ENVIRONMENT_TYPE' )      || define( 'WP_ENVIRONMENT_TYPE', 'local' );
+    defined( 'DISALLOW_FILE_EDIT' )       || define( 'DISALLOW_FILE_EDIT', true );
+    defined( 'AUTOMATIC_UPDATER_DISABLED' ) || define( 'AUTOMATIC_UPDATER_DISABLED', true );
+    @ini_set( 'display_errors', 0 );
+
+services:
+  db:
+    image: mariadb:10.11
+    container_name: 5drs_db
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+    networks: [5drs]
+
+  wordpress:
+    image: wordpress:php8.2-apache
+    container_name: 5drs_wp
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${WP_PORT:-8080}:80"
+    environment:
+      <<: *wp-environment
+    volumes:
+      - wp_core:/var/www/html
+      - ./wp-content:/var/www/html/wp-content:z
+      - ./config/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:z
+    networks: [5drs]
+
+  wpcli:
+    image: wordpress:cli-php8.2
+    container_name: 5drs_wpcli
+    profiles: ["cli"]
+    user: "33:33"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      <<: *wp-environment
+      # uid 33 has no home directory in the image; WP-CLI needs a writable one
+      # for its download cache (language packs, plugin zips).
+      HOME: /tmp
+    volumes:
+      - wp_core:/var/www/html
+      - ./wp-content:/var/www/html/wp-content:z
+      - ./config/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:z
+      - ./backups:/backups:z
+      - ./scripts:/scripts:z
+    working_dir: /var/www/html
+    entrypoint: ["wp"]
+    networks: [5drs]
+
+  phpmyadmin:
+    image: phpmyadmin:5-apache
+    container_name: 5drs_pma
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${PMA_PORT:-8081}:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: ${DB_USER}
+      PMA_PASSWORD: ${DB_PASSWORD}
+      UPLOAD_LIMIT: 128M
+    networks: [5drs]
+
+  mailpit:
+    image: axllent/mailpit:v1.21
+    container_name: 5drs_mailpit
+    restart: unless-stopped
+    ports:
+      - "${MAILPIT_PORT:-8025}:8025"
+    environment:
+      MP_MAX_MESSAGES: 500
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    networks: [5drs]
+
+volumes:
+  wp_core:
+  db_data:
+
+networks:
+  5drs:
+    driver: bridge

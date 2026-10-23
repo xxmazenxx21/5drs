@@ -1,0 +1,63 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"settings": {
+		"appearanceTools": true,
+		"useRootPaddingAwareAlignments": true,
+		"layout": {
+			"contentSize": "720px",
+			"wideSize": "1280px"
+		},
+		"color": {
+			"custom": true,
+			"customGradient": false,
+			"defaultPalette": false,
+			"defaultGradients": false,
+			"palette": [
+				{ "slug": "base",      "color": "#ffffff", "name": "Base" },
+				{ "slug": "contrast",  "color": "#111111", "name": "Contrast" },
+				{ "slug": "primary",   "color": "#111111", "name": "Primary" },
+				{ "slug": "secondary", "color": "#555555", "name": "Secondary" },
+				{ "slug": "accent",    "color": "#777777", "name": "Accent" },
+				{ "slug": "muted",     "color": "#f2f2f2", "name": "Muted" }
+			]
+		},
+		"typography": {
+			"customFontSize": true,
+			"fluid": true,
+			"fontFamilies": [
+				{
+					"slug": "sans",
+					"name": "Latin Sans (placeholder)",
+					"fontFamily": "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+				},
+				{
+					"slug": "arabic",
+					"name": "Arabic Sans (placeholder)",
+					"fontFamily": "system-ui, 'Noto Naskh Arabic', 'Segoe UI', Tahoma, sans-serif"
+				}
+			],
+			"fontSizes": [
+				{ "slug": "small",   "size": "0.875rem", "name": "Small" },
+				{ "slug": "medium",  "size": "1rem",     "name": "Medium" },
+				{ "slug": "large",   "size": "1.25rem",  "name": "Large" },
+				{ "slug": "x-large", "size": "1.75rem",  "name": "Extra large" }
+			]
+		},
+		"spacing": {
+			"units": [ "px", "rem", "em", "%", "vw", "vh" ],
+			"spacingSizes": [
+				{ "slug": "10", "size": "0.5rem", "name": "1" },
+				{ "slug": "20", "size": "1rem",   "name": "2" },
+				{ "slug": "30", "size": "1.5rem", "name": "3" },
+				{ "slug": "40", "size": "2.5rem", "name": "4" },
+				{ "slug": "50", "size": "4rem",   "name": "5" }
+			]
+		}
+	},
+	"styles": {
+		"typography": {
+			"fontFamily": "var(--wp--preset--font-family--sans)"
+		}
+	}
+}

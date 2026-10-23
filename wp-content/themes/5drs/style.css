@@ -1,0 +1,21 @@
+/*
+Theme Name:         5drs
+Theme URI:          https://5drs.local
+Author:             5drs
+Description:        Custom bilingual (Arabic / English) WooCommerce theme for 5drs.
+                    Built RTL-first using CSS logical properties so a single
+                    stylesheet serves both directions.
+Version:            0.1.0
+Requires at least:  6.5
+Requires PHP:       8.2
+License:            GPL-2.0-or-later
+License URI:        https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain:        5drs
+Tags:               e-commerce, translation-ready, rtl-language-support, custom-menu
+*/
+
+/*
+ * This file intentionally contains the theme header only.
+ * All real styles are authored in src/css/ and built to dist/ by Vite.
+ * Do not add CSS below this comment.
+ */

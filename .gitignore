@@ -1,0 +1,77 @@
+# ---------------------------------------------------------------------------
+# Secrets
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+
+# ---------------------------------------------------------------------------
+# Dependencies and build output
+# ---------------------------------------------------------------------------
+node_modules/
+vendor/
+dist/
+.vite/
+
+# ---------------------------------------------------------------------------
+# WordPress core
+# Core lives in the "wp_core" Docker volume and is never committed. Only
+# wp-content is bind-mounted into this repo.
+# ---------------------------------------------------------------------------
+/wp-admin/
+/wp-includes/
+/wp-*.php
+/index.php
+/xmlrpc.php
+/.htaccess
+/wp-config.php
+
+# ---------------------------------------------------------------------------
+# wp-content runtime data
+# ---------------------------------------------------------------------------
+wp-content/uploads/
+wp-content/upgrade/
+wp-content/upgrade-temp-backup/
+wp-content/languages/
+wp-content/cache/
+wp-content/debug.log
+wp-content/*.log
+wp-content/index.php
+
+# Drop-ins installed by plugins (Query Monitor ships db.php) - never deploy these.
+wp-content/db.php
+wp-content/object-cache.php
+wp-content/advanced-cache.php
+
+# ---------------------------------------------------------------------------
+# Third-party plugins: ignore everything, then re-include our own.
+# Add any custom plugin with another "!" line.
+# ---------------------------------------------------------------------------
+wp-content/plugins/*
+!wp-content/plugins/.gitkeep
+
+# ---------------------------------------------------------------------------
+# Themes: only the custom 5drs theme is tracked.
+# ---------------------------------------------------------------------------
+wp-content/themes/*
+!wp-content/themes/5drs/
+
+# mu-plugins are ours and stay tracked - no ignore rule here on purpose.
+
+# ---------------------------------------------------------------------------
+# Database dumps
+# ---------------------------------------------------------------------------
+backups/*
+!backups/.gitkeep
+*.sql
+*.sql.gz
+
+# ---------------------------------------------------------------------------
+# OS / editor noise
+# ---------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
