@@ -8,48 +8,55 @@
 defined( 'ABSPATH' ) || exit;
 
 get_header();
+
+$fivedrs_title = '';
+if ( is_home() && ! is_front_page() ) {
+	$fivedrs_title = single_post_title( '', false );
+} elseif ( is_archive() ) {
+	$fivedrs_title = wp_strip_all_tags( get_the_archive_title() );
+} elseif ( is_search() ) {
+	$fivedrs_title = sprintf(
+		/* translators: %s: search query. */
+		__( 'Search results for: %s', '5drs' ),
+		get_search_query()
+	);
+}
+
+if ( '' !== $fivedrs_title ) {
+	get_template_part( 'template-parts/page-hero', null, array( 'title' => $fivedrs_title ) );
+}
 ?>
 
 <main id="main" class="site-main">
+	<div class="fivedrs-container fivedrs-section">
 
-	<?php if ( have_posts() ) : ?>
+		<?php if ( have_posts() ) : ?>
 
-		<?php if ( is_home() && ! is_front_page() ) : ?>
-			<h1 class="page-title"><?php single_post_title(); ?></h1>
-		<?php elseif ( is_archive() ) : ?>
-			<h1 class="page-title"><?php the_archive_title(); ?></h1>
-		<?php elseif ( is_search() ) : ?>
-			<h1 class="page-title">
+			<div class="fivedrs-grid">
 				<?php
-				printf(
-					/* translators: %s: search query. */
-					esc_html__( 'Search results for: %s', '5drs' ),
-					'<span>' . esc_html( get_search_query() ) . '</span>'
-				);
+				while ( have_posts() ) :
+					the_post();
+					get_template_part( 'template-parts/content', get_post_type() );
+				endwhile;
 				?>
-			</h1>
+			</div>
+
+			<?php
+			the_posts_pagination(
+				array(
+					'prev_text' => esc_html__( 'Previous', '5drs' ),
+					'next_text' => esc_html__( 'Next', '5drs' ),
+				)
+			);
+			?>
+
+		<?php else : ?>
+
+			<?php get_template_part( 'template-parts/content', 'none' ); ?>
+
 		<?php endif; ?>
 
-		<?php
-		while ( have_posts() ) :
-			the_post();
-			get_template_part( 'template-parts/content', get_post_type() );
-		endwhile;
-
-		the_posts_pagination(
-			array(
-				'prev_text' => esc_html__( 'Previous', '5drs' ),
-				'next_text' => esc_html__( 'Next', '5drs' ),
-			)
-		);
-		?>
-
-	<?php else : ?>
-
-		<?php get_template_part( 'template-parts/content', 'none' ); ?>
-
-	<?php endif; ?>
-
+	</div>
 </main>
 
 <?php
