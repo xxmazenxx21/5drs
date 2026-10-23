@@ -30,6 +30,20 @@ $gettext->check_gettext_original_table();
 $gettext->check_gettext_original_meta_table();
 $query->check_machine_translation_lock_table();
 
+/*
+ * TranslatePress 3.3 ships a second, floating language switcher driven by its
+ * own option - the older "trp-ls-floater" setting does not control it. The
+ * theme renders its own switcher in the header, so this one is turned off to
+ * avoid a duplicate control pinned over the page.
+ */
+$switcher = get_option( 'trp_language_switcher_settings', array() );
+if ( ! is_array( $switcher ) ) {
+	$switcher = array();
+}
+$switcher['floater']['enabled'] = false;
+update_option( 'trp_language_switcher_settings', $switcher );
+WP_CLI::log( 'floating language switcher disabled (the theme renders its own)' );
+
 global $wpdb;
 $tables = $wpdb->get_col( "SHOW TABLES LIKE '{$wpdb->prefix}trp_%'" );
 WP_CLI::success( count( $tables ) . ' TranslatePress tables present: ' . implode( ', ', $tables ) );

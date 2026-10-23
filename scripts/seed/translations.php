@@ -157,51 +157,9 @@ $dynamic = array(
 	'My account'          => 'حسابي',
 );
 
-$trp   = TRP_Translate_Press::get_trp_instance();
-$query = $trp->get_component( 'query' );
+require_once __DIR__ . '/lib-trp.php';
 
-$originals = array_keys( $dynamic );
-
-// Make sure every original exists in the dictionary before translating it.
-$existing = $query->get_string_ids( $originals, $language );
-$new      = array();
-
-foreach ( $originals as $original ) {
-	if ( ! isset( $existing[ $original ] ) ) {
-		$new[] = $original;
-	}
-}
-
-if ( $new ) {
-	$query->insert_strings( $new, $language );
-	WP_CLI::log( 'dictionary: inserted ' . count( $new ) . ' new originals' );
-}
-
-$ids     = $query->get_string_ids( $originals, $language );
-$updates = array();
-
-foreach ( $dynamic as $original => $translation ) {
-	if ( ! isset( $ids[ $original ] ) ) {
-		WP_CLI::warning( "dictionary: no row for \"{$original}\"" );
-		continue;
-	}
-
-	$updates[] = array(
-		'id'         => (int) $ids[ $original ]->id,
-		'original'   => $original,
-		'translated' => $translation,
-		'status'     => $query->get_constant_human_reviewed(),
-		'block_type' => $query->get_constant_block_type_regular_string(),
-	);
-}
-
-if ( $updates ) {
-	$query->update_strings(
-		$updates,
-		$language,
-		array( 'id', 'original', 'translated', 'status', 'block_type' )
-	);
-	WP_CLI::log( 'dictionary: ' . count( $updates ) . ' titles and menu labels translated' );
-}
+$written = fivedrs_seed_dictionary( $dynamic, $language );
+WP_CLI::log( "dictionary: {$written} titles and menu labels translated" );
 
 WP_CLI::success( 'Arabic translations seeded.' );

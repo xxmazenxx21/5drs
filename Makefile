@@ -12,7 +12,7 @@ UID_GID    := $(shell id -u):$(shell id -g)
 
 .DEFAULT_GOAL := help
 .PHONY: help up down restart logs ps wp shell db-export db-import \
-        theme-install theme-dev theme-build pot mo lint lint-fix seed pages translations crawl trp-tables mail-test verify
+        theme-install theme-dev theme-build pot mo lint lint-fix seed pages home-media categories home-content translations crawl trp-tables mail-test verify
 
 help: ## Show this help
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | sort | \
@@ -96,6 +96,19 @@ pages: ## Create the page tree, assign templates and build the menus
 # TranslatePress only stores a gettext string once it has rendered it, and
 # rendering a translated page surfaces further strings, so this converges in
 # two crawl/seed passes rather than one.
+home-media: ## Convert the Home images to WebP and import them
+	python3 scripts/brand/prepare-home-images.py
+	$(WPCLI) eval-file /scripts/seed/home-media.php
+
+categories: ## Create the product categories and their card images
+	$(WPCLI) eval-file /scripts/seed/categories.php
+
+home-content: ## Seed the Arabic Home page content and its SEO fields
+	@./scripts/crawl.sh ar >/dev/null 2>&1 || true
+	$(WPCLI) eval-file /scripts/seed/home-content.php
+	@./scripts/crawl.sh ar >/dev/null 2>&1 || true
+	$(WPCLI) eval-file /scripts/seed/home-content.php
+
 translations: ## Seed the Arabic translations TranslatePress serves
 	@echo "pass 1: crawling Arabic pages so TranslatePress captures every string"
 	@./scripts/crawl.sh ar >/dev/null || true
