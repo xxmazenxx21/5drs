@@ -117,6 +117,33 @@ function fivedrs_icon( $name ) {
 		case 'tiktok':
 			return '<svg ' . $solid . '><path d="M16.6 2h-2.9v14.1a2.5 2.5 0 1 1-2.5-2.5c.26 0 .5.04.74.11v-2.96a5.5 5.5 0 1 0 4.66 5.43V8.9a6.5 6.5 0 0 0 3.9 1.28V7.23A3.6 3.6 0 0 1 16.6 2z"/></svg>';
 
+		case 'shield-check':
+			return '<svg ' . $stroke . '><path d="M12 2.8 5 5.6v5.5c0 4.3 3 8.3 7 9.6 4-1.3 7-5.3 7-9.6V5.6z"/><polyline points="9,11.8 11.2,14 15,10"/></svg>';
+
+		case 'leaf':
+			return '<svg ' . $stroke . '><path d="M4 20c0-7.2 4.6-12 14-12 0 7.2-4.2 12-14 12z"/><line x1="4" y1="20" x2="12" y2="12"/></svg>';
+
+		case 'family':
+			return '<svg ' . $stroke . '><circle cx="8" cy="8" r="3"/><circle cx="17" cy="10" r="2.2"/><path d="M2.8 20a5.2 5.2 0 0 1 10.4 0"/><path d="M15 20a4 4 0 0 1 6.2-3.3"/></svg>';
+
+		case 'lock':
+			return '<svg ' . $stroke . '><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.8a4 4 0 0 1 8 0v2.7"/></svg>';
+
+		case 'hand':
+			return '<svg ' . $stroke . '><path d="M9 11V4.8a1.6 1.6 0 0 1 3.2 0V11"/><path d="M12.2 11V3.6a1.6 1.6 0 0 1 3.2 0V11"/><path d="M15.4 11.4V6.4a1.6 1.6 0 0 1 3.2 0V14a7 7 0 0 1-7 7h-.6a6 6 0 0 1-5.2-3l-2-3.4a1.6 1.6 0 0 1 2.5-2L9 15"/></svg>';
+
+		case 'sparkle':
+			return '<svg ' . $stroke . '><path d="M12 3.2 13.8 9 19.6 10.8 13.8 12.6 12 18.4 10.2 12.6 4.4 10.8 10.2 9z"/><path d="M18.5 16.5 19.2 18.6 21.3 19.3 19.2 20 18.5 22.1 17.8 20 15.7 19.3 17.8 18.6z"/></svg>';
+
+		case 'grid':
+			return '<svg ' . $stroke . '><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg>';
+
+		case 'check':
+			return '<svg ' . $stroke . '><polyline points="5,12.5 10,17.5 19,6.5"/></svg>';
+
+		case 'chevron':
+			return '<svg ' . $stroke . '><polyline points="6,9.5 12,15.5 18,9.5"/></svg>';
+
 		case 'arrow':
 			return '<svg class="fivedrs-btn__arrow" ' . $stroke . '><line x1="4" y1="12" x2="19" y2="12"/><polyline points="13,6 19,12 13,18"/></svg>';
 
@@ -346,4 +373,58 @@ function fivedrs_social_links() {
 	}
 
 	echo '</div>';
+}
+
+/**
+ * Print a Home page image from a Customizer field.
+ *
+ * The hero is the Largest Contentful Paint element, so it opts out of
+ * lazy-loading and asks the browser to fetch it first. Everything else is
+ * below the fold and lazy-loads. Both go through wp_get_attachment_image(), so
+ * srcset and sizes come from WordPress.
+ *
+ * @param string $section Config section key.
+ * @param string $field   Config field key.
+ * @param array  $args    Optional. Keys: 'size' (registered image size,
+ *                        default 'large'), 'class' (extra class names),
+ *                        'priority' (true for the LCP image, default false)
+ *                        and 'sizes' (explicit sizes attribute).
+ * @return bool Whether an image was printed.
+ */
+function fivedrs_home_image( $section, $field, $args = array() ) {
+	$attachment_id = (int) fivedrs_home( $section, $field );
+
+	if ( ! $attachment_id ) {
+		return false;
+	}
+
+	$args = wp_parse_args(
+		$args,
+		array(
+			'size'     => 'large',
+			'class'    => '',
+			'priority' => false,
+			'sizes'    => '',
+		)
+	);
+
+	$attr = array(
+		'class'    => trim( 'fivedrs-img ' . $args['class'] ),
+		'decoding' => 'async',
+	);
+
+	if ( $args['priority'] ) {
+		$attr['loading']       = 'eager';
+		$attr['fetchpriority'] = 'high';
+	} else {
+		$attr['loading'] = 'lazy';
+	}
+
+	if ( '' !== $args['sizes'] ) {
+		$attr['sizes'] = $args['sizes'];
+	}
+
+	echo wp_get_attachment_image( $attachment_id, $args['size'], false, $attr );
+
+	return true;
 }

@@ -170,3 +170,35 @@ add_filter( 'loop_shop_per_page', 'fivedrs_products_per_page' );
  *   woocommerce_single_product_summary
  *   woocommerce_before_cart / woocommerce_before_checkout_form
  */
+
+/**
+ * Force lazy-loading on images inside the Home page's featured loop.
+ *
+ * Added and removed around that loop only - see
+ * template-parts/home/featured.php.
+ *
+ * @param array $attr Image attributes.
+ * @return array
+ */
+function fivedrs_featured_lazy_attr( $attr ) {
+	$attr['loading']  = 'lazy';
+	$attr['decoding'] = 'async';
+
+	return $attr;
+}
+
+/**
+ * Render a WooCommerce loop product title as an h3.
+ *
+ * WooCommerce emits an h2, which on the Home page would sit at the same level
+ * as the "Featured Products" heading above it. Swapped in around that loop
+ * only, so the shop archive keeps WooCommerce's own markup.
+ *
+ * @return void
+ */
+function fivedrs_featured_loop_title() {
+	printf(
+		'<h3 class="woocommerce-loop-product__title">%s</h3>',
+		esc_html( get_the_title() )
+	);
+}

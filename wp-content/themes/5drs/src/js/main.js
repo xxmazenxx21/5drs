@@ -10,6 +10,7 @@ import '../css/main.css';
 import initOffcanvas from './modules/offcanvas.js';
 import initHeader from './modules/header.js';
 import initCart from './modules/cart.js';
+import initReveal from './modules/reveal.js';
 
 /**
  * Current document direction. Prefer CSS logical properties over branching on
@@ -26,6 +27,7 @@ function boot() {
 	initHeader();
 	initOffcanvas();
 	initCart();
+	initReveal();
 }
 
 if ( document.readyState === 'loading' ) {
