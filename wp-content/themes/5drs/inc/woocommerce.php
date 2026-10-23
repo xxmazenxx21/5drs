@@ -51,19 +51,122 @@ function fivedrs_declare_wc_compatibility() {
 add_action( 'before_woocommerce_init', 'fivedrs_declare_wc_compatibility' );
 
 /*
--------------------------------------------------------------------------
- * Hook customisations
- * -------------------------------------------------------------------------
- * Everything that changes WooCommerce output belongs here: remove_action /
- * add_action against woocommerce_* hooks, wrappers, loop columns, breadcrumb
- * tweaks, and so on. Keep each change small and commented with why.
+ * Hook customisations.
  *
- * Intentionally empty for now - the shop is built in a later task.
+ * Everything that changes WooCommerce output lives below this line.
+ */
+
+/**
+ * Replace WooCommerce's content wrapper with the theme's container.
  *
- * Reference hooks, for when that work starts:
- *   woocommerce_before_main_content / woocommerce_after_main_content
+ * WooCommerce's default wrapper emits `#primary .content-area`, which does not
+ * exist in this theme. Swapping it here keeps every store page inside the same
+ * container as the rest of the site without overriding a single template.
+ *
+ * @return void
+ */
+function fivedrs_wc_wrapper_start() {
+	// On archives the page title is rendered as a brand hero instead, so that
+	// the shop header matches every other page on the site.
+	if ( is_shop() || is_product_taxonomy() ) {
+		get_template_part(
+			'template-parts/page-hero',
+			null,
+			array(
+				'title' => woocommerce_page_title( false ),
+			)
+		);
+	}
+
+	echo '<div class="fivedrs-container"><main id="main" class="site-main fivedrs-main">';
+}
+
+/**
+ * Close the theme's content wrapper.
+ *
+ * @return void
+ */
+function fivedrs_wc_wrapper_end() {
+	echo '</main></div>';
+}
+
+/**
+ * Swap WooCommerce's wrappers for the theme's and hide the duplicated title.
+ *
+ * @return void
+ */
+function fivedrs_wc_layout_hooks() {
+	remove_action( 'woocommerce_before_main_content', 'woocommerce_output_content_wrapper', 10 );
+	remove_action( 'woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end', 10 );
+
+	add_action( 'woocommerce_before_main_content', 'fivedrs_wc_wrapper_start', 10 );
+	add_action( 'woocommerce_after_main_content', 'fivedrs_wc_wrapper_end', 10 );
+
+	// The hero above already prints it.
+	add_filter( 'woocommerce_show_page_title', '__return_false' );
+}
+add_action( 'template_redirect', 'fivedrs_wc_layout_hooks' );
+
+/**
+ * Keep the header cart badge in sync after an AJAX add-to-cart.
+ *
+ * WooCommerce's cart-fragments script replaces every element matching a key in
+ * this array with the markup it maps to, so the badge updates for guests and
+ * signed-in customers alike without any custom request.
+ *
+ * @param array $fragments Cart fragments.
+ * @return array
+ */
+function fivedrs_cart_fragment( $fragments ) {
+	$fragments['.fivedrs-cart__count'] = fivedrs_cart_badge();
+
+	// The screen-reader label travels with it, so the announced count matches.
+	$count = fivedrs_cart_count();
+
+	$fragments['[data-cart-label]'] = sprintf(
+		'<span class="screen-reader-text" data-cart-label>%s</span>',
+		esc_html(
+			sprintf(
+				/* translators: %s: number of items in the cart. */
+				_n( '%s item in cart', '%s items in cart', $count, '5drs' ),
+				number_format_i18n( $count )
+			)
+		)
+	);
+
+	return $fragments;
+}
+add_filter( 'woocommerce_add_to_cart_fragments', 'fivedrs_cart_fragment' );
+
+/**
+ * Products per row in the shop grid.
+ *
+ * The CSS grid is responsive on its own; this only keeps WooCommerce's own
+ * column classes consistent with it.
+ *
+ * @return int
+ */
+function fivedrs_loop_columns() {
+	return 3;
+}
+add_filter( 'loop_shop_columns', 'fivedrs_loop_columns' );
+
+/**
+ * Products per page on the shop archive.
+ *
+ * @return int
+ */
+function fivedrs_products_per_page() {
+	return 12;
+}
+add_filter( 'loop_shop_per_page', 'fivedrs_products_per_page' );
+
+/*
+ * Further customisations belong here: remove_action / add_action against
+ * woocommerce_* hooks. Keep each change small and commented with why.
+ *
+ * Reference hooks:
  *   woocommerce_before_shop_loop_item / woocommerce_after_shop_loop_item
  *   woocommerce_single_product_summary
  *   woocommerce_before_cart / woocommerce_before_checkout_form
- * ----------------------------------------------------------------------
  */
