@@ -58,6 +58,10 @@ make db-import FILE=backups/5drs-....sql.gz
 make theme-dev          # Vite dev server + hot reload
 make theme-build        # production build into the theme's dist/
 make pot                # regenerate languages/5drs.pot
+make mo                 # compile languages/ar.po -> ar.mo
+make pages              # rebuild the page tree, templates and menus
+make translations       # seed the Arabic translations TranslatePress serves
+make crawl              # request every page in both languages
 
 make lint               # PHPCS (WordPress Coding Standards)
 make lint-fix           # phpcbf auto-fixes
@@ -93,19 +97,27 @@ separate task.
 Location: `wp-content/themes/5drs`.
 
 ```
-style.css          theme header only - no CSS lives here
-functions.php      constants + requires from inc/ - no logic
-theme.json         colour / typography / spacing placeholders
-inc/setup.php      theme supports, menus, image sizes, text domain
-inc/assets.php     enqueues the Vite build from dist/
-inc/woocommerce.php  WooCommerce support + hook customisations
-inc/i18n.php       language + RTL helpers, TranslatePress compat, font slot
-header.php footer.php index.php page.php single.php 404.php
+style.css            theme header only - no CSS lives here
+functions.php        constants + requires from inc/ - no logic
+theme.json           editor presets, mirroring src/css/tokens.css
+inc/setup.php        theme supports, menus, image sizes, text domain
+inc/assets.php       enqueues the Vite build from dist/
+inc/i18n.php         language + RTL helpers, per-language fonts, switcher
+inc/customizer.php   contact + social fields the client fills in
+inc/template-tags.php  logo, SVG icons, cart button, contact and social output
+inc/woocommerce.php  WooCommerce support, wrappers, cart fragment
+header.php footer.php front-page.php page.php page-about.php
+page-contact.php page-policies.php index.php single.php 404.php sidebar.php
 template-parts/
-woocommerce/       empty by design - read its README before adding anything
-languages/         5drs.pot (make pot)
-src/               Tailwind CSS + JS sources
-dist/              build output, gitignored
+  page-hero.php            shared page header
+  section-placeholder.php  empty, named section container
+  nav/offcanvas.php        mobile menu
+woocommerce/         empty by design - read its README before adding anything
+assets/images/       logo-lockup.png, logo-full.png (generated, see below)
+languages/           5drs.pot, ar.po, ar.mo
+src/css/             tokens.css, base.css, components/, woocommerce.css
+src/js/              main.js + modules/
+dist/                build output, gitignored
 ```
 
 ### 4.1 The `fivedrs_` prefix rule — non-negotiable
@@ -118,7 +130,56 @@ PHP identifiers cannot start with a digit, so `5drs` cannot be a code prefix.
 
 PHPCS enforces both via `phpcs.xml.dist`.
 
-### 4.2 Bilingual and RTL rules — apply from the first line of markup
+### 4.2 Design tokens
+
+Colours come from the logo, not from guesswork.
+`scripts/brand/extract-logo.py` samples `assets/brand/logo5drs.jpeg` and writes
+the theme's two PNGs; `scripts/brand/tokens.py` generates the 50–900 scales and
+audits every text/background pair for WCAG AA.
+
+| Role | Anchor | Notes |
+|---|---|---|
+| Navy | `#0e3d4d` | sampled from the "5D" wordmark - a teal-navy, not a blue |
+| Green | `#82ae61` | 2.57:1 on white, so **accents, icons and fills only** |
+| Green (text) | `#4d6f35` | the green that may carry text, 5.77:1 |
+| Gold | `#d0b572` | 1.99:1 - decorative highlights only, never text |
+
+Tokens live once in `src/css/tokens.css` (Tailwind v4 `@theme`) and are mirrored
+into `theme.json` for the editor. **After changing any colour run
+`python3 scripts/brand/tokens.py --check`** - it fails if a pair drops below AA.
+Use the semantic tokens (`--color-ink`, `--color-surface`, `--color-primary`,
+`--color-accent-strong`, …) in components rather than a raw scale step.
+
+### 4.3 Fonts
+
+Montserrat (English) and Tajawal (Arabic), **self-hosted** via `@fontsource`
+and bundled by Vite - no Google CDN. They are separate Vite entries
+(`src/css/fonts-en.css`, `src/css/fonts-ar.css`) and
+`fivedrs_enqueue_fonts()` loads only the one the current language needs, so an
+Arabic visitor never downloads Montserrat and vice versa. The 400 weight is
+preloaded by `fivedrs_preload_font()`.
+
+Font files are emitted to `dist/fonts/` **unhashed** (`vite.config.js`
+`assetFileNames`) precisely so that preload path is predictable; everything else
+stays content-hashed.
+
+### 4.4 Logo
+
+`assets/brand/logo5drs.jpeg` is the supplied original: a JPEG on a near-white
+ground, with a tagline band that is only 21px tall and unreadable at header
+size. `scripts/brand/extract-logo.py` crops it, knocks the background out to
+transparency and writes:
+
+- `assets/images/logo-lockup.png` - "5Drs" + "5Doctors", used in the header and footer
+- `assets/images/logo-full.png` - the complete lockup, the Customizer default
+
+The tagline is printed as **real text** (`fivedrs_tagline()`), not baked into
+the image, so it translates into Arabic and is readable by screen readers.
+A client logo set in Appearance → Customize wins over both files.
+**Ask the designer for an SVG** when one is available and re-point
+`fivedrs_logo()` at it.
+
+### 4.5 Bilingual and RTL rules — apply from the first line of markup
 
 1. **Every** user-facing string goes through a translation function with the
    `5drs` text domain: `__( 'Text', '5drs' )`, `esc_html_e( 'Text', '5drs' )`.
@@ -138,10 +199,15 @@ PHPCS enforces both via `phpcs.xml.dist`.
 5. Fonts load per language in `fivedrs_enqueue_fonts()` — currently an empty,
    documented slot. Components must reference the `--font-sans` /
    `--font-arabic` custom properties, never a font family name directly.
-6. The language switcher is `fivedrs_language_switcher()`. It is printed
-   unstyled in `header.php` and gets designed with the header.
+6. The language switcher is `fivedrs_language_switcher()`. It builds its own
+   markup from TranslatePress's `trp_custom_language_switcher()` data rather
+   than the plugin's `[language-switcher]` shortcode, so it is fully styleable
+   and carries `aria-current`.
+7. The off-canvas menu slides from the **start** edge. Its transform and the
+   button arrow glyph are the only two direction-specific rules in the theme;
+   both are commented as such. Do not add a third without the same justification.
 
-### 4.3 WooCommerce template overrides
+### 4.6 WooCommerce template overrides
 
 **Hooks first, overrides last.** Full rule in
 `wp-content/themes/5drs/woocommerce/README.md`. In short:
@@ -156,7 +222,7 @@ PHPCS enforces both via `phpcs.xml.dist`.
   `[woocommerce_checkout]` precisely so these PHP templates render. **Do not
   convert those pages back to blocks.**
 
-### 4.4 Build tooling
+### 4.7 Build tooling
 
 Vite + Tailwind v4 (`@tailwindcss/vite`, CSS-first config in
 `src/css/main.css`). `make theme-dev` writes `dist/.vite-dev-server`, which
@@ -164,7 +230,7 @@ Vite + Tailwind v4 (`@tailwindcss/vite`, CSS-first config in
 build writes a hashed bundle plus `dist/.vite/manifest.json`, which the same
 file reads. Assets are versioned by file mtime.
 
-### 4.5 Coding standards
+### 4.8 Coding standards
 
 PHPCS with WordPress Coding Standards + PHPCompatibilityWP, targeting PHP 8.2
 and WordPress 6.5+. `make lint` must pass before committing. Suppressions need a
@@ -177,7 +243,82 @@ deprecation notice on every request. It renders nothing unless the
 
 ---
 
-## 5. Store configuration
+## 5. Pages, menus and translations
+
+### 5.1 The page tree
+
+`make pages` builds it and is idempotent (pages are matched by slug):
+
+| Page | Slug | Template |
+|---|---|---|
+| Home | `home` | `front-page.php`, set as the static front page |
+| Our Products | `products` | the WooCommerce shop page, renamed from "Shop" |
+| About Us | `about` | `page-about.php` |
+| Contact Us | `contact` | `page-contact.php` |
+| Policies | `policies` | `page-policies.php` (lists its children automatically) |
+| ↳ Privacy Policy / Shipping & Delivery / Returns & Refunds / Terms & Conditions | children of `policies` | `page.php` |
+
+Privacy is wired to `wp_page_for_privacy_policy` and Terms to
+`woocommerce_terms_page_id`. **`woocommerce_shop_page_id` still points at the
+renamed page** - do not create a second shop page.
+
+Each template has both a `Template Name:` header and the `page-{slug}.php`
+filename, and `_wp_page_template` is set explicitly, so renaming a slug cannot
+silently detach a template.
+
+### 5.2 Page shells
+
+Every page is a **structural shell**: a hero plus empty, named section
+containers rendered by `template-parts/section-placeholder.php`. They emit an
+`<!-- Section: ... -->` comment and a dashed box that is **visible to
+signed-in editors only** - anonymous visitors see nothing. Replace a
+`get_template_part( 'template-parts/section-placeholder', ... )` call with the
+real markup when that section is built.
+
+### 5.3 Menus
+
+Three locations, all built by `make pages`: `primary`, `footer-quick`,
+`footer-policies`. The client edits them in Appearance → Menus.
+
+### 5.4 Contact details and social links
+
+Appearance → Customize → **Contact & Social**: phone, email, address, WhatsApp,
+Facebook, Instagram, TikTok. One definition in `fivedrs_option_fields()` drives
+the controls, the sanitisers and the footer output. Every field is optional and
+anything empty is simply not rendered.
+
+### 5.5 Translations — two stores, and the traps in both
+
+**Theme strings** (`5drs` text domain) live in `languages/ar.po`, compiled with
+`make mo`.
+
+> **Trap 1 — the filename.** `load_theme_textdomain()` loads
+> `languages/{locale}.mo` for a theme, i.e. **`ar.mo`**. The
+> `{domain}-{locale}.mo` form only works under `WP_LANG_DIR/themes/`. Naming it
+> `5drs-ar.mo` silently loads nothing.
+
+**Page titles and menu labels** are content, not gettext, so they live in
+TranslatePress's dictionary table. `make translations` writes them through
+TranslatePress's own `TRP_Query` API.
+
+> **Trap 2 — TranslatePress caches gettext.** It stores every gettext string it
+> renders in `wp_trp_gettext_ar` and then serves that row. A string captured
+> *before* its translation existed is cached as untranslated and keeps rendering
+> in English even after you add it to `ar.po`. `make translations` repairs those
+> rows from the `.po`, and it crawls the Arabic pages first because
+> TranslatePress only stores a string once it has rendered it - which is why it
+> runs two passes.
+
+Workflow after adding a translatable string:
+
+```bash
+make pot          # pick up the new string
+# add the msgstr to wp-content/themes/5drs/languages/ar.po
+make mo           # compile
+make translations # repair any row TranslatePress already cached
+```
+
+## 6. Store configuration
 
 - Base: **Egypt (Cairo)**, currency **EGP**, prices entered **excluding tax**,
   tax calculation **off** for now.
@@ -190,7 +331,7 @@ deprecation notice on every request. It renders nothing unless the
 
 ---
 
-## 6. Repository layout
+## 7. Repository layout
 
 Tracked: the `5drs` theme, `wp-content/mu-plugins/`, any future custom plugin,
 Docker/Make/config files.
@@ -202,7 +343,7 @@ To track a new custom plugin, add a `!wp-content/plugins/<name>/` line to
 
 ---
 
-## 7. Development-only — must not reach production
+## 8. Development-only — must not reach production
 
 - **Query Monitor** — deactivate and remove before deploying. It also installs
   the `wp-content/db.php` drop-in; that file is gitignored and must not be
@@ -218,7 +359,7 @@ To track a new custom plugin, add a `!wp-content/plugins/<name>/` line to
 
 ---
 
-## 8. Deployment target
+## 9. Deployment target
 
 The site ships to **Hostinger shared hosting** later:
 
