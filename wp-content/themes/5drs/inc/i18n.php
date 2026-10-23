@@ -189,6 +189,27 @@ function fivedrs_language_switcher( $args = array() ) {
 }
 
 /**
+ * Translate a string that TranslatePress cannot reach on its own.
+ *
+ * TranslatePress works on the rendered HTML, so it never sees text inside a
+ * <script> tag - JSON-LD schema would stay English on /ar/. This runs such
+ * strings through TranslatePress's own API so the structured data matches the
+ * page it describes.
+ *
+ * @param string $text Source text in the default language.
+ * @return string Translated text, or the original when unavailable.
+ */
+function fivedrs_translate( $text ) {
+	if ( '' === $text || ! function_exists( 'trp_translate' ) || ! fivedrs_is_arabic() ) {
+		return $text;
+	}
+
+	$translated = trp_translate( $text, null, false );
+
+	return is_string( $translated ) && '' !== $translated ? $translated : $text;
+}
+
+/**
  * Stylesheet handle and preload file for the current language's webfont.
  *
  * Both faces are self-hosted (no Google CDN) and built as separate Vite
