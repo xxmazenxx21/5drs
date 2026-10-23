@@ -46,6 +46,6 @@ defined( 'ABSPATH' ) || exit;
 	</div>
 
 	<div class="fivedrs-offcanvas__foot">
-		<?php echo wp_kses_post( fivedrs_language_switcher() ); ?>
+		<?php echo wp_kses( fivedrs_language_switcher(), fivedrs_kses_switcher() ); ?>
 	</div>
 </div>

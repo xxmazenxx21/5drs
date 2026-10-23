@@ -101,6 +101,13 @@
 	--fivedrs-gutter: 1rem;
 	--fivedrs-section-y: 3.5rem;
 	--fivedrs-header-height: 4.5rem;
+
+	/* Logo sizing lives here because it is referenced from two places: the
+	   header/footer components, and the unlayered WooCommerce compat rules
+	   that have to re-assert it on store pages. */
+	--fivedrs-logo-height: 2.5rem;
+	--fivedrs-logo-height-footer: 3.25rem;
+	--fivedrs-logo-height-offcanvas: 2.25rem;
 }
 
 @media (width >= 48rem) {
@@ -108,5 +115,6 @@
 		--fivedrs-gutter: 2rem;
 		--fivedrs-section-y: 5.5rem;
 		--fivedrs-header-height: 5.25rem;
+		--fivedrs-logo-height: 3rem;
 	}
 }

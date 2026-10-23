@@ -51,7 +51,7 @@
 	/* --- brand column -------------------------------------------------------- */
 
 	.fivedrs-footer__brand img {
-		height: 3.25rem;
+		height: var(--fivedrs-logo-height-footer);
 		width: auto;
 		/* The lockup is navy-on-transparent; invert it to read on the navy
 		   footer rather than shipping a second colourway of the asset. */

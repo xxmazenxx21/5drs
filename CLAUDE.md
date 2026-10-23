@@ -203,7 +203,14 @@ A client logo set in Appearance → Customize wins over both files.
    markup from TranslatePress's `trp_custom_language_switcher()` data rather
    than the plugin's `[language-switcher]` shortcode, so it is fully styleable
    and carries `aria-current`.
-7. The off-canvas menu slides from the **start** edge. Its transform and the
+7. **The language switcher must carry `data-no-translation`.** TranslatePress
+   rewrites every `href` on the page to the current language, including the
+   switcher's own links - without the marker, the "English" link on an Arabic
+   page points back at the Arabic URL and there is no way back. The attribute is
+   inherited by descendants. It also has to survive escaping, so the switcher is
+   printed with `fivedrs_kses_switcher()` rather than `wp_kses_post()`, which
+   strips `data-*`.
+8. The off-canvas menu slides from the **start** edge. Its transform and the
    button arrow glyph are the only two direction-specific rules in the theme;
    both are commented as such. Do not add a third without the same justification.
 
@@ -222,7 +229,27 @@ A client logo set in Appearance → Customize wins over both files.
   `[woocommerce_checkout]` precisely so these PHP templates render. **Do not
   convert those pages back to blocks.**
 
-### 4.7 Build tooling
+### 4.7 Cascade layers — the rule that bites
+
+Tailwind puts everything in cascade layers. **WooCommerce's stylesheets are
+unlayered, and an unlayered rule beats a layered one no matter how specific the
+layered one is.** A layered `.fivedrs-brand img { height: 2.5rem }` loses to
+WooCommerce's unlayered `.woocommerce img { height: auto }`, which is how the
+header logo ended up rendering at its intrinsic 534x364 on every store page.
+
+So the split is:
+
+- `src/css/woocommerce.css` and anything else whose job is to outrank a plugin
+  is **unlayered**. It competes on specificity and source order instead, and
+  the theme stylesheet is enqueued after WooCommerce's.
+- The theme's own components stay in `@layer components`, so Tailwind utilities
+  can still override them when pages get built.
+
+`python3 scripts/check-css-layers.py` asserts both halves and runs inside
+`make verify`. The failure mode is silent - valid CSS that simply loses - so
+check it rather than eyeballing the page.
+
+### 4.8 Build tooling
 
 Vite + Tailwind v4 (`@tailwindcss/vite`, CSS-first config in
 `src/css/main.css`). `make theme-dev` writes `dist/.vite-dev-server`, which
@@ -230,7 +257,7 @@ Vite + Tailwind v4 (`@tailwindcss/vite`, CSS-first config in
 build writes a hashed bundle plus `dist/.vite/manifest.json`, which the same
 file reads. Assets are versioned by file mtime.
 
-### 4.8 Coding standards
+### 4.9 Coding standards
 
 PHPCS with WordPress Coding Standards + PHPCompatibilityWP, targeting PHP 8.2
 and WordPress 6.5+. `make lint` must pass before committing. Suppressions need a

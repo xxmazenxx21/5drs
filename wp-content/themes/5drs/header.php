@@ -46,7 +46,7 @@ defined( 'ABSPATH' ) || exit;
 
 		<div class="fivedrs-header__actions">
 			<?php
-			echo wp_kses_post( fivedrs_language_switcher() );
+			echo wp_kses( fivedrs_language_switcher(), fivedrs_kses_switcher() );
 			fivedrs_cart_button();
 			?>
 

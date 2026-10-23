@@ -43,14 +43,9 @@
 	.fivedrs-brand .custom-logo {
 		display: block;
 		width: auto;
-		height: 2.5rem;
-	}
-
-	@media (width >= 48rem) {
-		.fivedrs-brand img,
-		.fivedrs-brand .custom-logo {
-			height: 3rem;
-		}
+		/* The breakpoint lives on the custom property in tokens.css, so the
+		   WooCommerce compat rules can reuse the same value. */
+		height: var(--fivedrs-logo-height);
 	}
 
 	/* --- primary navigation ----------------------------------------------- */
@@ -276,7 +271,7 @@
 	}
 
 	.fivedrs-offcanvas__head img {
-		height: 2.25rem;
+		height: var(--fivedrs-logo-height-offcanvas);
 		width: auto;
 	}
 

@@ -92,6 +92,35 @@ check "$(grep -q '.fivedrs-cart__count' <<<"$FRAG" && echo yes || echo no)" "AJA
 check "$(grep -qE '>2<' <<<"$FRAG" && echo yes || echo no)" "cart badge fragment carries the new count"
 rm -f "$JAR2"
 
+# --- language switching both ways ------------------------------------------
+# TranslatePress rewrites every href to the current language; without
+# data-no-translation it rewrites the switcher's own links, which made it
+# impossible to get back from Arabic to English.
+check "$(grep -q 'fivedrs-langs" aria-label="[^"]*" data-no-translation' <<<"$ar" && echo yes || echo no)" "switcher is marked data-no-translation"
+AR_ABOUT=$(curl -sL "$WP_URL/ar/about/")
+EN_LINK=$(grep -oE 'href="[^"]*"[^>]*lang="en-US"' <<<"$AR_ABOUT" | grep -oE 'https?://[^"]*' | head -1)
+check "$([ -n "$EN_LINK" ] && ! grep -q '/ar/' <<<"$EN_LINK" && echo yes || echo no)" "English link on an Arabic page leaves /ar/ ($EN_LINK)"
+# Captured first, then matched with a here-string: `grep -q` closes the pipe
+# early, and under `set -o pipefail` curl's resulting SIGPIPE would fail the
+# whole pipeline even on a match.
+EN_PAGE=$(curl -sL "$EN_LINK")
+check "$(grep -qE '<html[^>]*lang="en-US"' <<<"$EN_PAGE" && echo yes || echo no)" "following it lands on an English page"
+
+AR_LINK=$(grep -oE 'href="[^"]*"[^>]*lang="ar"' <<<"$home" | grep -oE 'https?://[^"]*' | head -1)
+check "$([ -n "$AR_LINK" ] && grep -q '/ar/' <<<"$AR_LINK" && echo yes || echo no)" "Arabic link on an English page points into /ar/"
+
+# --- cascade layers ----------------------------------------------------------
+# WooCommerce's CSS is unlayered and beats layered rules whatever the
+# specificity, so the override split has to stay the right way round.
+if python3 scripts/check-css-layers.py >/dev/null 2>&1; then
+	ok "WooCommerce overrides are unlayered, theme components are layered"
+else
+	bad "cascade layer split is wrong - run python3 scripts/check-css-layers.py"
+fi
+
+THEME_CSS=$(cat wp-content/themes/5drs/dist/assets/style-*.css)
+check "$(grep -q '\.woocommerce \.fivedrs-brand img' <<<"$THEME_CSS" && echo yes || echo no)" "store pages re-assert the header logo size"
+
 # --- build ------------------------------------------------------------------
 check "$([ -f wp-content/themes/5drs/dist/.vite/manifest.json ] && echo yes || echo no)" "theme build output exists"
 check "$([ -f wp-content/themes/5drs/languages/5drs.pot ] && echo yes || echo no)" "translation template exists"

@@ -102,12 +102,45 @@ function fivedrs_languages() {
 }
 
 /**
+ * Tags allowed when printing the language switcher.
+ *
+ * Needed because wp_kses_post() strips data-* attributes, which would remove
+ * the data-no-translation marker the switcher depends on - see
+ * fivedrs_language_switcher() for why that matters.
+ *
+ * @return array<string,array<string,bool>>
+ */
+function fivedrs_kses_switcher() {
+	return array(
+		'nav' => array(
+			'class'               => true,
+			'aria-label'          => true,
+			'data-no-translation' => true,
+		),
+		'a'   => array(
+			'class'        => true,
+			'href'         => true,
+			'lang'         => true,
+			'hreflang'     => true,
+			'aria-current' => true,
+		),
+	);
+}
+
+/**
  * Render the language switcher.
  *
  * Built from TranslatePress's data rather than its [language-switcher]
  * shortcode, so the markup is ours: a simple, styleable, keyboard-accessible
  * pair of links with aria-current on the active one. Returns an empty string
  * when TranslatePress is inactive, so templates stay safe.
+ *
+ * The wrapper carries data-no-translation, which is not optional: TranslatePress
+ * rewrites every href on the page to the current language, and without the
+ * marker it rewrites the switcher's own links too - so on an Arabic page the
+ * "English" link pointed back at the Arabic URL and switching back was
+ * impossible. The attribute is inherited by descendants, so it covers both
+ * links and keeps the language names from being translated as well.
  *
  * @param array $args Optional. 'wrapper_class' => string, 'label' => string.
  * @return string Switcher HTML.
@@ -148,7 +181,7 @@ function fivedrs_language_switcher( $args = array() ) {
 	}
 
 	return sprintf(
-		'<nav class="%1$s" aria-label="%2$s">%3$s</nav>',
+		'<nav class="%1$s" aria-label="%2$s" data-no-translation>%3$s</nav>',
 		esc_attr( $args['wrapper_class'] ),
 		esc_attr( $args['label'] ),
 		$items
