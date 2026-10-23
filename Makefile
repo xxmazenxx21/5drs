@@ -12,7 +12,7 @@ UID_GID    := $(shell id -u):$(shell id -g)
 
 .DEFAULT_GOAL := help
 .PHONY: help up down restart logs ps wp shell db-export db-import \
-        theme-install theme-dev theme-build pot lint lint-fix seed mail-test verify
+        theme-install theme-dev theme-build pot lint lint-fix seed trp-tables mail-test verify
 
 help: ## Show this help
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | sort | \
@@ -82,6 +82,9 @@ lint-fix: ## Auto-fix what PHPCS can fix
 
 seed: ## (Re)create the 3 test products
 	$(WPCLI) eval-file /scripts/seed/seed-products.php
+
+trp-tables: ## Create the TranslatePress tables for the configured languages
+	$(WPCLI) eval-file /scripts/seed/trp-tables.php
 
 mail-test: ## Create a test order and send its emails to Mailpit
 	$(WPCLI) eval-file /scripts/seed/test-order.php

@@ -60,6 +60,7 @@ make pot                # regenerate languages/5drs.pot
 make lint               # PHPCS (WordPress Coding Standards)
 make lint-fix           # phpcbf auto-fixes
 make seed               # recreate the 3 test products
+make trp-tables         # (re)create TranslatePress tables after a CLI language change
 make mail-test          # create a test order, check Mailpit
 make verify             # smoke-test the whole stack
 ```
@@ -75,7 +76,7 @@ Makefile uses.
 | Plugin | Why it is here |
 |---|---|
 | **WooCommerce** | The store. |
-| **TranslatePress (free)** | English/Arabic. English is the default at `/`; Arabic is served at `/ar/`. The free tier allows exactly one secondary language, which is all this site needs. |
+| **TranslatePress (free)** | English/Arabic. English is the default at `/`; Arabic is served at `/ar/`. The free tier allows exactly one secondary language, which is all this site needs. Its settings were written straight to the `trp_settings` option, which skips the routine that creates its database tables — `make trp-tables` does that. Re-run it if you ever add or rename a language from the CLI. |
 | **Rank Math SEO** | SEO. Deliberately trimmed to `sitemap`, `rich-snippet`, `woocommerce`, `link-counter`; the setup wizard and account connection are skipped. |
 | **Query Monitor** | **Development only.** See §7. |
 
@@ -166,6 +167,11 @@ file reads. Assets are versioned by file mtime.
 PHPCS with WordPress Coding Standards + PHPCompatibilityWP, targeting PHP 8.2
 and WordPress 6.5+. `make lint` must pass before committing. Suppressions need a
 comment saying why (see `inc/assets.php` for the pattern).
+
+`sidebar.php` exists even though the design has no sidebar yet: WordPress and
+WooCommerce both call `get_sidebar()`, and a theme without the file logs a
+deprecation notice on every request. It renders nothing unless the
+`fivedrs-shop-sidebar` widget area has widgets.
 
 ---
 
