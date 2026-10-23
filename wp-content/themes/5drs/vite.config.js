@@ -56,6 +56,19 @@ export default defineConfig( {
 			input: {
 				main: resolve( import.meta.dirname, 'src/js/main.js' ),
 				style: resolve( import.meta.dirname, 'src/css/main.css' ),
+				'fonts-en': resolve( import.meta.dirname, 'src/css/fonts-en.css' ),
+				'fonts-ar': resolve( import.meta.dirname, 'src/css/fonts-ar.css' ),
+			},
+			output: {
+				// Fonts keep their original, unhashed names so inc/i18n.php can
+				// emit a <link rel="preload"> for a path it knows ahead of time.
+				// Everything else stays content-hashed.
+				assetFileNames( info ) {
+					if ( /\.(woff2?|ttf|otf|eot)$/i.test( info.names?.[ 0 ] ?? info.name ?? '' ) ) {
+						return 'fonts/[name][extname]';
+					}
+					return 'assets/[name]-[hash][extname]';
+				},
 			},
 		},
 	},

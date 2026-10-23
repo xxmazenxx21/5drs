@@ -1,0 +1,14 @@
+/* ---------------------------------------------------------------------------
+ * Arabic webfont: Tajawal, self-hosted.
+ * ---------------------------------------------------------------------------
+ * The Latin subset is included as well because Arabic pages still render Latin
+ * glyphs - prices, SKUs, phone numbers - and they should not fall back to a
+ * system font mid-sentence.
+ * ------------------------------------------------------------------------ */
+
+@import "@fontsource/tajawal/arabic-400.css";
+@import "@fontsource/tajawal/arabic-500.css";
+@import "@fontsource/tajawal/arabic-700.css";
+@import "@fontsource/tajawal/latin-400.css";
+@import "@fontsource/tajawal/latin-500.css";
+@import "@fontsource/tajawal/latin-700.css";

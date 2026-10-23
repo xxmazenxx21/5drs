@@ -1,6 +1,6 @@
 <?php
 /**
- * Language, direction and TranslatePress helpers.
+ * Language, direction, font loading and TranslatePress helpers.
  *
  * The site is bilingual: English (default, served at /) and Arabic (served at
  * /ar/). TranslatePress swaps the locale at runtime, so always ask these
@@ -73,60 +73,157 @@ function fivedrs_body_classes( $classes ) {
 add_filter( 'body_class', 'fivedrs_body_classes' );
 
 /**
- * Render the TranslatePress language switcher.
+ * The languages available on the site, with their URL for the current page.
  *
- * Placement is deliberately left to the templates - call this from header.php
- * (or wherever the design puts it) once the header is designed. Returns an
- * empty string when TranslatePress is not active, so templates stay safe.
+ * Wraps TranslatePress's own helper so templates do not depend on the plugin
+ * directly and degrade to an empty list when it is not active.
  *
- * @param array $args Optional. 'wrapper_class' => string.
+ * @return array<int,array{code:string,name:string,slug:string,url:string,current:bool}>
+ */
+function fivedrs_languages() {
+	if ( ! function_exists( 'trp_custom_language_switcher' ) ) {
+		return array();
+	}
+
+	$current = fivedrs_current_locale();
+	$out     = array();
+
+	foreach ( (array) trp_custom_language_switcher() as $code => $language ) {
+		$out[] = array(
+			'code'    => (string) $code,
+			'name'    => isset( $language['language_name'] ) ? (string) $language['language_name'] : (string) $code,
+			'slug'    => isset( $language['short_language_name'] ) ? (string) $language['short_language_name'] : (string) $code,
+			'url'     => isset( $language['current_page_url'] ) ? (string) $language['current_page_url'] : '',
+			'current' => $code === $current,
+		);
+	}
+
+	return $out;
+}
+
+/**
+ * Render the language switcher.
+ *
+ * Built from TranslatePress's data rather than its [language-switcher]
+ * shortcode, so the markup is ours: a simple, styleable, keyboard-accessible
+ * pair of links with aria-current on the active one. Returns an empty string
+ * when TranslatePress is inactive, so templates stay safe.
+ *
+ * @param array $args Optional. 'wrapper_class' => string, 'label' => string.
  * @return string Switcher HTML.
  */
 function fivedrs_language_switcher( $args = array() ) {
-	if ( ! class_exists( 'TRP_Translate_Press' ) ) {
+	$languages = fivedrs_languages();
+
+	if ( count( $languages ) < 2 ) {
 		return '';
 	}
 
-	$args    = wp_parse_args( $args, array( 'wrapper_class' => 'fivedrs-language-switcher' ) );
-	$content = do_shortcode( '[language-switcher]' );
+	$args = wp_parse_args(
+		$args,
+		array(
+			'wrapper_class' => 'fivedrs-langs',
+			'label'         => __( 'Change language', '5drs' ),
+		)
+	);
 
-	if ( '' === trim( $content ) ) {
+	$items = '';
+	foreach ( $languages as $language ) {
+		if ( '' === $language['url'] ) {
+			continue;
+		}
+
+		$items .= sprintf(
+			'<a class="fivedrs-langs__item%1$s" href="%2$s" lang="%3$s" hreflang="%3$s"%4$s>%5$s</a>',
+			$language['current'] ? ' is-active' : '',
+			esc_url( $language['url'] ),
+			esc_attr( str_replace( '_', '-', $language['code'] ) ),
+			$language['current'] ? ' aria-current="true"' : '',
+			esc_html( $language['name'] )
+		);
+	}
+
+	if ( '' === $items ) {
 		return '';
 	}
 
 	return sprintf(
-		'<div class="%1$s">%2$s</div>',
+		'<nav class="%1$s" aria-label="%2$s">%3$s</nav>',
 		esc_attr( $args['wrapper_class'] ),
-		$content
+		esc_attr( $args['label'] ),
+		$items
 	);
 }
 
 /**
- * Enqueue the webfonts for the current language.
+ * Stylesheet handle and preload file for the current language's webfont.
  *
- * ---------------------------------------------------------------------------
- * FONT SLOT - fill this in once the Arabic and Latin fonts are chosen.
- * ---------------------------------------------------------------------------
- * Load only what the current language needs: an Arabic face is large and the
- * English pages should not pay for it (and vice versa). Self-host the files in
- * src/fonts/ and reference them from a @font-face block in src/css/, or
- * enqueue a remote stylesheet here.
+ * Both faces are self-hosted (no Google CDN) and built as separate Vite
+ * entries, so an English visitor never downloads Tajawal and an Arabic visitor
+ * never downloads Montserrat.
  *
- * Example shape:
+ * @return array{entry:string,handle:string,preload:string}
+ */
+function fivedrs_font_for_language() {
+	if ( fivedrs_is_arabic() ) {
+		return array(
+			'entry'   => 'src/css/fonts-ar.css',
+			'handle'  => 'fivedrs-font-ar',
+			// Unhashed by vite.config.js so this path is known ahead of the build.
+			'preload' => 'tajawal-arabic-400-normal.woff2',
+		);
+	}
+
+	return array(
+		'entry'   => 'src/css/fonts-en.css',
+		'handle'  => 'fivedrs-font-en',
+		'preload' => 'montserrat-latin-400-normal.woff2',
+	);
+}
+
+/**
+ * Enqueue the webfont for the current language.
  *
- *   if ( fivedrs_is_arabic() ) {
- *       wp_enqueue_style( 'fivedrs-font-ar', FIVEDRS_URI . '/dist/fonts-ar.css', array(), FIVEDRS_VERSION );
- *   } else {
- *       wp_enqueue_style( 'fivedrs-font-en', FIVEDRS_URI . '/dist/fonts-en.css', array(), FIVEDRS_VERSION );
- *   }
- *
- * Whatever is chosen, expose it to CSS through the --font-sans / --font-arabic
- * custom properties declared in src/css/main.css so components never name a
- * font family directly.
+ * Runs before fivedrs_enqueue_assets() so the font sheet is ahead of the main
+ * stylesheet in the document.
  *
  * @return void
  */
 function fivedrs_enqueue_fonts() {
-	// Intentionally empty - see the docblock above.
+	$font = fivedrs_font_for_language();
+	$url  = fivedrs_asset_url( $font['entry'] );
+
+	if ( '' === $url ) {
+		return;
+	}
+
+	wp_enqueue_style( $font['handle'], $url, array(), fivedrs_asset_version( $font['entry'] ) );
 }
 add_action( 'wp_enqueue_scripts', 'fivedrs_enqueue_fonts', 5 );
+
+/**
+ * Preload the body weight of the current language's font.
+ *
+ * Only the 400 weight is preloaded; the rest are fetched on demand. Skipped
+ * while the Vite dev server is serving assets, where the path does not exist.
+ *
+ * @return void
+ */
+function fivedrs_preload_font() {
+	if ( fivedrs_dev_server() ) {
+		return;
+	}
+
+	$font = fivedrs_font_for_language();
+	$path = FIVEDRS_DIR . '/dist/fonts/' . $font['preload'];
+
+	if ( ! file_exists( $path ) ) {
+		return;
+	}
+
+	printf(
+		'<link rel="preload" href="%s" as="font" type="font/woff2" crossorigin>' . "\n",
+		esc_url( FIVEDRS_URI . '/dist/fonts/' . $font['preload'] )
+	);
+}
+add_action( 'wp_head', 'fivedrs_preload_font', 1 );

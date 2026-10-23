@@ -1,0 +1,15 @@
+/* ---------------------------------------------------------------------------
+ * English (Latin) webfont: Montserrat, self-hosted.
+ * ---------------------------------------------------------------------------
+ * Built as its own entry so fivedrs_enqueue_fonts() can load it only on
+ * English pages - an Arabic visitor never downloads Montserrat and vice versa.
+ * @fontsource ships these with font-display: swap already set.
+ *
+ * Vite rewrites the url() references to dist/fonts/<name>.woff2 (unhashed, see
+ * vite.config.js) so inc/i18n.php can preload a known path.
+ * ------------------------------------------------------------------------ */
+
+@import "@fontsource/montserrat/latin-400.css";
+@import "@fontsource/montserrat/latin-500.css";
+@import "@fontsource/montserrat/latin-600.css";
+@import "@fontsource/montserrat/latin-700.css";
