@@ -89,6 +89,8 @@ services:
       - ./config/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:z
       - ./backups:/backups:z
       - ./scripts:/scripts:z
+      # Source art, read by the media seeder.
+      - ./assets:/assets:z
     working_dir: /var/www/html
     entrypoint: ["wp"]
     networks: [5drs]
