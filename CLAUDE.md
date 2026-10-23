@@ -60,6 +60,9 @@ make theme-build        # production build into the theme's dist/
 make pot                # regenerate languages/5drs.pot
 make mo                 # compile languages/ar.po -> ar.mo
 make pages              # rebuild the page tree, templates and menus
+make home-media         # convert assets/home to WebP and import to the Media Library
+make categories         # product categories + their card images
+make home-content       # Arabic Home copy + the Home SEO fields
 make translations       # seed the Arabic translations TranslatePress serves
 make crawl              # request every page in both languages
 
@@ -295,8 +298,9 @@ silently detach a template.
 
 ### 5.2 Page shells
 
-Every page is a **structural shell**: a hero plus empty, named section
-containers rendered by `template-parts/section-placeholder.php`. They emit an
+Every page *except the Home page* is a **structural shell**: a hero plus empty,
+named section containers rendered by `template-parts/section-placeholder.php`.
+The Home page has real content - see 5.5. They emit an
 `<!-- Section: ... -->` comment and a dashed box that is **visible to
 signed-in editors only** - anonymous visitors see nothing. Replace a
 `get_template_part( 'template-parts/section-placeholder', ... )` call with the
@@ -314,7 +318,45 @@ Facebook, Instagram, TikTok. One definition in `fivedrs_option_fields()` drives
 the controls, the sanitisers and the footer output. Every field is optional and
 anything empty is simply not rendered.
 
-### 5.5 Translations — two stores, and the traps in both
+### 5.5 The Home page
+
+The Home page is the one page with real content. Everything on it - copy,
+buttons, links and images - is editable in **Appearance → Customize → 5drs -
+Home Page**, one Customizer section per page section.
+
+A single array, `fivedrs_home_config()` in `inc/customizer-home.php`, defines
+the fields, their English defaults, their sanitisers and their controls. Add a
+field there and it appears in the Customizer automatically; nothing else needs
+touching. Read values with `fivedrs_home( 'section', 'field' )`, links with
+`fivedrs_home_page_url()` / `fivedrs_home_category_url()`, images with
+`fivedrs_home_image()`.
+
+**Clearing a section's text hides that section.** Each part in
+`template-parts/home/` returns early when it has nothing to show, so the page
+never renders an empty box. The FAQ's JSON-LD disappears with its section, so
+markup and schema cannot disagree.
+
+Images live in `assets/home/` as the supplied originals.
+`scripts/brand/prepare-home-images.py` converts them to WebP (8 MB → 207 KB)
+and `make home-media` imports them with stable slugs (`5drs-hero`, …), which is
+what the Customizer defaults resolve against - never a hardcoded attachment ID.
+The hero is the LCP element: `fetchpriority="high"`, no lazy-loading.
+Everything else lazy-loads. All of it goes through `wp_get_attachment_image()`,
+so srcset and sizes come from WordPress.
+
+#### TODO: Black Edition
+
+Two open items for the client:
+
+1. **The name and description are unconfirmed** - the product may end up being
+   a charcoal brush. The category exists at `black-edition`.
+2. **The supplied photo cannot be used.** `assets/home/cat-black.png` has
+   **"S55" moulded into the handle** and clearly legible at card size. The Home
+   page's third category card is therefore deliberately empty and **does not
+   render**. Set an image in *Home - Shop by need → Card 3 image* and the card
+   appears; nothing else needs changing.
+
+### 5.6 Translations — two stores, and the traps in both
 
 **Theme strings** (`5drs` text domain) live in `languages/ar.po`, compiled with
 `make mo`.
@@ -335,6 +377,30 @@ TranslatePress's own `TRP_Query` API.
 > rows from the `.po`, and it crawls the Arabic pages first because
 > TranslatePress only stores a string once it has rendered it - which is why it
 > runs two passes.
+
+> **Trap 3 - seed the string as it *renders*, not as you typed it.**
+> TranslatePress keys on the exact text in the HTML, and WordPress escapes the
+> same character differently depending on the path:
+> `esc_html()` turns `'` into `&#039;` and `&` into `&amp;`, while a post title
+> also passes through `convert_chars()`, which turns `&` into `&#038;`. Seeding
+> only the raw string leaves "Shop Kids' Brushes" and "Shipping & Delivery"
+> untranslated forever. `fivedrs_seed_dictionary()` in
+> `scripts/seed/lib-trp.php` writes every spelling, so pass it the plain text
+> and let it expand.
+
+> **Trap 4 - TranslatePress free does not translate SEO metadata.**
+> `<title>` and `<meta name="description">` are its premium SEO Pack. Its
+> "title" node accessor matches the HTML `title=""` attribute, not the document
+> title. The theme handles this instead: the Arabic pair is stored as
+> `fivedrs_seo_title_ar` / `fivedrs_seo_description_ar` post meta next to Rank
+> Math's own fields, and `inc/seo.php` swaps it in on Arabic requests. It works
+> for any post or page carrying that meta, not just the Home page.
+
+**Editing English breaks the Arabic.** The dictionary is keyed by the English
+string, so changing a word in the Customizer leaves that string untranslated on
+`/ar/` - it does not fall back to the old Arabic, it shows the new English.
+After editing English copy, re-translate it in **TranslatePress → Translate
+Site**, or update `scripts/seed/home-content.php` and re-run `make home-content`.
 
 Workflow after adding a translatable string:
 

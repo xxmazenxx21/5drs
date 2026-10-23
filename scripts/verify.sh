@@ -74,9 +74,8 @@ for page in products about contact policies policies/privacy-policy; do
 	check "$([ "$code" = "200" ] && echo yes || echo no)" "/$page/ returns 200 (got $code)"
 done
 
-front=$(curl -sL "$WP_URL/")
-check "$(grep -q '<!-- Section: ' <<<"$front" && echo yes || echo no)" "home page renders its section shells"
-
+# The home page carries real content now; its sections are checked below.
+# The remaining pages are still structural shells.
 about=$(curl -sL "$WP_URL/about/")
 check "$(grep -q 'Section: Our story' <<<"$about" && echo yes || echo no)" "about page uses page-about.php"
 
@@ -120,6 +119,51 @@ fi
 
 THEME_CSS=$(cat wp-content/themes/5drs/dist/assets/style-*.css)
 check "$(grep -q '\.woocommerce \.fivedrs-brand img' <<<"$THEME_CSS" && echo yes || echo no)" "store pages re-assert the header logo size"
+
+# --- home page ----------------------------------------------------------------
+HOME=$(curl -sL "$WP_URL/")
+AR_HOME=$(curl -sL "$WP_URL/ar/")
+
+check "$([ "$(grep -c '<h1' <<<"$HOME")" = "1" ] && echo yes || echo no)" "home page has exactly one h1"
+
+for sect in home-hero trust why cats featured kids tips faq cta; do
+	check "$(grep -q "fivedrs-$sect" <<<"$HOME" && echo yes || echo no)" "home section renders: $sect"
+done
+
+# The hero is the LCP element: eager, prioritised, and never lazy.
+HERO_IMG=$(grep -oE '<img[^>]*fivedrs-home-hero__image[^>]*>' <<<"$HOME" | head -1)
+check "$(grep -q 'fetchpriority="high"' <<<"$HERO_IMG" && echo yes || echo no)" "hero image has fetchpriority=high"
+check "$(grep -q 'loading="lazy"' <<<"$HERO_IMG" && echo no || echo yes)" "hero image is NOT lazy-loaded"
+check "$(grep -q 'srcset=' <<<"$HERO_IMG" && echo yes || echo no)" "hero image has srcset"
+
+# Every other content image below the fold must lazy-load.
+NONLAZY=$(grep -oE '<img[^>]*(cat-classic|cat-kids|kids-spotlight|test-product)[^>]*>' <<<"$HOME" | grep -cv 'loading="lazy"')
+check "$([ "$NONLAZY" = "0" ] && echo yes || echo no)" "all below-the-fold images lazy-load ($NONLAZY eager)"
+
+check "$([ "$(grep -c 'FAQPage' <<<"$HOME")" = "1" ] && echo yes || echo no)" "exactly one FAQPage schema (English)"
+check "$([ "$(grep -c 'FAQPage' <<<"$AR_HOME")" = "1" ] && echo yes || echo no)" "exactly one FAQPage schema (Arabic)"
+check "$(grep -q '"inLanguage":"ar"' <<<"$AR_HOME" && echo yes || echo no)" "Arabic FAQ schema is marked inLanguage=ar"
+
+check "$(grep -q 'product-category/classic' <<<"$HOME" && echo yes || echo no)" "category card links to the Classic archive"
+# Held out on purpose: the supplied Black Edition photo has "S55" on the handle.
+check "$(grep -q 'product-category/black-edition' <<<"$HOME" && echo no || echo yes)" "Black Edition card stays hidden until a clean image is set"
+
+# --- home page in Arabic --------------------------------------------------------
+check "$(grep -q 'ابتسامة أصح' <<<"$AR_HOME" && echo yes || echo no)" "Arabic hero heading renders"
+check "$(grep -q 'تسوّق حسب احتياجك' <<<"$AR_HOME" && echo yes || echo no)" "Arabic section headings render"
+check "$(grep -q 'تسوّق فرش الأطفال' <<<"$AR_HOME" && echo yes || echo no)" "Arabic strings containing apostrophes render"
+
+LEFTOVER=0
+for phrase in "Shop by Need" "Featured Products" "Gentle on Gums" "Shop Kids" "right for you"; do
+	grep -q "$phrase" <<<"$AR_HOME" && LEFTOVER=$((LEFTOVER+1))
+done
+check "$([ "$LEFTOVER" = "0" ] && echo yes || echo no)" "no English home copy left on /ar/ ($LEFTOVER found)"
+
+# TranslatePress free does not translate <title> or the meta description;
+# inc/seo.php swaps in the Arabic pair instead.
+check "$(grep -qE '<title>[^<]*فرش أسنان' <<<"$AR_HOME" && echo yes || echo no)" "Arabic page title"
+check "$(grep -q 'name="description" content="اكتشف' <<<"$AR_HOME" && echo yes || echo no)" "Arabic meta description"
+check "$(grep -q '<title>5Doctors | Toothbrushes' <<<"$HOME" && echo yes || echo no)" "English page title unchanged"
 
 # --- build ------------------------------------------------------------------
 check "$([ -f wp-content/themes/5drs/dist/.vite/manifest.json ] && echo yes || echo no)" "theme build output exists"
