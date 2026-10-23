@@ -12,7 +12,7 @@ UID_GID    := $(shell id -u):$(shell id -g)
 
 .DEFAULT_GOAL := help
 .PHONY: help up down restart logs ps wp shell db-export db-import \
-        theme-install theme-dev theme-build pot lint lint-fix seed trp-tables mail-test verify
+        theme-install theme-dev theme-build pot mo lint lint-fix seed pages translations crawl trp-tables mail-test verify
 
 help: ## Show this help
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | sort | \
@@ -74,6 +74,9 @@ theme-build: ## Production build into the theme's dist/
 pot: ## Regenerate languages/5drs.pot from the theme source
 	$(WPCLI) i18n make-pot $(THEME_DIR) $(THEME_DIR)/languages/5drs.pot --domain=5drs --exclude=node_modules,dist,vendor
 
+mo: ## Compile languages/*.po into the .mo files WordPress loads
+	$(WPCLI) i18n make-mo $(THEME_DIR)/languages $(THEME_DIR)/languages
+
 # --- quality ----------------------------------------------------------------
 
 lint: ## Run PHPCS (WordPress Coding Standards) over the theme
@@ -86,6 +89,23 @@ lint-fix: ## Auto-fix what PHPCS can fix
 
 seed: ## (Re)create the 3 test products
 	$(WPCLI) eval-file /scripts/seed/seed-products.php
+
+pages: ## Create the page tree, assign templates and build the menus
+	$(WPCLI) eval-file /scripts/seed/pages.php
+
+# TranslatePress only stores a gettext string once it has rendered it, and
+# rendering a translated page surfaces further strings, so this converges in
+# two crawl/seed passes rather than one.
+translations: ## Seed the Arabic translations TranslatePress serves
+	@echo "pass 1: crawling Arabic pages so TranslatePress captures every string"
+	@./scripts/crawl.sh ar >/dev/null || true
+	$(WPCLI) eval-file /scripts/seed/translations.php
+	@echo "pass 2"
+	@./scripts/crawl.sh ar >/dev/null || true
+	$(WPCLI) eval-file /scripts/seed/translations.php
+
+crawl: ## Request every page in both languages and report status codes
+	@./scripts/crawl.sh
 
 trp-tables: ## Create the TranslatePress tables for the configured languages
 	$(WPCLI) eval-file /scripts/seed/trp-tables.php

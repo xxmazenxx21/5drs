@@ -1,0 +1,361 @@
+# Arabic translation of the 5drs theme.
+# Maintained by hand: after `make pot` adds new strings, add the matching
+# msgstr here and run `make mo` to recompile ar.mo.
+msgid ""
+msgstr ""
+"Project-Id-Version: 5drs 0.1.0\n"
+"Report-Msgid-Bugs-To: https://5drs.local\n"
+"POT-Creation-Date: 2026-10-23 19:24+0000\n"
+"PO-Revision-Date: 2026-10-23 19:24+0000\n"
+"Last-Translator: 5drs\n"
+"Language-Team: Arabic\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
+"X-Domain: 5drs\n"
+
+
+#. Description of the theme
+#: style.css
+msgid "Custom bilingual (Arabic / English) WooCommerce theme for 5drs."
+msgstr "قالب ووكومرس مخصص ثنائي اللغة (عربي / إنجليزي) لـ 5drs."
+
+#: 404.php:16
+msgid "Page not found"
+msgstr "الصفحة غير موجودة"
+
+#: 404.php:17
+msgid "The page you are looking for does not exist or has moved."
+msgstr "الصفحة التي تبحث عنها غير موجودة أو تم نقلها."
+
+#: 404.php:28
+msgid "Back to home"
+msgstr "العودة إلى الرئيسية"
+
+#: footer.php:28
+msgid "Quick links"
+msgstr "روابط سريعة"
+
+#: footer.php:29
+msgid "Quick Links"
+msgstr "روابط سريعة"
+
+#: footer.php:45
+#: footer.php:46
+msgid "Policies"
+msgstr "السياسات"
+
+#. Template Name of the theme
+#: footer.php:62
+msgid "Contact Us"
+msgstr "تواصل معنا"
+
+#. translators: 1: current year, 2: site name.
+#: footer.php:73
+#, php-format
+msgid "&copy; %1$s %2$s. All rights reserved."
+msgstr "&copy; %1$s %2$s. جميع الحقوق محفوظة."
+
+#: front-page.php:26
+msgid "Hero - brand statement, product shot, primary call to action"
+msgstr "الواجهة الرئيسية - رسالة العلامة وصورة المنتج ودعوة لاتخاذ إجراء"
+
+#: front-page.php:37
+msgid "Featured products"
+msgstr "منتجات مميزة"
+
+#: front-page.php:47
+msgid "Why 5drs - benefits and trust signals"
+msgstr "لماذا 5drs - المزايا وعوامل الثقة"
+
+#: front-page.php:58
+msgid "Product range by category"
+msgstr "تشكيلة المنتجات حسب الفئة"
+
+#: front-page.php:68
+msgid "Customer reviews"
+msgstr "آراء العملاء"
+
+#: front-page.php:79
+#: page-about.php:65
+msgid "Closing call to action"
+msgstr "دعوة ختامية لاتخاذ إجراء"
+
+#: header.php:24
+msgid "Skip to content"
+msgstr "تخطَّ إلى المحتوى"
+
+#: header.php:34
+msgid "Primary"
+msgstr "التنقل الرئيسي"
+
+#: header.php:61
+msgid "Open menu"
+msgstr "فتح القائمة"
+
+#: inc/assets.php:168
+msgid "5drs theme assets are not built yet. Run \"make theme-build\" (or \"npm run build\" in the theme folder)."
+msgstr "لم يتم بناء ملفات قالب 5drs بعد. شغّل \"make theme-build\" (أو \"npm run build\" داخل مجلد القالب)."
+
+#: inc/customizer.php:25
+msgid "Phone number"
+msgstr "رقم الهاتف"
+
+#: inc/customizer.php:28
+msgid "Shown in the footer and used for the call link."
+msgstr "يظهر في تذييل الموقع ويُستخدم لرابط الاتصال."
+
+#: inc/customizer.php:31
+msgid "Email address"
+msgstr "البريد الإلكتروني"
+
+#: inc/customizer.php:36
+msgid "Address"
+msgstr "العنوان"
+
+#: inc/customizer.php:41
+msgid "WhatsApp number"
+msgstr "رقم واتساب"
+
+#: inc/customizer.php:44
+msgid "International format without spaces, e.g. 201234567890."
+msgstr "بالصيغة الدولية بدون مسافات، مثل 201234567890."
+
+#: inc/customizer.php:47
+msgid "Facebook URL"
+msgstr "رابط فيسبوك"
+
+#: inc/customizer.php:52
+msgid "Instagram URL"
+msgstr "رابط إنستجرام"
+
+#: inc/customizer.php:57
+msgid "TikTok URL"
+msgstr "رابط تيك توك"
+
+#: inc/customizer.php:85
+msgid "Contact & Social"
+msgstr "التواصل وشبكات التواصل"
+
+#: inc/customizer.php:86
+msgid "Used in the site footer. Leave a field empty to hide it."
+msgstr "تُستخدم في تذييل الموقع. اترك الحقل فارغًا لإخفائه."
+
+#: inc/i18n.php:126
+msgid "Change language"
+msgstr "تغيير اللغة"
+
+#: inc/setup.php:56
+msgid "Primary Menu"
+msgstr "القائمة الرئيسية"
+
+#: inc/setup.php:57
+msgid "Footer - Quick Links"
+msgstr "التذييل - روابط سريعة"
+
+#: inc/setup.php:58
+msgid "Footer - Policies"
+msgstr "التذييل - السياسات"
+
+#: inc/setup.php:75
+msgid "Shop Sidebar"
+msgstr "الشريط الجانبي للمتجر"
+
+#: inc/setup.php:77
+msgid "Sidebar shown on WooCommerce archive pages."
+msgstr "الشريط الجانبي الذي يظهر في صفحات أرشيف ووكومرس."
+
+#: inc/template-tags.php:182
+msgid "Our Goal Is Your Personal Comfort"
+msgstr "هدفنا راحتك الشخصية"
+
+#. translators: %s: number of items in the cart.
+#: inc/template-tags.php:236
+#: inc/woocommerce.php:131
+#, php-format
+msgid "%s item in cart"
+msgid_plural "%s items in cart"
+msgstr[0] "لا توجد منتجات في السلة"
+msgstr[1] "منتج واحد في السلة"
+msgstr[2] "منتجان في السلة"
+msgstr[3] "%s منتجات في السلة"
+msgstr[4] "%s منتجًا في السلة"
+msgstr[5] "%s منتج في السلة"
+
+#: inc/template-tags.php:305
+msgid "Facebook"
+msgstr "فيسبوك"
+
+#: inc/template-tags.php:309
+msgid "Instagram"
+msgstr "إنستجرام"
+
+#: inc/template-tags.php:313
+msgid "TikTok"
+msgstr "تيك توك"
+
+#: inc/template-tags.php:321
+msgid "WhatsApp"
+msgstr "واتساب"
+
+#. translators: %s: search query.
+#: index.php:20
+#, php-format
+msgid "Search results for: %s"
+msgstr "نتائج البحث عن: %s"
+
+#: index.php:47
+msgid "Previous"
+msgstr "السابق"
+
+#: index.php:48
+msgid "Next"
+msgstr "التالي"
+
+#. Template Name of the theme
+msgid "About Us"
+msgstr "من نحن"
+
+#: page-about.php:34
+msgid "Our story"
+msgstr "قصتنا"
+
+#: page-about.php:44
+msgid "Our mission and values"
+msgstr "رسالتنا وقيمنا"
+
+#: page-about.php:55
+msgid "What we make - product philosophy"
+msgstr "ما نصنعه - فلسفة المنتج"
+
+#: page-contact.php:39
+msgid "Contact form - no form plugin installed yet"
+msgstr "نموذج التواصل - لم يتم تثبيت إضافة نماذج بعد"
+
+#: page-contact.php:49
+msgid "Contact details and opening hours"
+msgstr "بيانات التواصل ومواعيد العمل"
+
+#: page-contact.php:60
+msgid "Map"
+msgstr "الخريطة"
+
+#. Template Name of the theme
+msgid "Policies hub"
+msgstr "صفحة السياسات"
+
+#: page-policies.php:49
+msgid "Read more"
+msgstr "اقرأ المزيد"
+
+#: page-policies.php:61
+msgid "Policy pages - add child pages under Policies"
+msgstr "صفحات السياسات - أضف صفحات فرعية تحت صفحة السياسات"
+
+#: sidebar.php:18
+msgid "Sidebar"
+msgstr "الشريط الجانبي"
+
+#: template-parts/content-none.php:11
+msgid "Nothing found"
+msgstr "لا توجد نتائج"
+
+#: template-parts/content-none.php:12
+msgid "No content matched your request."
+msgstr "لا يوجد محتوى مطابق لطلبك."
+
+#: template-parts/nav/offcanvas.php:22
+msgid "Site menu"
+msgstr "قائمة الموقع"
+
+#: template-parts/nav/offcanvas.php:30
+msgid "Close menu"
+msgstr "إغلاق القائمة"
+
+#. translators: %s: name of the page section.
+#: template-parts/section-placeholder.php:51
+#, php-format
+msgid "Section placeholder: %s"
+msgstr "قسم مؤقت: %s"
+
+#: theme.json
+msgid "Navy"
+msgstr "كحلي"
+
+#: theme.json
+msgid "Navy dark"
+msgstr "كحلي غامق"
+
+#: theme.json
+msgid "Navy tint"
+msgstr "كحلي فاتح"
+
+#: theme.json
+msgid "Green"
+msgstr "أخضر"
+
+#: theme.json
+msgid "Green dark"
+msgstr "أخضر غامق"
+
+#: theme.json
+msgid "Green tint"
+msgstr "أخضر فاتح"
+
+#: theme.json
+msgid "Gold"
+msgstr "ذهبي"
+
+#: theme.json
+msgid "Background"
+msgstr "الخلفية"
+
+#: theme.json
+msgid "Surface"
+msgstr "السطح"
+
+#: theme.json
+msgid "Surface alt"
+msgstr "سطح بديل"
+
+#: theme.json
+msgid "Text"
+msgstr "النص"
+
+#: theme.json
+msgid "Muted text"
+msgstr "نص ثانوي"
+
+#: theme.json
+msgid "Border"
+msgstr "الحدود"
+
+#: theme.json
+msgid "Montserrat (English)"
+msgstr "Montserrat (إنجليزي)"
+
+#: theme.json
+msgid "Tajawal (Arabic)"
+msgstr "Tajawal (عربي)"
+
+#: theme.json
+msgid "Small"
+msgstr "صغير"
+
+#: theme.json
+msgid "Medium"
+msgstr "متوسط"
+
+#: theme.json
+msgid "Large"
+msgstr "كبير"
+
+#: theme.json
+msgid "Extra large"
+msgstr "كبير جدًا"
+
+#: theme.json
+msgid "Display"
+msgstr "عرض"

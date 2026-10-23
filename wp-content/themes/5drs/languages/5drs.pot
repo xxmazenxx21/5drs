@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-23T18:49:58+00:00\n"
+"POT-Creation-Date: 2026-10-23T19:33:49+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: 5drs\n"
@@ -30,64 +30,232 @@ msgstr ""
 msgid "Custom bilingual (Arabic / English) WooCommerce theme for 5drs."
 msgstr ""
 
-#: 404.php:14
+#: 404.php:16
 msgid "Page not found"
 msgstr ""
 
-#: 404.php:16
+#: 404.php:17
 msgid "The page you are looking for does not exist or has moved."
 msgstr ""
 
-#: 404.php:22
+#: 404.php:28
 msgid "Back to home"
 msgstr ""
 
+#: footer.php:28
+msgid "Quick links"
+msgstr ""
+
+#: footer.php:29
+msgid "Quick Links"
+msgstr ""
+
+#: footer.php:45
+#: footer.php:46
+msgid "Policies"
+msgstr ""
+
+#. Template Name of the theme
+#: footer.php:62
+msgid "Contact Us"
+msgstr ""
+
 #. translators: 1: current year, 2: site name.
-#: footer.php:27
+#: footer.php:73
 #, php-format
 msgid "&copy; %1$s %2$s. All rights reserved."
 msgstr ""
 
-#: header.php:25
+#: front-page.php:26
+msgid "Hero - brand statement, product shot, primary call to action"
+msgstr ""
+
+#: front-page.php:37
+msgid "Featured products"
+msgstr ""
+
+#: front-page.php:47
+msgid "Why 5drs - benefits and trust signals"
+msgstr ""
+
+#: front-page.php:58
+msgid "Product range by category"
+msgstr ""
+
+#: front-page.php:68
+msgid "Customer reviews"
+msgstr ""
+
+#: front-page.php:79
+#: page-about.php:65
+msgid "Closing call to action"
+msgstr ""
+
+#: header.php:24
 msgid "Skip to content"
 msgstr ""
 
-#: header.php:32
+#: header.php:34
 msgid "Primary"
+msgstr ""
+
+#: header.php:61
+msgid "Open menu"
 msgstr ""
 
 #: inc/assets.php:168
 msgid "5drs theme assets are not built yet. Run \"make theme-build\" (or \"npm run build\" in the theme folder)."
 msgstr ""
 
-#: inc/setup.php:49
+#: inc/customizer.php:25
+msgid "Phone number"
+msgstr ""
+
+#: inc/customizer.php:28
+msgid "Shown in the footer and used for the call link."
+msgstr ""
+
+#: inc/customizer.php:31
+msgid "Email address"
+msgstr ""
+
+#: inc/customizer.php:36
+msgid "Address"
+msgstr ""
+
+#: inc/customizer.php:41
+msgid "WhatsApp number"
+msgstr ""
+
+#: inc/customizer.php:44
+msgid "International format without spaces, e.g. 201234567890."
+msgstr ""
+
+#: inc/customizer.php:47
+msgid "Facebook URL"
+msgstr ""
+
+#: inc/customizer.php:52
+msgid "Instagram URL"
+msgstr ""
+
+#: inc/customizer.php:57
+msgid "TikTok URL"
+msgstr ""
+
+#: inc/customizer.php:85
+msgid "Contact & Social"
+msgstr ""
+
+#: inc/customizer.php:86
+msgid "Used in the site footer. Leave a field empty to hide it."
+msgstr ""
+
+#: inc/i18n.php:126
+msgid "Change language"
+msgstr ""
+
+#: inc/setup.php:56
 msgid "Primary Menu"
 msgstr ""
 
-#: inc/setup.php:50
-msgid "Footer Menu"
+#: inc/setup.php:57
+msgid "Footer - Quick Links"
 msgstr ""
 
-#: inc/setup.php:68
+#: inc/setup.php:58
+msgid "Footer - Policies"
+msgstr ""
+
+#: inc/setup.php:75
 msgid "Shop Sidebar"
 msgstr ""
 
-#: inc/setup.php:70
+#: inc/setup.php:77
 msgid "Sidebar shown on WooCommerce archive pages."
 msgstr ""
 
+#: inc/template-tags.php:182
+msgid "Our Goal Is Your Personal Comfort"
+msgstr ""
+
+#. translators: %s: number of items in the cart.
+#: inc/template-tags.php:236
+#: inc/woocommerce.php:131
+#, php-format
+msgid "%s item in cart"
+msgid_plural "%s items in cart"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/template-tags.php:305
+msgid "Facebook"
+msgstr ""
+
+#: inc/template-tags.php:309
+msgid "Instagram"
+msgstr ""
+
+#: inc/template-tags.php:313
+msgid "TikTok"
+msgstr ""
+
+#: inc/template-tags.php:321
+msgid "WhatsApp"
+msgstr ""
+
 #. translators: %s: search query.
-#: index.php:26
+#: index.php:20
 #, php-format
 msgid "Search results for: %s"
 msgstr ""
 
-#: index.php:41
+#: index.php:47
 msgid "Previous"
 msgstr ""
 
-#: index.php:42
+#: index.php:48
 msgid "Next"
+msgstr ""
+
+#. Template Name of the theme
+msgid "About Us"
+msgstr ""
+
+#: page-about.php:34
+msgid "Our story"
+msgstr ""
+
+#: page-about.php:44
+msgid "Our mission and values"
+msgstr ""
+
+#: page-about.php:55
+msgid "What we make - product philosophy"
+msgstr ""
+
+#: page-contact.php:39
+msgid "Contact form - no form plugin installed yet"
+msgstr ""
+
+#: page-contact.php:49
+msgid "Contact details and opening hours"
+msgstr ""
+
+#: page-contact.php:60
+msgid "Map"
+msgstr ""
+
+#. Template Name of the theme
+msgid "Policies hub"
+msgstr ""
+
+#: page-policies.php:49
+msgid "Read more"
+msgstr ""
+
+#: page-policies.php:61
+msgid "Policy pages - add child pages under Policies"
 msgstr ""
 
 #: sidebar.php:18
@@ -102,44 +270,93 @@ msgstr ""
 msgid "No content matched your request."
 msgstr ""
 
-#: theme.json
-msgctxt "Color name"
-msgid "Base"
+#: template-parts/nav/offcanvas.php:22
+msgid "Site menu"
+msgstr ""
+
+#: template-parts/nav/offcanvas.php:30
+msgid "Close menu"
+msgstr ""
+
+#. translators: %s: name of the page section.
+#: template-parts/section-placeholder.php:51
+#, php-format
+msgid "Section placeholder: %s"
 msgstr ""
 
 #: theme.json
 msgctxt "Color name"
-msgid "Contrast"
+msgid "Navy"
 msgstr ""
 
 #: theme.json
 msgctxt "Color name"
-msgid "Primary"
+msgid "Navy dark"
 msgstr ""
 
 #: theme.json
 msgctxt "Color name"
-msgid "Secondary"
+msgid "Navy tint"
 msgstr ""
 
 #: theme.json
 msgctxt "Color name"
-msgid "Accent"
+msgid "Green"
 msgstr ""
 
 #: theme.json
 msgctxt "Color name"
-msgid "Muted"
+msgid "Green dark"
+msgstr ""
+
+#: theme.json
+msgctxt "Color name"
+msgid "Green tint"
+msgstr ""
+
+#: theme.json
+msgctxt "Color name"
+msgid "Gold"
+msgstr ""
+
+#: theme.json
+msgctxt "Color name"
+msgid "Background"
+msgstr ""
+
+#: theme.json
+msgctxt "Color name"
+msgid "Surface"
+msgstr ""
+
+#: theme.json
+msgctxt "Color name"
+msgid "Surface alt"
+msgstr ""
+
+#: theme.json
+msgctxt "Color name"
+msgid "Text"
+msgstr ""
+
+#: theme.json
+msgctxt "Color name"
+msgid "Muted text"
+msgstr ""
+
+#: theme.json
+msgctxt "Color name"
+msgid "Border"
 msgstr ""
 
 #: theme.json
 msgctxt "Font family name"
-msgid "Latin Sans (placeholder)"
+msgid "Montserrat (English)"
 msgstr ""
 
 #: theme.json
 msgctxt "Font family name"
-msgid "Arabic Sans (placeholder)"
+msgid "Tajawal (Arabic)"
 msgstr ""
 
 #: theme.json
@@ -160,6 +377,11 @@ msgstr ""
 #: theme.json
 msgctxt "Font size name"
 msgid "Extra large"
+msgstr ""
+
+#: theme.json
+msgctxt "Font size name"
+msgid "Display"
 msgstr ""
 
 #: theme.json
@@ -185,4 +407,9 @@ msgstr ""
 #: theme.json
 msgctxt "Space size name"
 msgid "5"
+msgstr ""
+
+#: theme.json
+msgctxt "Space size name"
+msgid "6"
 msgstr ""
