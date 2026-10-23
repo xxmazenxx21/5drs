@@ -40,8 +40,12 @@ shell: ## Open a bash shell in the WordPress container
 
 # --- wp-cli -----------------------------------------------------------------
 
-wp: ## Run WP-CLI, e.g. `make wp plugin list`
-	@$(WPCLI) $(filter-out $@,$(MAKECMDGOALS))
+# Bare words work for simple commands; anything containing a flag must go
+# through ARGS, because make would otherwise parse the flag as its own option.
+#   make wp plugin list
+#   make wp ARGS="plugin list --fields=name,status"
+wp: ## Run WP-CLI: `make wp plugin list` or `make wp ARGS="... --flag"`
+	@$(WPCLI) $(if $(ARGS),$(ARGS),$(filter-out $@,$(MAKECMDGOALS)))
 
 # --- database ---------------------------------------------------------------
 

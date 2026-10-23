@@ -49,6 +49,8 @@ make shell              # bash inside the WordPress container
 
 make wp plugin list     # any WP-CLI command
 make wp option get home
+# Flags must go through ARGS - make would read them as its own options:
+make wp ARGS="plugin list --fields=name,status"
 
 make db-export                                  # ./backups/5drs-<timestamp>.sql.gz
 make db-import FILE=backups/5drs-....sql.gz

@@ -78,4 +78,7 @@ make theme-dev     # Vite with hot reload while building pages
 make lint          # PHPCS - must pass before committing
 make pot           # after adding or changing translatable strings
 make help          # everything else
+
+# WP-CLI with flags goes through ARGS:
+make wp ARGS="user list --field=user_login"
 ```
