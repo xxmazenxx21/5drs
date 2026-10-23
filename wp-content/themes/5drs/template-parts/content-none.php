@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 ?>
-<section class="no-results">
+<section class="no-results fivedrs-container--prose">
 	<h2><?php esc_html_e( 'Nothing found', '5drs' ); ?></h2>
 	<p><?php esc_html_e( 'No content matched your request.', '5drs' ); ?></p>
 	<?php get_search_form(); ?>

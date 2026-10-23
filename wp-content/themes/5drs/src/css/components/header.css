@@ -1,0 +1,380 @@
+/* ---------------------------------------------------------------------------
+ * Site header: sticky bar, primary navigation, cart, language switcher and the
+ * mobile off-canvas panel.
+ * ---------------------------------------------------------------------------
+ * Everything is laid out with logical properties, so the whole header mirrors
+ * in Arabic without a single direction-specific rule - except the off-canvas
+ * slide transform and arrow glyphs, which physically cannot mirror themselves.
+ * Those two exceptions are marked below.
+ * ------------------------------------------------------------------------ */
+
+@layer components {
+	.fivedrs-header {
+		position: sticky;
+		inset-block-start: 0;
+		z-index: 50;
+		background-color: var(--color-surface);
+		border-block-end: 1px solid var(--color-line);
+		transition: box-shadow 200ms ease;
+	}
+
+	.fivedrs-header.is-stuck {
+		box-shadow: var(--shadow-header);
+	}
+
+	.fivedrs-header__inner {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		min-height: var(--fivedrs-header-height);
+	}
+
+	/* --- brand ------------------------------------------------------------ */
+
+	.fivedrs-brand {
+		flex: none;
+		display: inline-flex;
+		align-items: center;
+		margin-inline-end: auto;
+		text-decoration: none;
+	}
+
+	.fivedrs-brand img,
+	.fivedrs-brand .custom-logo {
+		display: block;
+		width: auto;
+		height: 2.5rem;
+	}
+
+	@media (width >= 48rem) {
+		.fivedrs-brand img,
+		.fivedrs-brand .custom-logo {
+			height: 3rem;
+		}
+	}
+
+	/* --- primary navigation ----------------------------------------------- */
+
+	.fivedrs-nav {
+		display: none;
+	}
+
+	@media (width >= 64rem) {
+		.fivedrs-nav {
+			display: block;
+		}
+	}
+
+	.fivedrs-nav ul {
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.fivedrs-nav a {
+		display: block;
+		padding: 0.5rem 0.875rem;
+		border-radius: var(--radius-full);
+		color: var(--color-ink);
+		font-size: 0.9375rem;
+		font-weight: 500;
+		text-decoration: none;
+		white-space: nowrap;
+		transition: background-color 150ms ease, color 150ms ease;
+	}
+
+	.fivedrs-nav a:hover {
+		background-color: var(--color-primary-soft);
+		color: var(--color-primary);
+	}
+
+	.fivedrs-nav .current-menu-item > a,
+	.fivedrs-nav .current_page_item > a,
+	.fivedrs-nav .current-menu-ancestor > a,
+	.fivedrs-nav [aria-current="page"] {
+		background-color: var(--color-accent-soft);
+		color: var(--color-green-800);
+		font-weight: 600;
+	}
+
+	/* --- header actions ---------------------------------------------------- */
+
+	.fivedrs-header__actions {
+		flex: none;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	/* --- language switcher -------------------------------------------------- */
+
+	.fivedrs-langs {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.125rem;
+		padding: 0.1875rem;
+		border: 1px solid var(--color-line);
+		border-radius: var(--radius-full);
+		background-color: var(--color-canvas);
+	}
+
+	.fivedrs-langs__item {
+		display: inline-block;
+		padding: 0.3125rem 0.6875rem;
+		border-radius: var(--radius-full);
+		color: var(--color-ink-muted);
+		font-size: 0.8125rem;
+		font-weight: 600;
+		line-height: 1;
+		text-decoration: none;
+		transition: background-color 150ms ease, color 150ms ease;
+	}
+
+	.fivedrs-langs__item:hover {
+		color: var(--color-primary);
+	}
+
+	.fivedrs-langs__item.is-active {
+		background-color: var(--color-primary);
+		color: var(--color-ink-invert);
+	}
+
+	/* --- cart button --------------------------------------------------------- */
+
+	.fivedrs-cart {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.75rem;
+		height: 2.75rem;
+		border-radius: var(--radius-full);
+		color: var(--color-ink);
+		text-decoration: none;
+		transition: background-color 150ms ease, color 150ms ease;
+	}
+
+	.fivedrs-cart:hover {
+		background-color: var(--color-primary-soft);
+		color: var(--color-primary);
+	}
+
+	.fivedrs-cart svg {
+		width: 1.375rem;
+		height: 1.375rem;
+	}
+
+	.fivedrs-cart__count {
+		position: absolute;
+		inset-block-start: 0.25rem;
+		inset-inline-end: 0.25rem;
+		display: grid;
+		place-items: center;
+		min-width: 1.125rem;
+		height: 1.125rem;
+		padding-inline: 0.25rem;
+		border-radius: var(--radius-full);
+		background-color: var(--color-accent-strong);
+		color: var(--color-ink-invert);
+		font-size: 0.6875rem;
+		font-weight: 700;
+		line-height: 1;
+		font-variant-numeric: tabular-nums;
+	}
+
+	/* Hidden rather than removed, so the fragment swap has a node to replace. */
+	.fivedrs-cart__count.is-empty {
+		display: none;
+	}
+
+	/* --- hamburger ----------------------------------------------------------- */
+
+	.fivedrs-burger {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.75rem;
+		height: 2.75rem;
+		padding: 0;
+		border: 0;
+		border-radius: var(--radius-full);
+		background-color: transparent;
+		color: var(--color-ink);
+		cursor: pointer;
+		transition: background-color 150ms ease;
+	}
+
+	.fivedrs-burger:hover {
+		background-color: var(--color-primary-soft);
+	}
+
+	.fivedrs-burger svg {
+		width: 1.5rem;
+		height: 1.5rem;
+	}
+
+	@media (width >= 64rem) {
+		.fivedrs-burger {
+			display: none;
+		}
+	}
+
+	/* --- off-canvas ----------------------------------------------------------- */
+
+	.fivedrs-offcanvas__backdrop {
+		position: fixed;
+		inset: 0;
+		z-index: 60;
+		background-color: rgb(10 49 62 / 0.45);
+		opacity: 0;
+		visibility: hidden;
+		transition: opacity 200ms ease, visibility 200ms ease;
+	}
+
+	.fivedrs-offcanvas__backdrop.is-open {
+		opacity: 1;
+		visibility: visible;
+	}
+
+	.fivedrs-offcanvas {
+		position: fixed;
+		inset-block: 0;
+		inset-inline-start: 0;
+		z-index: 61;
+		display: flex;
+		flex-direction: column;
+		width: min(20rem, 85vw);
+		background-color: var(--color-surface);
+		box-shadow: var(--shadow-card);
+		visibility: hidden;
+		/* DIRECTION EXCEPTION: a transform cannot be expressed logically, so the
+		   panel is pushed off the start edge explicitly per direction. */
+		transform: translateX(-100%);
+		transition: transform 250ms ease, visibility 250ms ease;
+	}
+
+	[dir="rtl"] .fivedrs-offcanvas {
+		transform: translateX(100%);
+	}
+
+	.fivedrs-offcanvas.is-open,
+	[dir="rtl"] .fivedrs-offcanvas.is-open {
+		visibility: visible;
+		transform: translateX(0);
+	}
+
+	.fivedrs-offcanvas__head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		padding: 1rem;
+		border-block-end: 1px solid var(--color-line);
+	}
+
+	.fivedrs-offcanvas__head img {
+		height: 2.25rem;
+		width: auto;
+	}
+
+	.fivedrs-offcanvas__close {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.5rem;
+		height: 2.5rem;
+		padding: 0;
+		border: 0;
+		border-radius: var(--radius-full);
+		background-color: transparent;
+		color: var(--color-ink);
+		cursor: pointer;
+	}
+
+	.fivedrs-offcanvas__close:hover {
+		background-color: var(--color-primary-soft);
+	}
+
+	.fivedrs-offcanvas__close svg {
+		width: 1.25rem;
+		height: 1.25rem;
+	}
+
+	.fivedrs-offcanvas__body {
+		flex: 1;
+		overflow-y: auto;
+		padding: 1rem;
+	}
+
+	.fivedrs-offcanvas ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.fivedrs-offcanvas .menu > li > a {
+		display: block;
+		padding: 0.75rem 0.875rem;
+		border-radius: var(--radius-sm);
+		color: var(--color-ink);
+		font-size: 1rem;
+		font-weight: 500;
+		text-decoration: none;
+	}
+
+	.fivedrs-offcanvas .menu > li > a:hover {
+		background-color: var(--color-primary-soft);
+	}
+
+	.fivedrs-offcanvas .current-menu-item > a,
+	.fivedrs-offcanvas .current_page_item > a {
+		background-color: var(--color-accent-soft);
+		color: var(--color-green-800);
+		font-weight: 600;
+	}
+
+	/* Child pages indent from the start edge, so it mirrors in Arabic. */
+	.fivedrs-offcanvas .sub-menu {
+		padding-inline-start: 0.875rem;
+	}
+
+	.fivedrs-offcanvas .sub-menu a {
+		display: block;
+		padding: 0.5rem 0.875rem;
+		color: var(--color-ink-muted);
+		font-size: 0.9375rem;
+		text-decoration: none;
+	}
+
+	.fivedrs-offcanvas__foot {
+		padding: 1rem;
+		border-block-start: 1px solid var(--color-line);
+	}
+}
+
+@layer components {
+	/* Feedback for an AJAX add-to-cart; the class is toggled in js/modules/cart.js. */
+	@keyframes fivedrs-bump {
+		0% { transform: scale(1); }
+		35% { transform: scale(1.35); }
+		100% { transform: scale(1); }
+	}
+
+	.fivedrs-cart__count.is-bumped {
+		animation: fivedrs-bump 320ms ease;
+	}
+}
+
+@layer components {
+	/* Watched by js/modules/header.js to toggle the sticky shadow. */
+	.fivedrs-header-sentinel {
+		position: absolute;
+		inset-block-start: 0;
+		width: 100%;
+		height: 1px;
+		pointer-events: none;
+	}
+}

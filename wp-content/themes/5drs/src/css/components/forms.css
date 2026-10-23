@@ -1,0 +1,88 @@
+/* ---------------------------------------------------------------------------
+ * Form controls, shared by the theme and WooCommerce.
+ * ------------------------------------------------------------------------ */
+
+@layer components {
+	.fivedrs-field {
+		display: block;
+		margin-block-end: 1rem;
+	}
+
+	.fivedrs-label,
+	.fivedrs-field > label {
+		display: block;
+		margin-block-end: 0.375rem;
+		color: var(--color-ink);
+		font-size: 0.875rem;
+		font-weight: 600;
+	}
+
+	.fivedrs-input,
+	input[type="text"],
+	input[type="email"],
+	input[type="url"],
+	input[type="password"],
+	input[type="search"],
+	input[type="number"],
+	input[type="tel"],
+	input[type="date"],
+	select,
+	textarea {
+		display: block;
+		width: 100%;
+		padding: 0.6875rem 0.875rem;
+		border: 1px solid var(--color-line-strong);
+		border-radius: var(--radius-sm);
+		background-color: var(--color-surface);
+		color: var(--color-ink);
+		font-family: inherit;
+		font-size: 0.9375rem;
+		line-height: 1.4;
+		text-align: start;
+		transition: border-color 150ms ease, box-shadow 150ms ease;
+	}
+
+	textarea {
+		min-height: 8rem;
+		resize: vertical;
+	}
+
+	.fivedrs-input:focus,
+	input[type="text"]:focus,
+	input[type="email"]:focus,
+	input[type="url"]:focus,
+	input[type="password"]:focus,
+	input[type="search"]:focus,
+	input[type="number"]:focus,
+	input[type="tel"]:focus,
+	input[type="date"]:focus,
+	select:focus,
+	textarea:focus {
+		outline: none;
+		border-color: var(--color-focus);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-focus) 22%, transparent);
+	}
+
+	::placeholder {
+		color: var(--color-ink-muted);
+		opacity: 0.75;
+	}
+
+	.fivedrs-help {
+		margin-block-start: 0.25rem;
+		color: var(--color-ink-muted);
+		font-size: 0.8125rem;
+	}
+
+	/* Checkbox and radio rows mirror cleanly because the gap is logical. */
+	.fivedrs-check {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.5rem;
+	}
+
+	.fivedrs-check input {
+		margin-block-start: 0.25rem;
+		accent-color: var(--color-accent-strong);
+	}
+}

@@ -7,6 +7,10 @@
 
 import '../css/main.css';
 
+import initOffcanvas from './modules/offcanvas.js';
+import initHeader from './modules/header.js';
+import initCart from './modules/cart.js';
+
 /**
  * Current document direction. Prefer CSS logical properties over branching on
  * this - it exists for the rare case where JS genuinely needs to know.
@@ -17,6 +21,15 @@ export function direction() {
 	return document.documentElement.getAttribute( 'dir' ) === 'rtl' ? 'rtl' : 'ltr';
 }
 
-document.addEventListener( 'DOMContentLoaded', () => {
+function boot() {
 	document.documentElement.classList.add( 'js' );
-} );
+	initHeader();
+	initOffcanvas();
+	initCart();
+}
+
+if ( document.readyState === 'loading' ) {
+	document.addEventListener( 'DOMContentLoaded', boot );
+} else {
+	boot();
+}

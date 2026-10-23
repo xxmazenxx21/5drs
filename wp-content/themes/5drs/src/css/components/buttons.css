@@ -1,0 +1,98 @@
+/* ---------------------------------------------------------------------------
+ * Buttons.
+ * ---------------------------------------------------------------------------
+ * .fivedrs-btn is also applied to WooCommerce's .button in woocommerce.css, so
+ * store and theme buttons stay identical without template overrides.
+ * ------------------------------------------------------------------------ */
+
+@layer components {
+	.fivedrs-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		padding: 0.75rem 1.5rem;
+		border: 1px solid transparent;
+		border-radius: var(--radius-full, 9999px);
+		background-color: var(--color-primary);
+		color: var(--color-ink-invert);
+		font-family: inherit;
+		font-size: 0.9375rem;
+		font-weight: 600;
+		line-height: 1.2;
+		text-align: center;
+		text-decoration: none;
+		cursor: pointer;
+		transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, transform 150ms ease;
+	}
+
+	.fivedrs-btn:hover {
+		background-color: var(--color-primary-hover);
+		color: var(--color-ink-invert);
+	}
+
+	.fivedrs-btn:active {
+		transform: translateY(1px);
+	}
+
+	.fivedrs-btn[disabled],
+	.fivedrs-btn.disabled {
+		opacity: 0.55;
+		cursor: not-allowed;
+	}
+
+	.fivedrs-btn--accent {
+		background-color: var(--color-accent-strong);
+	}
+
+	.fivedrs-btn--accent:hover {
+		background-color: var(--color-green-800);
+	}
+
+	.fivedrs-btn--outline {
+		background-color: transparent;
+		border-color: var(--color-primary);
+		color: var(--color-primary);
+	}
+
+	.fivedrs-btn--outline:hover {
+		background-color: var(--color-primary);
+		color: var(--color-ink-invert);
+	}
+
+	.fivedrs-btn--ghost {
+		background-color: transparent;
+		color: var(--color-primary);
+	}
+
+	.fivedrs-btn--ghost:hover {
+		background-color: var(--color-primary-soft);
+		color: var(--color-primary);
+	}
+
+	.fivedrs-btn--sm {
+		padding: 0.5rem 1rem;
+		font-size: 0.875rem;
+	}
+
+	.fivedrs-btn--lg {
+		padding: 0.9375rem 2rem;
+		font-size: 1rem;
+	}
+
+	.fivedrs-btn--block {
+		display: flex;
+		width: 100%;
+	}
+
+	/* Arrow glyphs are one of the few things that cannot mirror on their own. */
+	.fivedrs-btn__arrow {
+		flex: none;
+		width: 1em;
+		height: 1em;
+	}
+
+	[dir="rtl"] .fivedrs-btn__arrow {
+		transform: scaleX(-1);
+	}
+}

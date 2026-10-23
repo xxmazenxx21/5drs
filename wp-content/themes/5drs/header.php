@@ -2,9 +2,8 @@
 /**
  * Site header.
  *
- * Bare markup only - the header is designed in a later task.
- * language_attributes() emits both lang and dir, so Arabic pages get
- * dir="rtl" automatically.
+ * Both lang and dir come from language_attributes(), so Arabic pages get
+ * dir="rtl" automatically and the whole header mirrors through logical CSS.
  *
  * @package 5drs
  */
@@ -22,34 +21,50 @@ defined( 'ABSPATH' ) || exit;
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 
-<a class="skip-link screen-reader-text" href="#content"><?php esc_html_e( 'Skip to content', '5drs' ); ?></a>
+<a class="skip-link screen-reader-text" href="#main"><?php esc_html_e( 'Skip to content', '5drs' ); ?></a>
 
-<header id="masthead" class="site-header">
-	<p class="site-branding">
-		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a>
-	</p>
+<?php // Scrolls out of view, which is how the header knows to raise its shadow. ?>
+<div class="fivedrs-header-sentinel" data-header-sentinel aria-hidden="true"></div>
 
-	<nav id="site-navigation" class="site-navigation" aria-label="<?php esc_attr_e( 'Primary', '5drs' ); ?>">
-		<?php
-		wp_nav_menu(
-			array(
-				'theme_location' => 'primary',
-				'container'      => false,
-				'fallback_cb'    => false,
-			)
-		);
-		?>
-	</nav>
+<header id="masthead" class="fivedrs-header" data-header>
+	<div class="fivedrs-container fivedrs-header__inner">
 
-	<?php
-	/**
-	 * Language switcher slot.
-	 *
-	 * Returns the TranslatePress switcher via fivedrs_language_switcher();
-	 * printed unstyled for now and designed together with the header.
-	 */
-	echo wp_kses_post( fivedrs_language_switcher() );
-	?>
+		<?php fivedrs_logo(); ?>
+
+		<nav class="fivedrs-nav" aria-label="<?php esc_attr_e( 'Primary', '5drs' ); ?>">
+			<?php
+			wp_nav_menu(
+				array(
+					'theme_location' => 'primary',
+					'container'      => false,
+					'depth'          => 2,
+					'fallback_cb'    => false,
+				)
+			);
+			?>
+		</nav>
+
+		<div class="fivedrs-header__actions">
+			<?php
+			echo wp_kses_post( fivedrs_language_switcher() );
+			fivedrs_cart_button();
+			?>
+
+			<button
+				type="button"
+				class="fivedrs-burger"
+				data-offcanvas-open
+				aria-controls="fivedrs-offcanvas"
+				aria-expanded="false"
+			>
+				<?php echo wp_kses( fivedrs_icon( 'menu' ), fivedrs_kses_svg() ); ?>
+				<span class="screen-reader-text"><?php esc_html_e( 'Open menu', '5drs' ); ?></span>
+			</button>
+		</div>
+
+	</div>
 </header>
+
+<?php get_template_part( 'template-parts/nav/offcanvas' ); ?>
 
 <div id="content" class="site-content">
