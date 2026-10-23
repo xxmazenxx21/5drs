@@ -22,7 +22,9 @@ require_once FIVEDRS_DIR . '/inc/setup.php';
 require_once FIVEDRS_DIR . '/inc/i18n.php';
 require_once FIVEDRS_DIR . '/inc/assets.php';
 require_once FIVEDRS_DIR . '/inc/customizer.php';
+require_once FIVEDRS_DIR . '/inc/customizer-home.php';
 require_once FIVEDRS_DIR . '/inc/template-tags.php';
+require_once FIVEDRS_DIR . '/inc/seo.php';
 
 if ( class_exists( 'WooCommerce' ) ) {
 	require_once FIVEDRS_DIR . '/inc/woocommerce.php';
