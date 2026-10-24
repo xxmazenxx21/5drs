@@ -2,7 +2,10 @@
 /**
  * Template Name: Contact Us
  *
- * Structural shell for the Contact page.
+ * The Contact page: a compact hero, then the form beside the contact details.
+ * Both columns read their wording from the Customizer (5drs - Contact Page);
+ * the address, email and phone come from the shared Contact & Social settings
+ * the footer uses, so there is one source for them.
  *
  * @package 5drs
  */
@@ -11,59 +14,26 @@ defined( 'ABSPATH' ) || exit;
 
 get_header();
 
-while ( have_posts() ) :
-	the_post();
-
-	get_template_part(
-		'template-parts/page-hero',
-		null,
-		array( 'title' => get_the_title() )
-	);
-endwhile;
+get_template_part(
+	'template-parts/page-hero',
+	null,
+	array(
+		'title'   => fivedrs_content( 'contact', 'heading' ),
+		'lead'    => fivedrs_content( 'contact', 'text' ),
+		'variant' => 'gradient',
+	)
+);
 ?>
 
-<main id="main" class="site-main">
-
-	<?php
-	/*
-	 * Two columns on desktop: the enquiry form on one side, the contact details
-	 * the client fills in through the Customizer on the other.
-	 *
-	 * No form plugin is installed yet - that is a separate task. When one is
-	 * chosen, drop its shortcode into the form placeholder below.
-	 */
-	get_template_part(
-		'template-parts/section-placeholder',
-		null,
-		array(
-			'label'  => __( 'Contact form - no form plugin installed yet', '5drs' ),
-			'id'     => 'contact-form',
-			'height' => '22rem',
-		)
-	);
-
-	get_template_part(
-		'template-parts/section-placeholder',
-		null,
-		array(
-			'label'   => __( 'Contact details and opening hours', '5drs' ),
-			'id'      => 'contact-details',
-			'variant' => 'alt',
-			'height'  => '14rem',
-		)
-	);
-
-	get_template_part(
-		'template-parts/section-placeholder',
-		null,
-		array(
-			'label'  => __( 'Map', '5drs' ),
-			'id'     => 'contact-map',
-			'height' => '18rem',
-		)
-	);
-	?>
-
+<main id="main" class="site-main fivedrs-contact">
+	<div class="fivedrs-container fivedrs-section">
+		<div class="fivedrs-contact__grid">
+			<?php
+			get_template_part( 'template-parts/contact/form' );
+			get_template_part( 'template-parts/contact/info' );
+			?>
+		</div>
+	</div>
 </main>
 
 <?php
