@@ -289,3 +289,51 @@ function fivedrs_translate_product_schema( $data ) {
 	return $data;
 }
 add_filter( 'rank_math/json_ld', 'fivedrs_translate_product_schema', 20 );
+
+/**
+ * Add the real contact details to Rank Math's Organization entity.
+ *
+ * Rank Math already emits an Organization carrying only a name, so the details
+ * are merged into it rather than published as a second block - two
+ * Organization entities on one page would just make a search engine choose.
+ *
+ * The values come from the same Customizer settings the footer and the contact
+ * page read, so there is one source for them.
+ *
+ * @param array $data Rank Math JSON-LD entities.
+ * @return array
+ */
+function fivedrs_contact_schema( $data ) {
+	if ( ! is_array( $data ) ) {
+		return $data;
+	}
+
+	$phone   = fivedrs_option( 'phone' );
+	$email   = fivedrs_option( 'email' );
+	$address = fivedrs_translate( fivedrs_option( 'address' ) );
+
+	foreach ( $data as $key => $entity ) {
+		if ( ! is_array( $entity ) || ! isset( $entity['@type'] ) || 'Organization' !== $entity['@type'] ) {
+			continue;
+		}
+
+		if ( '' !== $phone && empty( $entity['telephone'] ) ) {
+			$data[ $key ]['telephone'] = $phone;
+		}
+
+		if ( '' !== $email && empty( $entity['email'] ) ) {
+			$data[ $key ]['email'] = $email;
+		}
+
+		if ( '' !== $address && empty( $entity['address'] ) ) {
+			$data[ $key ]['address'] = array(
+				'@type'          => 'PostalAddress',
+				'streetAddress'  => $address,
+				'addressCountry' => 'EG',
+			);
+		}
+	}
+
+	return $data;
+}
+add_filter( 'rank_math/json_ld', 'fivedrs_contact_schema', 25 );

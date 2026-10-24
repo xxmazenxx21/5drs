@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-24T18:39:58+00:00\n"
+"POT-Creation-Date: 2026-10-24T19:10:49+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: 5drs\n"
@@ -82,6 +82,82 @@ msgstr ""
 msgid "5drs theme assets are not built yet. Run \"make theme-build\" (or \"npm run build\" in the theme folder)."
 msgstr ""
 
+#: inc/contact.php:39
+#: inc/contact.php:41
+msgid "Messages"
+msgstr ""
+
+#: inc/contact.php:40
+#: inc/contact.php:80
+#: inc/contact.php:272
+#: template-parts/contact/form.php:151
+msgid "Message"
+msgstr ""
+
+#: inc/contact.php:42
+msgid "All Messages"
+msgstr ""
+
+#: inc/contact.php:43
+msgid "Search Messages"
+msgstr ""
+
+#: inc/contact.php:44
+msgid "No messages yet."
+msgstr ""
+
+#: inc/contact.php:77
+#: inc/contact.php:268
+#: template-parts/contact/form.php:88
+msgid "Name"
+msgstr ""
+
+#: inc/contact.php:78
+msgid "Phone"
+msgstr ""
+
+#: inc/contact.php:79
+msgid "Email"
+msgstr ""
+
+#: inc/contact.php:81
+msgid "Received"
+msgstr ""
+
+#: inc/contact.php:128
+msgid "Please enter your name."
+msgstr ""
+
+#: inc/contact.php:129
+msgid "Please enter a valid phone number."
+msgstr ""
+
+#: inc/contact.php:130
+msgid "Please enter a valid email address."
+msgstr ""
+
+#: inc/contact.php:131
+msgid "Please write your message."
+msgstr ""
+
+#: inc/contact.php:134
+msgid "Sending..."
+msgstr ""
+
+#: inc/contact.php:269
+#: template-parts/contact/form.php:108
+msgid "Phone Number"
+msgstr ""
+
+#: inc/contact.php:270
+#: template-parts/contact/form.php:131
+msgid "Email Address"
+msgstr ""
+
+#: inc/contact.php:285
+msgid "New contact message — 5drs"
+msgstr ""
+
 #: inc/customizer-content.php:32
 msgid "Home - Hero"
 msgstr ""
@@ -107,7 +183,7 @@ msgstr ""
 #: inc/customizer-content.php:542
 #: inc/customizer-content.php:594
 #: inc/customizer-content.php:628
-#: inc/customizer-content.php:665
+#: inc/customizer-content.php:726
 msgid "Heading"
 msgstr ""
 
@@ -117,7 +193,7 @@ msgstr ""
 #: inc/customizer-content.php:434
 #: inc/customizer-content.php:616
 #: inc/customizer-content.php:633
-#: inc/customizer-content.php:670
+#: inc/customizer-content.php:731
 msgid "Text"
 msgstr ""
 
@@ -281,7 +357,7 @@ msgstr ""
 #: inc/customizer-content.php:292
 #: inc/customizer-content.php:405
 #: inc/customizer-content.php:439
-#: inc/customizer-content.php:675
+#: inc/customizer-content.php:736
 msgid "Button label"
 msgstr ""
 
@@ -480,38 +556,94 @@ msgid "About page - Closing call to action"
 msgstr ""
 
 #: inc/customizer-content.php:660
-msgid "Home - Closing call to action"
+msgid "Contact page"
+msgstr ""
+
+#: inc/customizer-content.php:665
+msgid "Hero heading"
+msgstr ""
+
+#: inc/customizer-content.php:670
+msgid "Hero text"
+msgstr ""
+
+#: inc/customizer-content.php:675
+msgid "Form heading"
 msgstr ""
 
 #: inc/customizer-content.php:680
+msgid "Submit button label"
+msgstr ""
+
+#: inc/customizer-content.php:685
+msgid "Success message"
+msgstr ""
+
+#: inc/customizer-content.php:690
+msgid "Error message"
+msgstr ""
+
+#: inc/customizer-content.php:695
+msgid "Information card heading"
+msgstr ""
+
+#: inc/customizer-content.php:700
+msgid "Address label"
+msgstr ""
+
+#: inc/customizer-content.php:705
+msgid "Email label"
+msgstr ""
+
+#: inc/customizer-content.php:710
+msgid "Phone label"
+msgstr ""
+
+#: inc/customizer-content.php:715
+msgid "Social label"
+msgstr ""
+
+#: inc/customizer-content.php:721
+msgid "Home - Closing call to action"
+msgstr ""
+
+#: inc/customizer-content.php:741
 msgid "Button links to"
 msgstr ""
 
-#: inc/customizer-content.php:851
+#: inc/customizer-content.php:912
 msgid "5drs - Home Page"
 msgstr ""
 
-#: inc/customizer-content.php:852
+#: inc/customizer-content.php:913
 msgid "All Home page content. Clear a section's text to hide that section entirely."
 msgstr ""
 
-#: inc/customizer-content.php:856
+#: inc/customizer-content.php:917
 msgid "5drs - Products Page"
 msgstr ""
 
-#: inc/customizer-content.php:857
+#: inc/customizer-content.php:918
 msgid "The hero on the Our Products page. Clear the text to hide it."
 msgstr ""
 
-#: inc/customizer-content.php:861
+#: inc/customizer-content.php:922
 msgid "5drs - About Page"
 msgstr ""
 
-#: inc/customizer-content.php:862
+#: inc/customizer-content.php:923
 msgid "All About page content. Clear a section's text to hide that section entirely."
 msgstr ""
 
-#: inc/customizer-content.php:871
+#: inc/customizer-content.php:927
+msgid "5drs - Contact Page"
+msgstr ""
+
+#: inc/customizer-content.php:928
+msgid "Contact page wording. Field labels and validation messages are theme strings, translated in languages/ar.po."
+msgstr ""
+
+#: inc/customizer-content.php:937
 msgid "- none -"
 msgstr ""
 
@@ -519,43 +651,55 @@ msgstr ""
 msgid "Phone number"
 msgstr ""
 
-#: inc/customizer.php:28
-msgid "Shown in the footer and used for the call link."
+#: inc/customizer.php:29
+msgid "Shown in the footer and on the contact page, and used for the call link."
 msgstr ""
 
-#: inc/customizer.php:31
+#: inc/customizer.php:32
 msgid "Email address"
 msgstr ""
 
-#: inc/customizer.php:36
+#: inc/customizer.php:38
 msgid "Address"
 msgstr ""
 
-#: inc/customizer.php:41
-msgid "WhatsApp number"
-msgstr ""
-
 #: inc/customizer.php:44
-msgid "International format without spaces, e.g. 201234567890."
+msgid "One line, so it stays a single translatable string."
 msgstr ""
 
 #: inc/customizer.php:47
-msgid "Facebook URL"
+msgid "Contact form recipient"
 msgstr ""
 
-#: inc/customizer.php:52
-msgid "Instagram URL"
+#: inc/customizer.php:51
+msgid "Where messages from the contact form are sent."
+msgstr ""
+
+#: inc/customizer.php:54
+msgid "WhatsApp number"
 msgstr ""
 
 #: inc/customizer.php:57
+msgid "International format without spaces, e.g. 201234567890."
+msgstr ""
+
+#: inc/customizer.php:60
+msgid "Facebook URL"
+msgstr ""
+
+#: inc/customizer.php:65
+msgid "Instagram URL"
+msgstr ""
+
+#: inc/customizer.php:70
 msgid "TikTok URL"
 msgstr ""
 
-#: inc/customizer.php:85
+#: inc/customizer.php:103
 msgid "Contact & Social"
 msgstr ""
 
-#: inc/customizer.php:86
+#: inc/customizer.php:104
 msgid "Used in the site footer. Leave a field empty to hide it."
 msgstr ""
 
@@ -596,19 +740,19 @@ msgid_plural "%s items in cart"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/template-tags.php:344
+#: inc/template-tags.php:364
 msgid "Facebook"
 msgstr ""
 
-#: inc/template-tags.php:348
+#: inc/template-tags.php:368
 msgid "Instagram"
 msgstr ""
 
-#: inc/template-tags.php:352
+#: inc/template-tags.php:372
 msgid "TikTok"
 msgstr ""
 
-#: inc/template-tags.php:360
+#: inc/template-tags.php:380
 msgid "WhatsApp"
 msgstr ""
 
@@ -675,18 +819,6 @@ msgstr ""
 msgid "About Us"
 msgstr ""
 
-#: page-contact.php:39
-msgid "Contact form - no form plugin installed yet"
-msgstr ""
-
-#: page-contact.php:49
-msgid "Contact details and opening hours"
-msgstr ""
-
-#: page-contact.php:60
-msgid "Map"
-msgstr ""
-
 #. Template Name of the theme
 msgid "Policies hub"
 msgstr ""
@@ -719,6 +851,10 @@ msgstr ""
 #: template-parts/about/slideshow.php:87
 #, php-format
 msgid "Show image %1$s of %2$s"
+msgstr ""
+
+#: template-parts/contact/form.php:82
+msgid "Website"
 msgstr ""
 
 #: template-parts/content-none.php:11

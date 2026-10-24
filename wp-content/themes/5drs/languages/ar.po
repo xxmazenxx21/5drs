@@ -701,3 +701,111 @@ msgstr "عنوان القيمة 4"
 
 msgid "Value 4 text"
 msgstr "نص القيمة 4"
+
+msgid "Name"
+msgstr "الاسم"
+
+msgid "Phone Number"
+msgstr "رقم الهاتف"
+
+msgid "Email Address"
+msgstr "البريد الإلكتروني"
+
+msgid "Message"
+msgstr "رسالتك"
+
+msgid "Website"
+msgstr "الموقع الإلكتروني"
+
+msgid "Please enter your name."
+msgstr "يرجى إدخال اسمك."
+
+msgid "Please enter a valid phone number."
+msgstr "يرجى إدخال رقم هاتف صحيح."
+
+msgid "Please enter a valid email address."
+msgstr "يرجى إدخال بريد إلكتروني صحيح."
+
+msgid "Please write your message."
+msgstr "يرجى كتابة رسالتك."
+
+msgid "Sending..."
+msgstr "جارٍ الإرسال..."
+
+msgid "Messages"
+msgstr "الرسائل"
+
+msgid "All Messages"
+msgstr "كل الرسائل"
+
+msgid "Search Messages"
+msgstr "بحث في الرسائل"
+
+msgid "No messages yet."
+msgstr "لا توجد رسائل بعد."
+
+msgid "Phone"
+msgstr "الهاتف"
+
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+msgid "Received"
+msgstr "تاريخ الاستلام"
+
+msgid "New contact message — 5drs"
+msgstr "رسالة تواصل جديدة — 5drs"
+
+msgid "5drs - Contact Page"
+msgstr "5drs - صفحة التواصل"
+
+msgid "Contact page wording. Field labels and validation messages are theme strings, translated in languages/ar.po."
+msgstr "نصوص صفحة التواصل. تسميات الحقول ورسائل التحقق نصوص قالب مترجمة في languages/ar.po."
+
+msgid "Contact page"
+msgstr "صفحة التواصل"
+
+msgid "Hero heading"
+msgstr "عنوان الواجهة"
+
+msgid "Hero text"
+msgstr "نص الواجهة"
+
+msgid "Form heading"
+msgstr "عنوان النموذج"
+
+msgid "Submit button label"
+msgstr "نص زر الإرسال"
+
+msgid "Success message"
+msgstr "رسالة النجاح"
+
+msgid "Error message"
+msgstr "رسالة الخطأ"
+
+msgid "Information card heading"
+msgstr "عنوان بطاقة المعلومات"
+
+msgid "Address label"
+msgstr "تسمية العنوان"
+
+msgid "Email label"
+msgstr "تسمية البريد الإلكتروني"
+
+msgid "Phone label"
+msgstr "تسمية الهاتف"
+
+msgid "Social label"
+msgstr "تسمية التواصل الاجتماعي"
+
+msgid "Contact form recipient"
+msgstr "مستلم رسائل النموذج"
+
+msgid "Where messages from the contact form are sent."
+msgstr "العنوان الذي تُرسل إليه رسائل نموذج التواصل."
+
+msgid "Shown in the footer and on the contact page, and used for the call link."
+msgstr "يظهر في تذييل الموقع وصفحة التواصل، ويُستخدم لرابط الاتصال."
+
+msgid "One line, so it stays a single translatable string."
+msgstr "سطر واحد، ليبقى نصًا واحدًا قابلًا للترجمة."

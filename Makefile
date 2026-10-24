@@ -12,7 +12,7 @@ UID_GID    := $(shell id -u):$(shell id -g)
 
 .DEFAULT_GOAL := help
 .PHONY: help up down restart logs ps wp shell db-export db-import \
-        theme-install theme-dev theme-build pot mo lint lint-fix seed pages store-setup product-media products about-media home-media categories home-content product-content about-content translations crawl trp-tables mail-test verify
+        theme-install theme-dev theme-build pot mo lint lint-fix seed pages store-setup product-media products about-media home-media categories home-content product-content about-content contact-content translations crawl trp-tables mail-test verify
 
 help: ## Show this help
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | sort | \
@@ -128,6 +128,12 @@ about-content: ## Seed the Arabic About page content and its SEO fields
 	$(WPCLI) eval-file /scripts/seed/about-content.php
 	@./scripts/crawl.sh ar >/dev/null 2>&1 || true
 	$(WPCLI) eval-file /scripts/seed/about-content.php
+
+contact-content: ## Seed the Arabic Contact page content and its SEO fields
+	@./scripts/crawl.sh ar >/dev/null 2>&1 || true
+	$(WPCLI) eval-file /scripts/seed/contact-content.php
+	@./scripts/crawl.sh ar >/dev/null 2>&1 || true
+	$(WPCLI) eval-file /scripts/seed/contact-content.php
 
 home-content: ## Seed the Arabic Home page content and its SEO fields
 	@./scripts/crawl.sh ar >/dev/null 2>&1 || true
