@@ -72,9 +72,9 @@ function fivedrs_wc_wrapper_start() {
 	 * the term's own name and description.
 	 */
 	if ( is_shop() ) {
-		get_template_part( 'template-parts/products/hero' );
+		get_template_part( 'template-parts/hero-banner', null, array( 'section' => 'products' ) );
 	} elseif ( is_product_taxonomy() ) {
-		get_template_part( 'template-parts/products/hero', null, array( 'compact' => true ) );
+		get_template_part( 'template-parts/hero-banner', null, array( 'compact' => true ) );
 	}
 
 	echo '<div class="fivedrs-container"><main id="main" class="site-main fivedrs-main">';

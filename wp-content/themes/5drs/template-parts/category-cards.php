@@ -1,18 +1,36 @@
 <?php
 /**
- * Home: shop by need.
+ * Category cards.
+ *
+ * Shared by the Home page and the About page. The cards themselves always come
+ * from the "categories" content section, so both pages show the same four from
+ * one source; only the heading and subtitle above them are overridable.
  *
  * Each card needs a category, an image and some text. A card missing any of
  * those is skipped - which is how the Black Edition card stays hidden until a
  * clean image is supplied in the Customizer.
+ *
+ * @param array $args Optional. Keys: 'heading' and 'subtitle' to override the
+ *                    text above the cards, and 'variant' for the section
+ *                    background ('alt' by default).
  *
  * @package 5drs
  */
 
 defined( 'ABSPATH' ) || exit;
 
-$fivedrs_heading = fivedrs_content( 'categories', 'heading' );
-$fivedrs_label   = fivedrs_content( 'categories', 'link_label' );
+$fivedrs_cards_args = wp_parse_args(
+	isset( $args ) ? $args : array(),
+	array(
+		'heading'  => fivedrs_content( 'categories', 'heading' ),
+		'subtitle' => '',
+		'variant'  => 'alt',
+	)
+);
+
+$fivedrs_heading  = $fivedrs_cards_args['heading'];
+$fivedrs_subtitle = $fivedrs_cards_args['subtitle'];
+$fivedrs_label    = fivedrs_content( 'categories', 'link_label' );
 
 $fivedrs_cards = array();
 for ( $fivedrs_i = 1; $fivedrs_i <= 4; $fivedrs_i++ ) {
@@ -42,12 +60,17 @@ if ( empty( $fivedrs_cards ) ) {
 	return;
 }
 ?>
-<section class="fivedrs-section fivedrs-section--alt fivedrs-cats" data-reveal>
+<section class="fivedrs-section fivedrs-cats<?php echo '' !== $fivedrs_cards_args['variant'] ? ' fivedrs-section--' . esc_attr( $fivedrs_cards_args['variant'] ) : ''; ?>" data-reveal>
 	<div class="fivedrs-container">
 
-		<?php if ( '' !== $fivedrs_heading ) : ?>
+		<?php if ( '' !== $fivedrs_heading || '' !== $fivedrs_subtitle ) : ?>
 			<div class="fivedrs-section__head fivedrs-section__head--center">
-				<h2><?php echo esc_html( $fivedrs_heading ); ?></h2>
+				<?php if ( '' !== $fivedrs_heading ) : ?>
+					<h2><?php echo esc_html( $fivedrs_heading ); ?></h2>
+				<?php endif; ?>
+				<?php if ( '' !== $fivedrs_subtitle ) : ?>
+					<p class="fivedrs-section__lead"><?php echo esc_html( $fivedrs_subtitle ); ?></p>
+				<?php endif; ?>
 			</div>
 		<?php endif; ?>
 

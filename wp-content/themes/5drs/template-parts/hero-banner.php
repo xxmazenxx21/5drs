@@ -1,14 +1,16 @@
 <?php
 /**
- * Our Products hero.
+ * Full-bleed page hero.
  *
- * Full-bleed on the shop page, compact on category archives. The image is the
- * LCP element, so it is eager with fetchpriority high and goes through
- * wp_get_attachment_image() for srcset.
+ * Shared by the Our Products page and the About page, and used in a compact
+ * form on product category archives. The image is the LCP element, so it is
+ * eager with fetchpriority high and goes through wp_get_attachment_image()
+ * for srcset.
  *
- * @param array $args {
- *     @type bool $compact Render the short category-archive variant.
- * }
+ * @param array $args    Optional. Keys: 'section' (content config section to
+ *                       read, default 'products'), 'anchor' (href for the
+ *                       button, default '#products') and 'compact' (render the
+ *                       short category-archive variant).
  *
  * @package 5drs
  */
@@ -17,7 +19,11 @@ defined( 'ABSPATH' ) || exit;
 
 $fivedrs_hero = wp_parse_args(
 	isset( $args ) ? $args : array(),
-	array( 'compact' => false )
+	array(
+		'section' => 'products',
+		'anchor'  => '#products',
+		'compact' => false,
+	)
 );
 
 if ( $fivedrs_hero['compact'] ) {
@@ -29,11 +35,12 @@ if ( $fivedrs_hero['compact'] ) {
 	$fivedrs_label    = '';
 	$fivedrs_image_id = 0;
 } else {
-	$fivedrs_eyebrow  = fivedrs_content( 'products', 'eyebrow' );
-	$fivedrs_heading  = fivedrs_content( 'products', 'heading' );
-	$fivedrs_text     = fivedrs_content( 'products', 'text' );
-	$fivedrs_label    = fivedrs_content( 'products', 'button_label' );
-	$fivedrs_image_id = (int) fivedrs_content( 'products', 'image' );
+	$fivedrs_section  = $fivedrs_hero['section'];
+	$fivedrs_eyebrow  = fivedrs_content( $fivedrs_section, 'eyebrow' );
+	$fivedrs_heading  = fivedrs_content( $fivedrs_section, 'heading' );
+	$fivedrs_text     = fivedrs_content( $fivedrs_section, 'text' );
+	$fivedrs_label    = fivedrs_content( $fivedrs_section, 'button_label' );
+	$fivedrs_image_id = (int) fivedrs_content( $fivedrs_section, 'image' );
 }
 
 if ( '' === $fivedrs_heading && '' === $fivedrs_text && ! $fivedrs_image_id ) {
@@ -49,13 +56,13 @@ if ( ! $fivedrs_image_id ) {
 	$fivedrs_classes .= ' fivedrs-phero--plain';
 }
 ?>
-<section class="<?php echo esc_attr( $fivedrs_classes ); ?>">
+<section class="<?php echo esc_attr( $fivedrs_classes ); ?>" data-hero>
 
 	<?php if ( $fivedrs_image_id ) : ?>
 		<div class="fivedrs-phero__media" aria-hidden="true">
 			<?php
 			fivedrs_content_image(
-				'products',
+				$fivedrs_hero['section'],
 				'image',
 				array(
 					'size'     => 'full',
@@ -85,7 +92,7 @@ if ( ! $fivedrs_image_id ) {
 
 		<?php if ( '' !== $fivedrs_label ) : ?>
 			<p class="fivedrs-phero__actions" data-phero-item>
-				<a class="fivedrs-btn fivedrs-btn--lg" href="#products">
+				<a class="fivedrs-btn fivedrs-btn--lg" href="<?php echo esc_attr( $fivedrs_hero['anchor'] ); ?>">
 					<?php echo esc_html( $fivedrs_label ); ?>
 				</a>
 			</p>

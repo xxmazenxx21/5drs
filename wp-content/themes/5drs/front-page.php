@@ -19,12 +19,12 @@ get_header();
 	get_template_part( 'template-parts/home/hero' );
 	get_template_part( 'template-parts/home/trust' );
 	get_template_part( 'template-parts/home/why' );
-	get_template_part( 'template-parts/home/categories' );
+	get_template_part( 'template-parts/category-cards' );
 	get_template_part( 'template-parts/home/featured' );
 	get_template_part( 'template-parts/home/kids' );
 	get_template_part( 'template-parts/home/tips' );
 	get_template_part( 'template-parts/home/faq' );
-	get_template_part( 'template-parts/home/cta' );
+	get_template_part( 'template-parts/cta-band' );
 	?>
 </main>
 
