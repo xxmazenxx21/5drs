@@ -12,6 +12,13 @@
 
 	.fivedrs-story {
 		scroll-margin-block-start: calc(var(--fivedrs-header-height) + 1rem);
+		/*
+		 * The directional reveal below starts 1.5rem off to one side, which is
+		 * wider than the 1rem mobile gutter and would otherwise push the page
+		 * sideways at 360px. `clip` contains it without creating a scroll
+		 * container, so sticky ancestors keep working.
+		 */
+		overflow-x: clip;
 	}
 
 	.fivedrs-story__inner {
