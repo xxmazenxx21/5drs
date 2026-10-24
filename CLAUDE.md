@@ -60,9 +60,13 @@ make theme-build        # production build into the theme's dist/
 make pot                # regenerate languages/5drs.pot
 make mo                 # compile languages/ar.po -> ar.mo
 make pages              # rebuild the page tree, templates and menus
+make store-setup        # remove placeholder data, categories + Bristle Type attribute
+make product-media      # convert assets/products to WebP and import them
+make products           # create the four real products
 make home-media         # convert assets/home to WebP and import to the Media Library
-make categories         # product categories + their card images
+make categories         # category card images
 make home-content       # Arabic Home copy + the Home SEO fields
+make product-content    # Arabic catalogue + Products page copy
 make translations       # seed the Arabic translations TranslatePress serves
 make crawl              # request every page in both languages
 
@@ -107,19 +111,25 @@ inc/setup.php        theme supports, menus, image sizes, text domain
 inc/assets.php       enqueues the Vite build from dist/
 inc/i18n.php         language + RTL helpers, per-language fonts, switcher
 inc/customizer.php   contact + social fields the client fills in
+inc/customizer-content.php  Home and Products page content (see 5.5)
 inc/template-tags.php  logo, SVG icons, cart button, contact and social output
-inc/woocommerce.php  WooCommerce support, wrappers, cart fragment
+inc/seo.php          FAQ schema, Arabic SEO metadata, breadcrumb/schema translation
+inc/woocommerce.php  WooCommerce support, wrappers, cart fragment, shop + product hooks
 header.php footer.php front-page.php page.php page-about.php
 page-contact.php page-policies.php index.php single.php 404.php sidebar.php
 template-parts/
   page-hero.php            shared page header
   section-placeholder.php  empty, named section container
   nav/offcanvas.php        mobile menu
+  home/                    the nine Home page sections
+  products/hero.php        full-bleed shop hero (compact on category archives)
+  products/filter.php      category pill links
 woocommerce/         empty by design - read its README before adding anything
 assets/images/       logo-lockup.png, logo-full.png (generated, see below)
 languages/           5drs.pot, ar.po, ar.mo
 src/css/             tokens.css, base.css, components/, woocommerce.css
-src/js/              main.js + modules/
+src/js/              main.js + modules/ (offcanvas, header, cart, reveal,
+                     shop, product, cart-notice)
 dist/                build output, gitignored
 ```
 
@@ -324,8 +334,13 @@ The Home page is the one page with real content. Everything on it - copy,
 buttons, links and images - is editable in **Appearance → Customize → 5drs -
 Home Page**, one Customizer section per page section.
 
-A single array, `fivedrs_home_config()` in `inc/customizer-home.php`, defines
-the fields, their English defaults, their sanitisers and their controls. Add a
+A single array, `fivedrs_content_config()` in `inc/customizer-content.php`,
+defines the fields, their English defaults, their sanitisers and their
+controls. Each section declares which panel it belongs to - `home` or
+`products` - so the Home page and the Our Products page share one mechanism
+rather than duplicating it. Read values with `fivedrs_content()`, links with
+`fivedrs_content_page_url()` / `fivedrs_content_category_url()` and images with
+`fivedrs_content_image()`. Add a
 field there and it appears in the Customizer automatically; nothing else needs
 touching. Read values with `fivedrs_home( 'section', 'field' )`, links with
 `fivedrs_home_page_url()` / `fivedrs_home_category_url()`, images with
@@ -344,19 +359,67 @@ The hero is the LCP element: `fetchpriority="high"`, no lazy-loading.
 Everything else lazy-loads. All of it goes through `wp_get_attachment_image()`,
 so srcset and sizes come from WordPress.
 
-#### TODO: Black Edition
+#### TODO: placeholder prices
 
-Two open items for the client:
+The four products carry **placeholder prices** agreed as a stand-in:
+Classic 45, Premium 75, Charcoal 60, Kids 40 EGP. They live in
+`scripts/seed/products.php`. Replace them with the client's real prices - in
+wp-admin, or in that file followed by `make products` - before launch.
 
-1. **The name and description are unconfirmed** - the product may end up being
-   a charcoal brush. The category exists at `black-edition`.
-2. **The supplied photo cannot be used.** `assets/home/cat-black.png` has
-   **"S55" moulded into the handle** and clearly legible at card size. The Home
-   page's third category card is therefore deliberately empty and **does not
-   render**. Set an image in *Home - Shop by need → Card 3 image* and the card
-   appears; nothing else needs changing.
+Black Edition is resolved: the category is now **Charcoal** (`charcoal`), and
+its photography is in use. The "555" moulded into the charcoal handles is part
+of the real product, not generated text.
 
-### 5.6 Translations — two stores, and the traps in both
+### 5.6 The Our Products page and the catalogue
+
+**Catalogue.** Four products, all featured, stock management off:
+
+| Product | Type | SKU | Category |
+|---|---|---|---|
+| Classic Toothbrush | variable (Soft/Medium/Hard) | `5DRS-CLS` + `-S/-M/-H` | Classic |
+| Premium Toothbrush | variable (Soft/Medium/Hard) | `5DRS-PRM` + `-S/-M/-H` | Premium |
+| Charcoal Soft Toothbrush | simple | `5DRS-CHR-S` | Charcoal |
+| Kids Fun Toothbrush | simple | `5DRS-KID` | Kids |
+
+Bristle Type is a **global attribute** (`pa_bristle`). On the variable products
+it drives the variations; on the simple ones it is display-only and renders as
+a badge instead of a selector. Its terms are ordered Soft → Medium → Hard via
+the plain `order` term meta - **not** `order_pa_bristle`, which is the key older
+guides suggest and which WooCommerce ignores.
+
+**The shop hero** is printed before the theme container so it can run edge to
+edge, and is the LCP element. Its veil reaches 0.72 opacity at the centre
+because the photograph has pure white highlights behind the text; that measures
+5.8:1 for white body text. If the image is ever swapped, re-check that number
+before trusting it.
+
+**No default variation is set**, so WooCommerce keeps Add to Cart disabled
+until a bristle type is chosen. The hint next to it is shown by CSS alone, off
+WooCommerce's own `woocommerce-variation-add-to-cart-disabled` class, so it can
+never drift out of step with the button.
+
+**The bristle pills are progressive enhancement.** WooCommerce's native
+`<select>` is what the form posts and what its variation engine listens to;
+`src/js/modules/product.js` builds the pills, writes to the select and
+dispatches a bubbling `change`. Only once the pills exist is the select hidden.
+With JavaScript off the native dropdown is still there and still works.
+
+**AJAX add-to-cart on the single product page** is ours - WooCommerce only
+wires that up on archives. For a variable product the *variation* id is posted
+as `product_id`; `WC_AJAX::add_to_cart()` resolves the parent and the chosen
+attributes from it.
+
+Two filters worth knowing about, both in `inc/woocommerce.php`:
+
+- `woocommerce_product_variation_title_include_attributes` is turned **off**, so
+  a cart line reads "Classic Toothbrush" with "Bristle Type: Medium" beneath it
+  rather than "Classic Toothbrush - Medium". The labelled form is clearer and,
+  unlike the appended title, both halves translate.
+- `woocommerce_attribute_label` is translated at source, because WooCommerce
+  prints it with a trailing colon ("Bristle Type:") and that text node never
+  matches a plain dictionary entry.
+
+### 5.7 Translations — two stores, and the traps in both
 
 **Theme strings** (`5drs` text domain) live in `languages/ar.po`, compiled with
 `make mo`.
@@ -396,6 +459,17 @@ TranslatePress's own `TRP_Query` API.
 > Math's own fields, and `inc/seo.php` swaps it in on Arabic requests. It works
 > for any post or page carrying that meta, not just the Home page.
 
+> **Trap 5 - TranslatePress only sees rendered *text nodes*.**
+> Anything else needs translating at the source with `fivedrs_translate()`:
+> JSON inside an attribute (WooCommerce ships variation descriptions in
+> `data-product_variations`), anything inside a `<script>` (the FAQ and Product
+> JSON-LD), values Rank Math writes into meta attributes (`og:title`), and text
+> that shares a node with punctuation - the last breadcrumb crumb sits next to
+> its separator, and an attribute label is printed as "Bristle Type:" with the
+> colon attached. All of these are handled in `inc/seo.php` and
+> `inc/woocommerce.php`; copy that pattern rather than trying to seed the
+> punctuation into the dictionary.
+
 **Editing English breaks the Arabic.** The dictionary is keyed by the English
 string, so changing a word in the Customizer leaves that string untranslated on
 `/ar/` - it does not fall back to the old Arabic, it shows the new English.
@@ -418,9 +492,10 @@ make translations # repair any row TranslatePress already cached
 - Guest checkout **on**; account creation at checkout **on**.
 - WooCommerce usage tracking, marketplace suggestions, marketing nags and the
   onboarding wizard are all disabled via options.
-- Three products (`TEST-001/002/003`) exist in the **Test** category, tagged
-  **`test-data`**, with generated placeholder images. Delete them before launch:
-  `make wp post delete $(make wp post list --post_type=product --tag=test-data --format=ids) --force`
+- The catalogue is four real products in four categories - see 5.6. The
+  placeholder `TEST-00x` products, the test order and the Test category were
+  removed by `make store-setup`.
+- **Prices are placeholders.** See the TODO under 5.5.
 
 ---
 

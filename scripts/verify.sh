@@ -40,8 +40,8 @@ check "$(grep -qE '<html[^>]*lang="ar"' <<<"$ar" && echo yes || echo no)" "Arabi
 
 # --- shop -------------------------------------------------------------------
 shop=$(curl -sL "$WP_URL/products/")
-count=$(grep -o 'Test Product' <<<"$shop" | wc -l)
-check "$([ "$count" -ge 3 ] && echo yes || echo no)" "Our Products page lists the test products ($count matches)"
+count=$(grep -c 'woocommerce-loop-product__title' <<<"$shop")
+check "$([ "$count" -ge 4 ] && echo yes || echo no)" "Our Products page lists the catalogue ($count products)"
 
 cart=$(curl -sL "$WP_URL/cart/")
 check "$(grep -q 'woocommerce-cart-form\|cart-empty\|wc-empty-cart-message' <<<"$cart" && echo yes || echo no)" "cart page renders WooCommerce markup"
@@ -164,6 +164,79 @@ check "$([ "$LEFTOVER" = "0" ] && echo yes || echo no)" "no English home copy le
 check "$(grep -qE '<title>[^<]*فرش أسنان' <<<"$AR_HOME" && echo yes || echo no)" "Arabic page title"
 check "$(grep -q 'name="description" content="اكتشف' <<<"$AR_HOME" && echo yes || echo no)" "Arabic meta description"
 check "$(grep -q '<title>5Doctors | Toothbrushes' <<<"$HOME" && echo yes || echo no)" "English page title unchanged"
+
+# --- our products page ----------------------------------------------------------
+PRODUCTS=$(curl -sL "$WP_URL/products/")
+AR_PRODUCTS=$(curl -sL "$WP_URL/ar/products/")
+
+check "$(grep -q 'fivedrs-phero' <<<"$PRODUCTS" && echo yes || echo no)" "products hero renders"
+
+PHERO_IMG=$(grep -oE '<img[^>]*fivedrs-phero__image[^>]*>' <<<"$PRODUCTS" | head -1)
+check "$(grep -q 'fetchpriority="high"' <<<"$PHERO_IMG" && echo yes || echo no)" "products hero image has fetchpriority=high"
+check "$(grep -q 'loading="lazy"' <<<"$PHERO_IMG" && echo no || echo yes)" "products hero image is NOT lazy-loaded"
+check "$(grep -q 'srcset=' <<<"$PHERO_IMG" && echo yes || echo no)" "products hero image has srcset"
+
+PILLS=$(grep -c 'fivedrs-pills__item' <<<"$PRODUCTS")
+check "$([ "$PILLS" = "5" ] && echo yes || echo no)" "category pills: All + 4 categories ($PILLS)"
+
+CARDS=$(grep -c 'woocommerce-loop-product__title' <<<"$PRODUCTS")
+check "$([ "$CARDS" = "4" ] && echo yes || echo no)" "product grid shows 4 products ($CARDS)"
+check "$([ "$(grep -c 'Choose options' <<<"$PRODUCTS")" = "2" ] && echo yes || echo no)" "the two variable products offer Choose options"
+check "$(grep -q 'woocommerce-result-count' <<<"$PRODUCTS" && echo no || echo yes)" "result count is hidden"
+
+for cat in classic premium charcoal kids; do
+	code=$(curl -sL -o /dev/null -w '%{http_code}' "$WP_URL/product-category/$cat/")
+	check "$([ "$code" = "200" ] && echo yes || echo no)" "category archive /$cat/ returns 200 (got $code)"
+done
+
+# --- single product ---------------------------------------------------------------
+VARIABLE=$(curl -sL "$WP_URL/product/classic-toothbrush/")
+SIMPLE=$(curl -sL "$WP_URL/product/charcoal-soft-toothbrush/")
+
+check "$(grep -q 'name="attribute_pa_bristle"' <<<"$VARIABLE" && echo yes || echo no)" "variable product keeps the native variation select"
+check "$(grep -q 'fivedrs-variation-hint' <<<"$VARIABLE" && echo yes || echo no)" "variable product shows the choose-a-bristle hint"
+check "$(grep -q 'fivedrs-qty__btn' <<<"$VARIABLE" && echo yes || echo no)" "quantity stepper controls render"
+check "$(grep -q 'fivedrs-bristle-badge' <<<"$SIMPLE" && echo yes || echo no)" "simple product shows a bristle badge"
+check "$(grep -q 'fivedrs-bristle-badge' <<<"$VARIABLE" && echo no || echo yes)" "variable product shows no bristle badge"
+
+# Soft, then Medium, then Hard - not alphabetical.
+ORDER=$(grep -oE '<option value="(soft|medium|hard)"' <<<"$VARIABLE" | sed 's/.*value="//;s/"//' | tr '\n' ' ')
+check "$([ "$ORDER" = "soft medium hard " ] && echo yes || echo no)" "bristle options are ordered soft/medium/hard ($ORDER)"
+
+check "$([ "$(grep -c '"@type":"Product"' <<<"$VARIABLE")" = "1" ] && echo yes || echo no)" "exactly one Product schema on a variable product"
+
+# --- add to cart ---------------------------------------------------------------------
+JAR3=$(mktemp)
+MEDIUM=$(grep -oE '"sku":"5DRS-CLS-M","variation_id":[0-9]+' <<<"$VARIABLE" | grep -oE '[0-9]+$' | head -1)
+if [ -z "$MEDIUM" ]; then
+	MEDIUM=$(grep -oE 'variation_id&quot;:[0-9]+' <<<"$VARIABLE" | grep -oE '[0-9]+' | sed -n 2p)
+fi
+
+ADD=$(curl -s -c "$JAR3" -b "$JAR3" -X POST "$WP_URL/?wc-ajax=add_to_cart" -d "product_id=${MEDIUM:-0}&quantity=3")
+check "$(grep -qE '>3<' <<<"$ADD" && echo yes || echo no)" "adding 3 of a variation puts 3 in the cart"
+
+CART=$(curl -sL -c "$JAR3" -b "$JAR3" "$WP_URL/cart/")
+check "$(grep -q 'Bristle Type' <<<"$CART" && echo yes || echo no)" "cart shows the attribute as Bristle Type: ..."
+
+AR_CART=$(curl -sL -c "$JAR3" -b "$JAR3" "$WP_URL/ar/cart/")
+check "$(grep -q 'نوع الشعيرات' <<<"$AR_CART" && echo yes || echo no)" "Arabic cart shows نوع الشعيرات"
+
+SIMPLE_ID=$(grep -oE 'name="add-to-cart" value="[0-9]+"' <<<"$SIMPLE" | grep -oE '[0-9]+' | head -1)
+ADD2=$(curl -s -c "$JAR3" -b "$JAR3" -X POST "$WP_URL/?wc-ajax=add_to_cart" -d "product_id=${SIMPLE_ID:-0}&quantity=1")
+check "$(grep -q 'fivedrs-cart__count' <<<"$ADD2" && echo yes || echo no)" "simple product adds via AJAX and returns the badge"
+rm -f "$JAR3"
+
+# --- arabic catalogue -----------------------------------------------------------------
+check "$(grep -q 'عناية تناسب كل ابتسامة' <<<"$AR_PRODUCTS" && echo yes || echo no)" "Arabic products hero heading"
+check "$(grep -q 'اختر النوع' <<<"$AR_PRODUCTS" && echo yes || echo no)" "Arabic Choose options label"
+AR_VARIABLE=$(curl -sL "$WP_URL/ar/product/classic-toothbrush/")
+check "$(grep -q 'نوع الشعيرات' <<<"$AR_VARIABLE" && echo yes || echo no)" "Arabic bristle attribute label"
+check "$(grep -q 'فرشاة كلاسيك' <<<"$AR_VARIABLE" && echo yes || echo no)" "Arabic product name"
+check "$(grep -qE '<title>[^<]*فرشاة كلاسيك' <<<"$AR_VARIABLE" && echo yes || echo no)" "Arabic product page title"
+
+# --- home page categories -----------------------------------------------------------------
+CAT_CARDS=$(grep -oE 'class="fivedrs-cat-card" href=' <<<"$HOME" | wc -l)
+check "$([ "$CAT_CARDS" = "4" ] && echo yes || echo no)" "home page shows four category cards ($CAT_CARDS)"
 
 # --- build ------------------------------------------------------------------
 check "$([ -f wp-content/themes/5drs/dist/.vite/manifest.json ] && echo yes || echo no)" "theme build output exists"
