@@ -13,6 +13,8 @@ import initCart from './modules/cart.js';
 import initReveal from './modules/reveal.js';
 import initShop from './modules/shop.js';
 import initProduct from './modules/product.js';
+import initSlideshow from './modules/slideshow.js';
+import initParallax from './modules/parallax.js';
 
 /**
  * Current document direction. Prefer CSS logical properties over branching on
@@ -32,6 +34,8 @@ function boot() {
 	initReveal();
 	initShop();
 	initProduct();
+	initSlideshow();
+	initParallax();
 }
 
 if ( document.readyState === 'loading' ) {

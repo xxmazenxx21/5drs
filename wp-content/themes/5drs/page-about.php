@@ -2,9 +2,13 @@
 /**
  * Template Name: About Us
  *
- * Structural shell for the About page. Named page-about.php so it also applies
- * automatically to the page with the slug "about"; the Template Name header
- * means it keeps working if that slug ever changes.
+ * The About page. Named page-about.php so it also applies automatically to the
+ * page with the slug "about"; the Template Name header means it keeps working
+ * if that slug ever changes.
+ *
+ * Every section is a template part that renders nothing when its content is
+ * empty, so the client can switch a whole section off from the Customizer
+ * (5drs - About Page) by clearing its text.
  *
  * @package 5drs
  */
@@ -13,63 +17,35 @@ defined( 'ABSPATH' ) || exit;
 
 get_header();
 
-while ( have_posts() ) :
-	the_post();
-
-	get_template_part(
-		'template-parts/page-hero',
-		null,
-		array( 'title' => get_the_title() )
-	);
-endwhile;
+get_template_part(
+	'template-parts/hero-banner',
+	null,
+	array(
+		'section' => 'about',
+		'anchor'  => '#story',
+	)
+);
 ?>
 
-<main id="main" class="site-main">
-
+<main id="main" class="site-main fivedrs-about">
 	<?php
+	get_template_part( 'template-parts/about/story' );
+	get_template_part( 'template-parts/about/mission' );
+	get_template_part( 'template-parts/about/values' );
+
 	get_template_part(
-		'template-parts/section-placeholder',
+		'template-parts/category-cards',
 		null,
 		array(
-			'label'  => __( 'Our story', '5drs' ),
-			'id'     => 'about-story',
-			'height' => '18rem',
+			'heading'  => fivedrs_content( 'about_range', 'heading' ),
+			'subtitle' => fivedrs_content( 'about_range', 'subtitle' ),
+			'variant'  => '',
 		)
 	);
 
-	get_template_part(
-		'template-parts/section-placeholder',
-		null,
-		array(
-			'label'   => __( 'Our mission and values', '5drs' ),
-			'id'      => 'about-mission',
-			'variant' => 'alt',
-			'height'  => '16rem',
-		)
-	);
-
-	get_template_part(
-		'template-parts/section-placeholder',
-		null,
-		array(
-			'label'  => __( 'What we make - product philosophy', '5drs' ),
-			'id'     => 'about-products',
-			'height' => '16rem',
-		)
-	);
-
-	get_template_part(
-		'template-parts/section-placeholder',
-		null,
-		array(
-			'label'   => __( 'Closing call to action', '5drs' ),
-			'id'      => 'about-cta',
-			'variant' => 'surface',
-			'height'  => '12rem',
-		)
-	);
+	get_template_part( 'template-parts/about/promise' );
+	get_template_part( 'template-parts/cta-band', null, array( 'section' => 'about_cta' ) );
 	?>
-
 </main>
 
 <?php

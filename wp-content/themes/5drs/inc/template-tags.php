@@ -141,6 +141,18 @@ function fivedrs_icon( $name ) {
 		case 'check':
 			return '<svg ' . $stroke . '><polyline points="5,12.5 10,17.5 19,6.5"/></svg>';
 
+		case 'play':
+			return '<svg ' . $solid . '><path d="M8 5.2v13.6a1 1 0 0 0 1.53.85l10.6-6.8a1 1 0 0 0 0-1.7L9.53 4.35A1 1 0 0 0 8 5.2z"/></svg>';
+
+		case 'pause':
+			return '<svg ' . $solid . '><rect x="6.5" y="4.5" width="4" height="15" rx="1.2"/><rect x="13.5" y="4.5" width="4" height="15" rx="1.2"/></svg>';
+
+		case 'target':
+			return '<svg ' . $stroke . '><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>';
+
+		case 'eye':
+			return '<svg ' . $stroke . '><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3.2"/></svg>';
+
 		case 'chevron':
 			return '<svg ' . $stroke . '><polyline points="6,9.5 12,15.5 18,9.5"/></svg>';
 
@@ -427,4 +439,38 @@ function fivedrs_content_image( $section, $field, $args = array() ) {
 	echo wp_get_attachment_image( $attachment_id, $args['size'], false, $attr );
 
 	return true;
+}
+
+/**
+ * Print a string with each word wrapped for a staggered reveal.
+ *
+ * Splits on whitespace only - never inside a word - so Arabic letter joining
+ * is never broken; the spans sit between words exactly where a space already
+ * was, and the literal spaces are kept so wrapping and shaping behave
+ * normally. The stagger index travels as a custom property rather than an
+ * inline transition-delay, keeping the timing in the stylesheet.
+ *
+ * @param string $text Plain text to split.
+ * @return void
+ */
+function fivedrs_the_words( $text ) {
+	$words = preg_split( '/\s+/u', trim( (string) $text ), -1, PREG_SPLIT_NO_EMPTY );
+
+	if ( ! $words ) {
+		return;
+	}
+
+	$last = count( $words ) - 1;
+
+	foreach ( $words as $index => $word ) {
+		printf(
+			'<span class="fivedrs-word" style="--fivedrs-word-index:%d">%s</span>',
+			(int) $index,
+			esc_html( $word )
+		);
+
+		if ( $index < $last ) {
+			echo ' ';
+		}
+	}
 }

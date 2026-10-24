@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function fivedrs_content_config() {
 	return array(
-		'hero'       => array(
+		'hero'          => array(
 			'title'  => __( 'Home - Hero', '5drs' ),
 			'panel'  => 'home',
 			'fields' => array(
@@ -74,7 +74,7 @@ function fivedrs_content_config() {
 				),
 			),
 		),
-		'trust'      => array(
+		'trust'         => array(
 			'title'  => __( 'Home - Trust bar', '5drs' ),
 			'panel'  => 'home',
 			'fields' => array(
@@ -100,7 +100,7 @@ function fivedrs_content_config() {
 				),
 			),
 		),
-		'why'        => array(
+		'why'           => array(
 			'title'  => __( 'Home - Why choose us', '5drs' ),
 			'panel'  => 'home',
 			'fields' => array(
@@ -146,7 +146,7 @@ function fivedrs_content_config() {
 				),
 			),
 		),
-		'categories' => array(
+		'categories'    => array(
 			'title'  => __( 'Home - Shop by need', '5drs' ),
 			'panel'  => 'home',
 			'fields' => array(
@@ -222,7 +222,7 @@ function fivedrs_content_config() {
 				),
 			),
 		),
-		'featured'   => array(
+		'featured'      => array(
 			'title'  => __( 'Home - Featured products', '5drs' ),
 			'panel'  => 'home',
 			'fields' => array(
@@ -253,7 +253,7 @@ function fivedrs_content_config() {
 				),
 			),
 		),
-		'kids'       => array(
+		'kids'          => array(
 			'title'  => __( 'Home - Kids spotlight', '5drs' ),
 			'panel'  => 'home',
 			'fields' => array(
@@ -304,7 +304,7 @@ function fivedrs_content_config() {
 				),
 			),
 		),
-		'tips'       => array(
+		'tips'          => array(
 			'title'  => __( 'Home - Healthy smile tips', '5drs' ),
 			'panel'  => 'home',
 			'fields' => array(
@@ -330,7 +330,7 @@ function fivedrs_content_config() {
 				),
 			),
 		),
-		'faq'        => array(
+		'faq'           => array(
 			'title'  => __( 'Home - FAQ', '5drs' ),
 			'panel'  => 'home',
 			'fields' => array(
@@ -381,7 +381,7 @@ function fivedrs_content_config() {
 				),
 			),
 		),
-		'products'   => array(
+		'products'      => array(
 			'title'  => __( 'Products page - Hero', '5drs' ),
 			'panel'  => 'products',
 			'fields' => array(
@@ -415,7 +415,248 @@ function fivedrs_content_config() {
 			),
 		),
 
-		'cta'        => array(
+		'about'         => array(
+			'title'  => __( 'About page - Hero', '5drs' ),
+			'panel'  => 'about',
+			'fields' => array(
+				'eyebrow'      => array(
+					'type'    => 'text',
+					'label'   => __( 'Eyebrow', '5drs' ),
+					'default' => 'About 5Doctors',
+				),
+				'heading'      => array(
+					'type'    => 'textarea',
+					'label'   => __( 'Heading', '5drs' ),
+					'default' => 'Every Bright Smile Starts with the Right Daily Care',
+				),
+				'text'         => array(
+					'type'    => 'textarea',
+					'label'   => __( 'Text', '5drs' ),
+					'default' => 'We design toothbrushes that bring together advanced technology, modern comfort, and care for every member of the family.',
+				),
+				'button_label' => array(
+					'type'        => 'text',
+					'label'       => __( 'Button label', '5drs' ),
+					'default'     => 'Our Story',
+					'description' => __( 'Scrolls down to the Our Story section.', '5drs' ),
+				),
+				'image'        => array(
+					'type'         => 'image',
+					'label'        => __( 'Hero background image', '5drs' ),
+					'default_slug' => '5drs-hero-about',
+					'description'  => __( 'Shown full width behind the hero text. Leave empty for a brand gradient.', '5drs' ),
+				),
+			),
+		),
+
+		'about_story'   => array(
+			'title'  => __( 'About page - Our story', '5drs' ),
+			'panel'  => 'about',
+			'fields' => array(
+				'eyebrow' => array(
+					'type'    => 'text',
+					'label'   => __( 'Eyebrow', '5drs' ),
+					'default' => 'Who We Are',
+				),
+				'heading' => array(
+					'type'    => 'text',
+					'label'   => __( 'Heading', '5drs' ),
+					'default' => 'Oral Care Designed Around You',
+				),
+				'text_1'  => array(
+					'type'    => 'textarea',
+					'label'   => __( 'Paragraph 1', '5drs' ),
+					'default' => 'We are a brand dedicated to oral and dental care, committed to creating products that combine advanced technology with modern, comfortable design. We believe a bright smile starts with the right daily care - which is why we developed a complete range of toothbrushes designed to meet the needs of every member of the family, with the highest standards of safety and medical-grade quality in mind.',
+				),
+				'text_2'  => array(
+					'type'    => 'textarea',
+					'label'   => __( 'Paragraph 2', '5drs' ),
+					'default' => "From the shape of the handle to the softness of every bristle, each 5Doctors brush is designed around one idea: your personal comfort. Whether you need a gentle touch for sensitive gums, a deeper clean for stubborn stains, or a fun brush that makes kids want to brush, there's a 5Doctors brush made for you.",
+				),
+				'slide_1' => array(
+					'type'         => 'image',
+					'label'        => __( 'Slideshow image 1', '5drs' ),
+					'default_slug' => '5drs-hero',
+				),
+				'slide_2' => array(
+					'type'         => 'image',
+					'label'        => __( 'Slideshow image 2', '5drs' ),
+					'default_slug' => '5drs-cat-classic',
+				),
+				'slide_3' => array(
+					'type'         => 'image',
+					'label'        => __( 'Slideshow image 3', '5drs' ),
+					'default_slug' => '5drs-product-premium',
+				),
+				'slide_4' => array(
+					'type'         => 'image',
+					'label'        => __( 'Slideshow image 4', '5drs' ),
+					'default_slug' => '5drs-cat-black',
+				),
+				'slide_5' => array(
+					'type'         => 'image',
+					'label'        => __( 'Slideshow image 5', '5drs' ),
+					'default_slug' => '5drs-cat-kids',
+				),
+				'slide_6' => array(
+					'type'         => 'image',
+					'label'        => __( 'Slideshow image 6', '5drs' ),
+					'default_slug' => '5drs-kids-spotlight',
+				),
+			),
+		),
+
+		'about_mission' => array(
+			'title'  => __( 'About page - Mission and vision', '5drs' ),
+			'panel'  => 'about',
+			'fields' => array(
+				'mission_title' => array(
+					'type'    => 'text',
+					'label'   => __( 'Mission title', '5drs' ),
+					'default' => 'Our Mission',
+				),
+				'mission_text'  => array(
+					'type'    => 'textarea',
+					'label'   => __( 'Mission text', '5drs' ),
+					'default' => "To make effective, comfortable oral care part of every family's daily routine, with thoughtfully designed products that combine quality, safety, and ease of use.",
+				),
+				'vision_title'  => array(
+					'type'    => 'text',
+					'label'   => __( 'Vision title', '5drs' ),
+					'default' => 'Our Vision',
+				),
+				'vision_text'   => array(
+					'type'    => 'textarea',
+					'label'   => __( 'Vision text', '5drs' ),
+					'default' => "To become a trusted name in oral care in every home, known for products that put people's comfort and health first.",
+				),
+			),
+		),
+
+		'about_values'  => array(
+			'title'  => __( 'About page - Our values', '5drs' ),
+			'panel'  => 'about',
+			'fields' => array(
+				'heading'       => array(
+					'type'    => 'text',
+					'label'   => __( 'Heading', '5drs' ),
+					'default' => 'What We Stand For',
+				),
+				'value_1_title' => array(
+					'type'    => 'text',
+					'label'   => __( 'Value 1 title', '5drs' ),
+					'default' => 'Quality & Safety',
+				),
+				'value_1_text'  => array(
+					'type'    => 'textarea',
+					'label'   => __( 'Value 1 text', '5drs' ),
+					'default' => 'We choose safe materials and pay close attention to every detail, so you can brush with confidence every day.',
+				),
+				'value_2_title' => array(
+					'type'    => 'text',
+					'label'   => __( 'Value 2 title', '5drs' ),
+					'default' => 'Comfort by Design',
+				),
+				'value_2_text'  => array(
+					'type'    => 'textarea',
+					'label'   => __( 'Value 2 text', '5drs' ),
+					'default' => 'Ergonomic handles and carefully shaped heads make brushing feel natural and easy.',
+				),
+				'value_3_title' => array(
+					'type'    => 'text',
+					'label'   => __( 'Value 3 title', '5drs' ),
+					'default' => 'Care for Every Age',
+				),
+				'value_3_text'  => array(
+					'type'    => 'textarea',
+					'label'   => __( 'Value 3 text', '5drs' ),
+					'default' => 'From adults to little ones, our range is built so everyone in the family finds the brush that suits them.',
+				),
+				'value_4_title' => array(
+					'type'    => 'text',
+					'label'   => __( 'Value 4 title', '5drs' ),
+					'default' => 'Continuous Innovation',
+				),
+				'value_4_text'  => array(
+					'type'    => 'textarea',
+					'label'   => __( 'Value 4 text', '5drs' ),
+					'default' => 'We keep developing our designs and bristle options to bring you a better clean, every day.',
+				),
+			),
+		),
+
+		'about_range'   => array(
+			'title'  => __( 'About page - Our range', '5drs' ),
+			'panel'  => 'about',
+			'fields' => array(
+				'heading'  => array(
+					'type'    => 'text',
+					'label'   => __( 'Heading', '5drs' ),
+					'default' => 'One Family of Brushes, Made for Every Smile',
+				),
+				'subtitle' => array(
+					'type'    => 'textarea',
+					'label'   => __( 'Subtitle', '5drs' ),
+					'default' => 'Classic, Premium, Charcoal, and Kids - find the one that fits you.',
+				),
+			),
+		),
+
+		'about_promise' => array(
+			'title'  => __( 'About page - Our promise', '5drs' ),
+			'panel'  => 'about',
+			'fields' => array(
+				'statement' => array(
+					'type'    => 'text',
+					'label'   => __( 'Statement', '5drs' ),
+					'default' => 'Our Goal Is Your Personal Comfort',
+				),
+				'text'      => array(
+					'type'    => 'textarea',
+					'label'   => __( 'Text', '5drs' ),
+					'default' => "It's more than a tagline - it's the question we ask before every design decision: will this make brushing more comfortable for you?",
+				),
+			),
+		),
+
+		'about_cta'     => array(
+			'title'  => __( 'About page - Closing call to action', '5drs' ),
+			'panel'  => 'about',
+			'fields' => array(
+				'heading'        => array(
+					'type'    => 'text',
+					'label'   => __( 'Heading', '5drs' ),
+					'default' => 'Find Your Perfect Brush',
+				),
+				'text'           => array(
+					'type'    => 'textarea',
+					'label'   => __( 'Text', '5drs' ),
+					'default' => 'Explore our range and choose the brush that fits your smile.',
+				),
+				'button_label'   => array(
+					'type'    => 'text',
+					'label'   => __( 'Primary button label', '5drs' ),
+					'default' => 'Shop Now',
+				),
+				'button_page'    => array(
+					'type'         => 'page',
+					'label'        => __( 'Primary button links to', '5drs' ),
+					'default_slug' => 'products',
+				),
+				'button_2_label' => array(
+					'type'    => 'text',
+					'label'   => __( 'Secondary button label', '5drs' ),
+					'default' => 'Contact Us',
+				),
+				'button_2_page'  => array(
+					'type'         => 'page',
+					'label'        => __( 'Secondary button links to', '5drs' ),
+					'default_slug' => 'contact',
+				),
+			),
+		),
+
+		'cta'           => array(
 			'title'  => __( 'Home - Closing call to action', '5drs' ),
 			'panel'  => 'home',
 			'fields' => array(
@@ -615,6 +856,11 @@ function fivedrs_customize_register_content( $wp_customize ) {
 			'title'       => __( '5drs - Products Page', '5drs' ),
 			'description' => __( 'The hero on the Our Products page. Clear the text to hide it.', '5drs' ),
 			'priority'    => 31,
+		),
+		'about'    => array(
+			'title'       => __( '5drs - About Page', '5drs' ),
+			'description' => __( 'All About page content. Clear a section\'s text to hide that section entirely.', '5drs' ),
+			'priority'    => 32,
 		),
 	);
 

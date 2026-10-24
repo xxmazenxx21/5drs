@@ -25,6 +25,14 @@ export default function initReveal() {
 		( entries ) => {
 			entries.forEach( ( entry ) => {
 				if ( entry.isIntersecting ) {
+					// Cards in a row carry an index so they arrive one after
+					// another rather than all at once.
+					const index = Number( entry.target.dataset.revealIndex || 0 );
+
+					if ( index > 0 ) {
+						entry.target.style.transitionDelay = `${ Math.min( index, 7 ) * 90 }ms`;
+					}
+
 					entry.target.classList.add( 'is-revealed' );
 					observer.unobserve( entry.target );
 				}
