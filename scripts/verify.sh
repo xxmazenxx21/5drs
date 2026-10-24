@@ -76,8 +76,7 @@ done
 
 # The home page carries real content now; its sections are checked below.
 # The remaining pages are still structural shells.
-about=$(curl -sL "$WP_URL/about/")
-check "$(grep -q 'Section: Our story' <<<"$about" && echo yes || echo no)" "about page uses page-about.php"
+# The About page has real content now; its sections are checked further down.
 
 # --- translations ---------------------------------------------------------------
 check "$(grep -q 'منتجاتنا' <<<"$ar" && echo yes || echo no)" "Arabic menu labels are translated"
@@ -237,6 +236,62 @@ check "$(grep -qE '<title>[^<]*فرشاة كلاسيك' <<<"$AR_VARIABLE" && ech
 # --- home page categories -----------------------------------------------------------------
 CAT_CARDS=$(grep -oE 'class="fivedrs-cat-card" href=' <<<"$HOME" | wc -l)
 check "$([ "$CAT_CARDS" = "4" ] && echo yes || echo no)" "home page shows four category cards ($CAT_CARDS)"
+
+# --- about page -------------------------------------------------------------------
+ABOUT=$(curl -sL "$WP_URL/about/")
+AR_ABOUT_PAGE=$(curl -sL "$WP_URL/ar/about/")
+
+check "$([ "$(grep -c '<h1' <<<"$ABOUT")" = "1" ] && echo yes || echo no)" "about page has exactly one h1"
+
+for sect in phero story slideshow mission values cats promise cta; do
+	check "$(grep -q "fivedrs-$sect" <<<"$ABOUT" && echo yes || echo no)" "about section renders: $sect"
+done
+
+ABOUT_HERO=$(grep -oE '<img[^>]*fivedrs-phero__image[^>]*>' <<<"$ABOUT" | head -1)
+check "$(grep -q 'fetchpriority="high"' <<<"$ABOUT_HERO" && echo yes || echo no)" "about hero image has fetchpriority=high"
+check "$(grep -q 'loading="lazy"' <<<"$ABOUT_HERO" && echo no || echo yes)" "about hero image is NOT lazy-loaded"
+check "$(grep -q 'srcset=' <<<"$ABOUT_HERO" && echo yes || echo no)" "about hero image has srcset"
+
+# --- slideshow -----------------------------------------------------------------------
+SLIDES=$(grep -oE 'fivedrs-slideshow__image' <<<"$ABOUT" | wc -l)
+check "$([ "$SLIDES" = "6" ] && echo yes || echo no)" "slideshow has six slides ($SLIDES)"
+
+DOTS=$(grep -oE 'data-slideshow-dot=' <<<"$ABOUT" | wc -l)
+check "$([ "$DOTS" = "6" ] && echo yes || echo no)" "slideshow has six dots ($DOTS)"
+
+check "$(grep -q 'data-slideshow-toggle' <<<"$ABOUT" && echo yes || echo no)" "slideshow has a pause control (WCAG 2.2.2)"
+check "$(grep -q 'aria-current="true"' <<<"$ABOUT" && echo yes || echo no)" "the active dot carries aria-current"
+check "$(grep -q 'data-slideshow-interval="5000"' <<<"$ABOUT" && echo yes || echo no)" "slideshow advances every 5s"
+
+# First slide eager so it paints immediately; the other five wait.
+EAGER=$(grep -oE '<img[^>]*fivedrs-slideshow__image[^>]*loading="eager"' <<<"$ABOUT" | wc -l)
+LAZY=$(grep -oE '<img[^>]*fivedrs-slideshow__image[^>]*loading="lazy"' <<<"$ABOUT" | wc -l)
+check "$([ "$EAGER" = "1" ] && [ "$LAZY" = "5" ] && echo yes || echo no)" "first slide eager, the rest lazy ($EAGER/$LAZY)"
+
+# --- promise word reveal ---------------------------------------------------------------
+# Splitting must never happen inside a word, or Arabic letters stop joining.
+EN_WORDS=$(grep -oE '<span class="fivedrs-word"[^>]*>[^<]*</span>' <<<"$ABOUT" | sed 's/<[^>]*>//g' | tr '\n' ' ' | sed 's/ *$//')
+check "$([ "$EN_WORDS" = "Our Goal Is Your Personal Comfort" ] && echo yes || echo no)" "English promise splits into whole words"
+
+AR_WORDS=$(grep -oE '<span class="fivedrs-word"[^>]*>[^<]*</span>' <<<"$AR_ABOUT_PAGE" | sed 's/<[^>]*>//g' | tr '\n' ' ' | sed 's/ *$//')
+check "$([ "$AR_WORDS" = "هدفنا راحتك الشخصية" ] && echo yes || echo no)" "Arabic promise splits into whole words, letters intact"
+
+# --- about in arabic ----------------------------------------------------------------------
+check "$(grep -q 'الابتسامة المشرقة' <<<"$AR_ABOUT_PAGE" && echo yes || echo no)" "Arabic about hero heading"
+check "$(grep -q 'عناية بالفم مصممة' <<<"$AR_ABOUT_PAGE" && echo yes || echo no)" "Arabic story heading"
+check "$(grep -q 'ما نؤمن به' <<<"$AR_ABOUT_PAGE" && echo yes || echo no)" "Arabic values heading"
+check "$(grep -qE '<title>[^<]*عناية بالفم' <<<"$AR_ABOUT_PAGE" && echo yes || echo no)" "Arabic about page title"
+
+ABOUT_LEFT=0
+for phrase in "Who We Are" "Our Mission" "What We Stand For" "Find Your Perfect"; do
+	grep -q "$phrase" <<<"$AR_ABOUT_PAGE" && ABOUT_LEFT=$((ABOUT_LEFT+1))
+done
+check "$([ "$ABOUT_LEFT" = "0" ] && echo yes || echo no)" "no English About copy left on /ar/ ($ABOUT_LEFT found)"
+
+# The closing band carries two buttons here and one on the Home page.
+ABOUT_CTA_BTNS=$(grep -oE 'fivedrs-cta__actions' <<<"$ABOUT" | wc -l)
+check "$([ "$ABOUT_CTA_BTNS" = "1" ] && grep -q 'fivedrs-cta__secondary' <<<"$ABOUT" && echo yes || echo no)" "about CTA has a secondary button"
+check "$(grep -q 'fivedrs-cta__secondary' <<<"$HOME" && echo no || echo yes)" "home CTA still has only one button"
 
 # --- build ------------------------------------------------------------------
 check "$([ -f wp-content/themes/5drs/dist/.vite/manifest.json ] && echo yes || echo no)" "theme build output exists"

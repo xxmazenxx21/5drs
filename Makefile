@@ -12,7 +12,7 @@ UID_GID    := $(shell id -u):$(shell id -g)
 
 .DEFAULT_GOAL := help
 .PHONY: help up down restart logs ps wp shell db-export db-import \
-        theme-install theme-dev theme-build pot mo lint lint-fix seed pages store-setup product-media products home-media categories home-content product-content translations crawl trp-tables mail-test verify
+        theme-install theme-dev theme-build pot mo lint lint-fix seed pages store-setup product-media products about-media home-media categories home-content product-content about-content translations crawl trp-tables mail-test verify
 
 help: ## Show this help
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | sort | \
@@ -100,14 +100,18 @@ store-setup: ## Remove placeholder data and set up categories + attributes
 	$(WPCLI) eval-file /scripts/seed/store-setup.php
 
 product-media: ## Convert the product photos to WebP and import them
-	python3 scripts/brand/prepare-product-images.py
+	python3 scripts/brand/prepare-images.py products
 	$(WPCLI) eval-file /scripts/seed/product-media.php
 
 products: ## Create the four real products
 	$(WPCLI) eval-file /scripts/seed/products.php
 
+about-media: ## Convert the About hero to WebP and import it
+	python3 scripts/brand/prepare-images.py about
+	$(WPCLI) eval-file /scripts/seed/about-media.php
+
 home-media: ## Convert the Home images to WebP and import them
-	python3 scripts/brand/prepare-home-images.py
+	python3 scripts/brand/prepare-images.py home
 	$(WPCLI) eval-file /scripts/seed/home-media.php
 
 categories: ## Create the product categories and their card images
@@ -118,6 +122,12 @@ product-content: ## Seed the Arabic catalogue and Products page content
 	$(WPCLI) eval-file /scripts/seed/product-content.php
 	@./scripts/crawl.sh ar >/dev/null 2>&1 || true
 	$(WPCLI) eval-file /scripts/seed/product-content.php
+
+about-content: ## Seed the Arabic About page content and its SEO fields
+	@./scripts/crawl.sh ar >/dev/null 2>&1 || true
+	$(WPCLI) eval-file /scripts/seed/about-content.php
+	@./scripts/crawl.sh ar >/dev/null 2>&1 || true
+	$(WPCLI) eval-file /scripts/seed/about-content.php
 
 home-content: ## Seed the Arabic Home page content and its SEO fields
 	@./scripts/crawl.sh ar >/dev/null 2>&1 || true

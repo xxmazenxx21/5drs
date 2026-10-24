@@ -63,10 +63,12 @@ make pages              # rebuild the page tree, templates and menus
 make store-setup        # remove placeholder data, categories + Bristle Type attribute
 make product-media      # convert assets/products to WebP and import them
 make products           # create the four real products
+make about-media        # convert the About hero to WebP and import it
 make home-media         # convert assets/home to WebP and import to the Media Library
 make categories         # category card images
 make home-content       # Arabic Home copy + the Home SEO fields
 make product-content    # Arabic catalogue + Products page copy
+make about-content      # Arabic About copy + the About SEO fields
 make translations       # seed the Arabic translations TranslatePress serves
 make crawl              # request every page in both languages
 
@@ -120,16 +122,19 @@ page-contact.php page-policies.php index.php single.php 404.php sidebar.php
 template-parts/
   page-hero.php            shared page header
   section-placeholder.php  empty, named section container
+  hero-banner.php          full-bleed hero, shared by Products and About
+  category-cards.php       the four category cards, shared by Home and About
+  cta-band.php             closing call-to-action, shared by Home and About
   nav/offcanvas.php        mobile menu
   home/                    the nine Home page sections
-  products/hero.php        full-bleed shop hero (compact on category archives)
+  about/                   story, slideshow, mission, values, promise
   products/filter.php      category pill links
 woocommerce/         empty by design - read its README before adding anything
 assets/images/       logo-lockup.png, logo-full.png (generated, see below)
 languages/           5drs.pot, ar.po, ar.mo
 src/css/             tokens.css, base.css, components/, woocommerce.css
 src/js/              main.js + modules/ (offcanvas, header, cart, reveal,
-                     shop, product, cart-notice)
+                     shop, product, cart-notice, slideshow, parallax)
 dist/                build output, gitignored
 ```
 
@@ -308,9 +313,10 @@ silently detach a template.
 
 ### 5.2 Page shells
 
-Every page *except the Home page* is a **structural shell**: a hero plus empty,
-named section containers rendered by `template-parts/section-placeholder.php`.
-The Home page has real content - see 5.5. They emit an
+The Contact and Policies pages are still **structural shells**: a hero plus
+empty, named section containers rendered by
+`template-parts/section-placeholder.php`. Home (5.5), Our Products (5.6) and
+About (5.7) have real content. They emit an
 `<!-- Section: ... -->` comment and a dashed box that is **visible to
 signed-in editors only** - anonymous visitors see nothing. Replace a
 `get_template_part( 'template-parts/section-placeholder', ... )` call with the
@@ -352,7 +358,7 @@ never renders an empty box. The FAQ's JSON-LD disappears with its section, so
 markup and schema cannot disagree.
 
 Images live in `assets/home/` as the supplied originals.
-`scripts/brand/prepare-home-images.py` converts them to WebP (8 MB → 207 KB)
+`scripts/brand/prepare-images.py home` converts them to WebP (8 MB → 207 KB)
 and `make home-media` imports them with stable slugs (`5drs-hero`, …), which is
 what the Customizer defaults resolve against - never a hardcoded attachment ID.
 The hero is the LCP element: `fetchpriority="high"`, no lazy-loading.
@@ -419,7 +425,52 @@ Two filters worth knowing about, both in `inc/woocommerce.php`:
   prints it with a trailing colon ("Bristle Type:") and that text node never
   matches a plain dictionary entry.
 
-### 5.7 Translations — two stores, and the traps in both
+### 5.7 The About page
+
+Seven sections, all driven by the same content config under the **"5drs — About
+Page"** panel: hero, Our Story (with the slideshow), Mission & Vision, Our
+Values, Our Range, Our Promise and the closing CTA. Clearing a section's text
+hides it, as everywhere else.
+
+**Three components are shared rather than copied.** `hero-banner.php`,
+`category-cards.php` and `cta-band.php` live at the root of `template-parts/`
+and take a `section` argument; their defaults preserve the Home and Products
+behaviour, so those pages did not change. The category cards always read the
+`categories` config section, so Home and About show the same four cards from
+one source and only the heading above them differs. The CTA renders a second
+button only when the section defines one.
+
+#### The slideshow
+
+`template-parts/about/slideshow.php` + `src/js/modules/slideshow.js`. It reuses
+images already in the Media Library from the Home and Products work - nothing
+is imported for it.
+
+- Every slide ships in the DOM, stacked in a **fixed-aspect frame**, so
+  switching can never shift the layout. The first is eager, the rest lazy, and
+  the next one is primed before it appears.
+- **A visible pause control is not optional** - WCAG 2.2.2 requires a way to
+  stop anything that moves automatically. It also pauses itself on hover, on
+  focus within, when scrolled off screen and when the tab is hidden.
+- Under `prefers-reduced-motion` it starts paused with no zoom; the dots still
+  work, so the content is all still reachable.
+- Without JavaScript the CSS shows the first slide and the controls stay
+  hidden, so the section degrades to a single image rather than breaking.
+
+#### The promise reveal, and a rule it illustrates
+
+The statement animates a word at a time. `fivedrs_the_words()` splits on
+**whitespace only** - never inside a word - because splitting mid-word would
+break Arabic letter joining.
+
+> **Translate before you fragment.** Once the statement is a run of one-word
+> spans, each span is its own text node, and TranslatePress would try to look
+> up "Our", "Goal" and "Is" separately. So the statement is translated with
+> `fivedrs_translate()` *first*, split *second*, and the heading carries
+> `data-no-translation` so the plugin leaves the pieces alone. Any future
+> effect that chops text into fragments needs the same order.
+
+### 5.8 Translations — two stores, and the traps in both
 
 **Theme strings** (`5drs` text domain) live in `languages/ar.po`, compiled with
 `make mo`.
