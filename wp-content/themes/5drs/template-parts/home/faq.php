@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$fivedrs_heading = fivedrs_home( 'faq', 'heading' );
+$fivedrs_heading = fivedrs_content( 'faq', 'heading' );
 $fivedrs_entries = fivedrs_faq_entries();
 
 if ( empty( $fivedrs_entries ) ) {

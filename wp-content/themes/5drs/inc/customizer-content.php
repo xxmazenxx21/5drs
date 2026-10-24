@@ -1,11 +1,13 @@
 <?php
 /**
- * Home page content, editable from the Customizer.
+ * Editable page content, driven from the Customizer.
  *
- * Every string, button, link and image on the Home page is defined once in
- * fivedrs_home_config(). That single array drives the Customizer controls, the
- * sanitisers, the defaults and the front-end output, so the four cannot drift
- * apart.
+ * Every string, button, link and image on the Home page and the Our Products
+ * page is defined once in fivedrs_content_config(). That single array drives
+ * the Customizer panels, controls, sanitisers, defaults and the front-end
+ * output, so they cannot drift apart.
+ *
+ * Each section declares which panel it belongs to ('home' or 'products').
  *
  * The English copy here is the default. The Arabic lives in TranslatePress's
  * dictionary, keyed by the English string - see scripts/seed/home-content.php
@@ -24,10 +26,11 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array<string,array{title:string,fields:array<string,array>}>
  */
-function fivedrs_home_config() {
+function fivedrs_content_config() {
 	return array(
 		'hero'       => array(
 			'title'  => __( 'Home - Hero', '5drs' ),
+			'panel'  => 'home',
 			'fields' => array(
 				'eyebrow'         => array(
 					'type'    => 'text',
@@ -73,6 +76,7 @@ function fivedrs_home_config() {
 		),
 		'trust'      => array(
 			'title'  => __( 'Home - Trust bar', '5drs' ),
+			'panel'  => 'home',
 			'fields' => array(
 				'item_1' => array(
 					'type'    => 'text',
@@ -98,6 +102,7 @@ function fivedrs_home_config() {
 		),
 		'why'        => array(
 			'title'  => __( 'Home - Why choose us', '5drs' ),
+			'panel'  => 'home',
 			'fields' => array(
 				'heading'      => array(
 					'type'    => 'text',
@@ -143,6 +148,7 @@ function fivedrs_home_config() {
 		),
 		'categories' => array(
 			'title'  => __( 'Home - Shop by need', '5drs' ),
+			'panel'  => 'home',
 			'fields' => array(
 				'heading'      => array(
 					'type'    => 'text',
@@ -172,40 +178,53 @@ function fivedrs_home_config() {
 				'card_2_cat'   => array(
 					'type'         => 'category',
 					'label'        => __( 'Card 2 category', '5drs' ),
-					'default_slug' => 'kids',
+					'default_slug' => 'premium',
 				),
 				'card_2_text'  => array(
 					'type'    => 'textarea',
 					'label'   => __( 'Card 2 text', '5drs' ),
-					'default' => 'A playful brush with a suction base that turns brushing into fun.',
+					'default' => 'Advanced design and smart bristles for a professional-grade clean.',
 				),
 				'card_2_image' => array(
 					'type'         => 'image',
 					'label'        => __( 'Card 2 image', '5drs' ),
-					'default_slug' => '5drs-cat-kids',
+					'default_slug' => '5drs-product-premium',
 				),
 				'card_3_cat'   => array(
 					'type'         => 'category',
 					'label'        => __( 'Card 3 category', '5drs' ),
-					'default_slug' => 'black-edition',
+					'default_slug' => 'charcoal',
 				),
 				'card_3_text'  => array(
 					'type'    => 'textarea',
 					'label'   => __( 'Card 3 text', '5drs' ),
-					'default' => 'A bold design with a modern edge.',
+					'default' => 'Soft charcoal-infused bristles for a gentle, fresh clean.',
 				),
 				'card_3_image' => array(
-					'type'        => 'image',
-					'label'       => __( 'Card 3 image', '5drs' ),
-					// Intentionally no default: the supplied Black Edition photo
-					// has "S55" moulded into the handle. The card stays hidden
-					// until a clean image is chosen here. See CLAUDE.md.
-					'description' => __( 'The Black Edition card only appears once an image is chosen here.', '5drs' ),
+					'type'         => 'image',
+					'label'        => __( 'Card 3 image', '5drs' ),
+					'default_slug' => '5drs-cat-black',
+				),
+				'card_4_cat'   => array(
+					'type'         => 'category',
+					'label'        => __( 'Card 4 category', '5drs' ),
+					'default_slug' => 'kids',
+				),
+				'card_4_text'  => array(
+					'type'    => 'textarea',
+					'label'   => __( 'Card 4 text', '5drs' ),
+					'default' => 'A playful brush with a suction base that turns brushing into fun.',
+				),
+				'card_4_image' => array(
+					'type'         => 'image',
+					'label'        => __( 'Card 4 image', '5drs' ),
+					'default_slug' => '5drs-cat-kids',
 				),
 			),
 		),
 		'featured'   => array(
 			'title'  => __( 'Home - Featured products', '5drs' ),
+			'panel'  => 'home',
 			'fields' => array(
 				'heading'    => array(
 					'type'    => 'text',
@@ -236,6 +255,7 @@ function fivedrs_home_config() {
 		),
 		'kids'       => array(
 			'title'  => __( 'Home - Kids spotlight', '5drs' ),
+			'panel'  => 'home',
 			'fields' => array(
 				'eyebrow'      => array(
 					'type'    => 'text',
@@ -286,6 +306,7 @@ function fivedrs_home_config() {
 		),
 		'tips'       => array(
 			'title'  => __( 'Home - Healthy smile tips', '5drs' ),
+			'panel'  => 'home',
 			'fields' => array(
 				'heading' => array(
 					'type'    => 'text',
@@ -311,6 +332,7 @@ function fivedrs_home_config() {
 		),
 		'faq'        => array(
 			'title'  => __( 'Home - FAQ', '5drs' ),
+			'panel'  => 'home',
 			'fields' => array(
 				'heading'    => array(
 					'type'    => 'text',
@@ -359,8 +381,43 @@ function fivedrs_home_config() {
 				),
 			),
 		),
+		'products'   => array(
+			'title'  => __( 'Products page - Hero', '5drs' ),
+			'panel'  => 'products',
+			'fields' => array(
+				'eyebrow'      => array(
+					'type'    => 'text',
+					'label'   => __( 'Eyebrow', '5drs' ),
+					'default' => 'The 5Doctors Collection',
+				),
+				'heading'      => array(
+					'type'    => 'textarea',
+					'label'   => __( 'Heading', '5drs' ),
+					'default' => 'Care That Fits Every Smile',
+				),
+				'text'         => array(
+					'type'    => 'textarea',
+					'label'   => __( 'Text', '5drs' ),
+					'default' => 'Explore our Classic, Premium, Charcoal, and Kids toothbrushes - each designed for comfort and an effective daily clean.',
+				),
+				'button_label' => array(
+					'type'        => 'text',
+					'label'       => __( 'Button label', '5drs' ),
+					'default'     => 'Browse Products',
+					'description' => __( 'Scrolls down to the product grid.', '5drs' ),
+				),
+				'image'        => array(
+					'type'         => 'image',
+					'label'        => __( 'Hero background image', '5drs' ),
+					'default_slug' => '5drs-hero-products',
+					'description'  => __( 'Shown full width behind the hero text. Leave empty for a brand gradient.', '5drs' ),
+				),
+			),
+		),
+
 		'cta'        => array(
 			'title'  => __( 'Home - Closing call to action', '5drs' ),
+			'panel'  => 'home',
 			'fields' => array(
 				'heading'      => array(
 					'type'    => 'text',
@@ -393,7 +450,7 @@ function fivedrs_home_config() {
  * @param string $type Field type.
  * @return string
  */
-function fivedrs_home_sanitiser( $type ) {
+function fivedrs_content_sanitiser( $type ) {
 	switch ( $type ) {
 		case 'textarea':
 			return 'sanitize_textarea_field';
@@ -414,8 +471,8 @@ function fivedrs_home_sanitiser( $type ) {
  * @param string $field   Field key.
  * @return string
  */
-function fivedrs_home_key( $section, $field ) {
-	return 'fivedrs_home_' . $section . '_' . $field;
+function fivedrs_content_key( $section, $field ) {
+	return 'fivedrs_content_' . $section . '_' . $field;
 }
 
 /**
@@ -428,10 +485,10 @@ function fivedrs_home_key( $section, $field ) {
  * @param string $field   Field key.
  * @return string|int Empty string or 0 when unset and undefaulted.
  */
-function fivedrs_home( $section, $field ) {
+function fivedrs_content( $section, $field ) {
 	static $config = null;
 	if ( null === $config ) {
-		$config = fivedrs_home_config();
+		$config = fivedrs_content_config();
 	}
 
 	if ( ! isset( $config[ $section ]['fields'][ $field ] ) ) {
@@ -440,7 +497,7 @@ function fivedrs_home( $section, $field ) {
 
 	$spec = $config[ $section ]['fields'][ $field ];
 	$type = $spec['type'];
-	$key  = fivedrs_home_key( $section, $field );
+	$key  = fivedrs_content_key( $section, $field );
 
 	$stored = get_theme_mod( $key, null );
 
@@ -510,8 +567,8 @@ function fivedrs_attachment_id_by_slug( $slug ) {
  * @param string $field   Field key.
  * @return string Empty string when the page is unset or gone.
  */
-function fivedrs_home_page_url( $section, $field ) {
-	$page_id = (int) fivedrs_home( $section, $field );
+function fivedrs_content_page_url( $section, $field ) {
+	$page_id = (int) fivedrs_content( $section, $field );
 
 	if ( ! $page_id ) {
 		return '';
@@ -529,8 +586,8 @@ function fivedrs_home_page_url( $section, $field ) {
  * @param string $field   Field key.
  * @return string
  */
-function fivedrs_home_category_url( $section, $field ) {
-	$term_id = (int) fivedrs_home( $section, $field );
+function fivedrs_content_category_url( $section, $field ) {
+	$term_id = (int) fivedrs_content( $section, $field );
 
 	if ( ! $term_id ) {
 		return '';
@@ -547,15 +604,23 @@ function fivedrs_home_category_url( $section, $field ) {
  * @param WP_Customize_Manager $wp_customize Customizer instance.
  * @return void
  */
-function fivedrs_customize_register_home( $wp_customize ) {
-	$wp_customize->add_panel(
-		'fivedrs_home',
-		array(
+function fivedrs_customize_register_content( $wp_customize ) {
+	$panels = array(
+		'home'     => array(
 			'title'       => __( '5drs - Home Page', '5drs' ),
 			'description' => __( 'All Home page content. Clear a section\'s text to hide that section entirely.', '5drs' ),
 			'priority'    => 30,
-		)
+		),
+		'products' => array(
+			'title'       => __( '5drs - Products Page', '5drs' ),
+			'description' => __( 'The hero on the Our Products page. Clear the text to hide it.', '5drs' ),
+			'priority'    => 31,
+		),
 	);
+
+	foreach ( $panels as $panel_key => $panel_args ) {
+		$wp_customize->add_panel( 'fivedrs_' . $panel_key, $panel_args );
+	}
 
 	$categories = array( 0 => __( '- none -', '5drs' ) );
 	foreach ( get_terms(
@@ -569,27 +634,28 @@ function fivedrs_customize_register_home( $wp_customize ) {
 		}
 	}
 
-	foreach ( fivedrs_home_config() as $section => $spec ) {
-		$section_id = 'fivedrs_home_' . $section;
+	foreach ( fivedrs_content_config() as $section => $spec ) {
+		$section_id = 'fivedrs_content_' . $section;
+		$panel      = isset( $spec['panel'] ) ? $spec['panel'] : 'home';
 
 		$wp_customize->add_section(
 			$section_id,
 			array(
 				'title' => $spec['title'],
-				'panel' => 'fivedrs_home',
+				'panel' => 'fivedrs_' . $panel,
 			)
 		);
 
 		foreach ( $spec['fields'] as $field => $field_spec ) {
-			$key     = fivedrs_home_key( $section, $field );
-			$default = fivedrs_home( $section, $field );
+			$key     = fivedrs_content_key( $section, $field );
+			$default = fivedrs_content( $section, $field );
 
 			$wp_customize->add_setting(
 				$key,
 				array(
 					'default'           => $default,
 					'transport'         => 'refresh',
-					'sanitize_callback' => fivedrs_home_sanitiser( $field_spec['type'] ),
+					'sanitize_callback' => fivedrs_content_sanitiser( $field_spec['type'] ),
 				)
 			);
 
@@ -653,4 +719,4 @@ function fivedrs_customize_register_home( $wp_customize ) {
 		}
 	}
 }
-add_action( 'customize_register', 'fivedrs_customize_register_home' );
+add_action( 'customize_register', 'fivedrs_customize_register_content' );

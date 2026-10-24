@@ -77,7 +77,7 @@ $fields = array(
 	'cta.button_label'         => 'تسوّق الآن',
 );
 
-$config = fivedrs_home_config();
+$config = fivedrs_content_config();
 $pairs  = array();
 
 foreach ( $fields as $path => $translation ) {

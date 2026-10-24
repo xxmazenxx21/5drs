@@ -10,19 +10,19 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$fivedrs_heading = fivedrs_home( 'hero', 'heading' );
-$fivedrs_image   = (int) fivedrs_home( 'hero', 'image' );
+$fivedrs_heading = fivedrs_content( 'hero', 'heading' );
+$fivedrs_image   = (int) fivedrs_content( 'hero', 'image' );
 
 if ( '' === $fivedrs_heading && ! $fivedrs_image ) {
 	return;
 }
 
-$fivedrs_eyebrow   = fivedrs_home( 'hero', 'eyebrow' );
-$fivedrs_text      = fivedrs_home( 'hero', 'text' );
-$fivedrs_primary   = fivedrs_home( 'hero', 'primary_label' );
-$fivedrs_secondary = fivedrs_home( 'hero', 'secondary_label' );
-$fivedrs_url_1     = fivedrs_home_page_url( 'hero', 'primary_page' );
-$fivedrs_url_2     = fivedrs_home_page_url( 'hero', 'secondary_page' );
+$fivedrs_eyebrow   = fivedrs_content( 'hero', 'eyebrow' );
+$fivedrs_text      = fivedrs_content( 'hero', 'text' );
+$fivedrs_primary   = fivedrs_content( 'hero', 'primary_label' );
+$fivedrs_secondary = fivedrs_content( 'hero', 'secondary_label' );
+$fivedrs_url_1     = fivedrs_content_page_url( 'hero', 'primary_page' );
+$fivedrs_url_2     = fivedrs_content_page_url( 'hero', 'secondary_page' );
 ?>
 <section class="fivedrs-home-hero">
 	<div class="fivedrs-container fivedrs-home-hero__inner">
@@ -61,7 +61,7 @@ $fivedrs_url_2     = fivedrs_home_page_url( 'hero', 'secondary_page' );
 		<?php if ( $fivedrs_image ) : ?>
 			<div class="fivedrs-home-hero__media">
 				<?php
-				fivedrs_home_image(
+				fivedrs_content_image(
 					'hero',
 					'image',
 					array(

@@ -16,7 +16,7 @@ if ( ! function_exists( 'wc_get_products' ) ) {
 	return;
 }
 
-$fivedrs_count = (int) fivedrs_home( 'featured', 'count' );
+$fivedrs_count = (int) fivedrs_content( 'featured', 'count' );
 $fivedrs_count = $fivedrs_count > 0 ? $fivedrs_count : 4;
 
 $fivedrs_query = array(
@@ -39,10 +39,10 @@ if ( empty( $fivedrs_products ) ) {
 	return;
 }
 
-$fivedrs_heading  = fivedrs_home( 'featured', 'heading' );
-$fivedrs_subtitle = fivedrs_home( 'featured', 'subtitle' );
-$fivedrs_label    = fivedrs_home( 'featured', 'link_label' );
-$fivedrs_url      = fivedrs_home_page_url( 'featured', 'link_page' );
+$fivedrs_heading  = fivedrs_content( 'featured', 'heading' );
+$fivedrs_subtitle = fivedrs_content( 'featured', 'subtitle' );
+$fivedrs_label    = fivedrs_content( 'featured', 'link_label' );
+$fivedrs_url      = fivedrs_content_page_url( 'featured', 'link_page' );
 ?>
 <section class="fivedrs-section fivedrs-featured woocommerce" data-reveal>
 	<div class="fivedrs-container">

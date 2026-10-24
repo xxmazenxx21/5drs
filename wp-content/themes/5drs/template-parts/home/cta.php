@@ -7,10 +7,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$fivedrs_heading = fivedrs_home( 'cta', 'heading' );
-$fivedrs_text    = fivedrs_home( 'cta', 'text' );
-$fivedrs_label   = fivedrs_home( 'cta', 'button_label' );
-$fivedrs_url     = fivedrs_home_page_url( 'cta', 'button_page' );
+$fivedrs_heading = fivedrs_content( 'cta', 'heading' );
+$fivedrs_text    = fivedrs_content( 'cta', 'text' );
+$fivedrs_label   = fivedrs_content( 'cta', 'button_label' );
+$fivedrs_url     = fivedrs_content_page_url( 'cta', 'button_page' );
 
 if ( '' === $fivedrs_heading && '' === $fivedrs_text ) {
 	return;

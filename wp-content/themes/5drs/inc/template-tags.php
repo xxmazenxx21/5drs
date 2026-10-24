@@ -391,8 +391,8 @@ function fivedrs_social_links() {
  *                        and 'sizes' (explicit sizes attribute).
  * @return bool Whether an image was printed.
  */
-function fivedrs_home_image( $section, $field, $args = array() ) {
-	$attachment_id = (int) fivedrs_home( $section, $field );
+function fivedrs_content_image( $section, $field, $args = array() ) {
+	$attachment_id = (int) fivedrs_content( $section, $field );
 
 	if ( ! $attachment_id ) {
 		return false;

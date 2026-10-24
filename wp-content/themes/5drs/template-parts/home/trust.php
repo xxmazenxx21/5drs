@@ -13,19 +13,19 @@ defined( 'ABSPATH' ) || exit;
 $fivedrs_items = array(
 	array(
 		'icon' => 'shield-check',
-		'text' => fivedrs_home( 'trust', 'item_1' ),
+		'text' => fivedrs_content( 'trust', 'item_1' ),
 	),
 	array(
 		'icon' => 'leaf',
-		'text' => fivedrs_home( 'trust', 'item_2' ),
+		'text' => fivedrs_content( 'trust', 'item_2' ),
 	),
 	array(
 		'icon' => 'family',
-		'text' => fivedrs_home( 'trust', 'item_3' ),
+		'text' => fivedrs_content( 'trust', 'item_3' ),
 	),
 	array(
 		'icon' => 'lock',
-		'text' => fivedrs_home( 'trust', 'item_4' ),
+		'text' => fivedrs_content( 'trust', 'item_4' ),
 	),
 );
 

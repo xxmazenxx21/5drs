@@ -16,8 +16,8 @@ function fivedrs_faq_entries() {
 	$entries = array();
 
 	for ( $i = 1; $i <= 4; $i++ ) {
-		$question = fivedrs_home( 'faq', 'question_' . $i );
-		$answer   = fivedrs_home( 'faq', 'answer_' . $i );
+		$question = fivedrs_content( 'faq', 'question_' . $i );
+		$answer   = fivedrs_content( 'faq', 'answer_' . $i );
 
 		if ( '' === $question || '' === $answer ) {
 			continue;

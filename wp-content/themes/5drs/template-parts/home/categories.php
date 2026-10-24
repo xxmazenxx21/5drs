@@ -11,14 +11,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$fivedrs_heading = fivedrs_home( 'categories', 'heading' );
-$fivedrs_label   = fivedrs_home( 'categories', 'link_label' );
+$fivedrs_heading = fivedrs_content( 'categories', 'heading' );
+$fivedrs_label   = fivedrs_content( 'categories', 'link_label' );
 
 $fivedrs_cards = array();
-for ( $fivedrs_i = 1; $fivedrs_i <= 3; $fivedrs_i++ ) {
-	$fivedrs_term_id = (int) fivedrs_home( 'categories', 'card_' . $fivedrs_i . '_cat' );
-	$fivedrs_image   = (int) fivedrs_home( 'categories', 'card_' . $fivedrs_i . '_image' );
-	$fivedrs_url     = fivedrs_home_category_url( 'categories', 'card_' . $fivedrs_i . '_cat' );
+for ( $fivedrs_i = 1; $fivedrs_i <= 4; $fivedrs_i++ ) {
+	$fivedrs_term_id = (int) fivedrs_content( 'categories', 'card_' . $fivedrs_i . '_cat' );
+	$fivedrs_image   = (int) fivedrs_content( 'categories', 'card_' . $fivedrs_i . '_image' );
+	$fivedrs_url     = fivedrs_content_category_url( 'categories', 'card_' . $fivedrs_i . '_cat' );
 
 	if ( ! $fivedrs_term_id || ! $fivedrs_image || '' === $fivedrs_url ) {
 		continue;
@@ -33,7 +33,7 @@ for ( $fivedrs_i = 1; $fivedrs_i <= 3; $fivedrs_i++ ) {
 	$fivedrs_cards[] = array(
 		'index' => $fivedrs_i,
 		'name'  => $fivedrs_term->name,
-		'text'  => fivedrs_home( 'categories', 'card_' . $fivedrs_i . '_text' ),
+		'text'  => fivedrs_content( 'categories', 'card_' . $fivedrs_i . '_text' ),
 		'url'   => $fivedrs_url,
 	);
 }
@@ -56,7 +56,7 @@ if ( empty( $fivedrs_cards ) ) {
 				<a class="fivedrs-cat-card" href="<?php echo esc_url( $fivedrs_card['url'] ); ?>">
 					<span class="fivedrs-cat-card__media">
 						<?php
-						fivedrs_home_image(
+						fivedrs_content_image(
 							'categories',
 							'card_' . $fivedrs_card['index'] . '_image',
 							array(

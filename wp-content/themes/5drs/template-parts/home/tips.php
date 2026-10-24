@@ -7,11 +7,11 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$fivedrs_heading = fivedrs_home( 'tips', 'heading' );
+$fivedrs_heading = fivedrs_content( 'tips', 'heading' );
 
 $fivedrs_steps = array();
 for ( $fivedrs_i = 1; $fivedrs_i <= 3; $fivedrs_i++ ) {
-	$fivedrs_step = fivedrs_home( 'tips', 'step_' . $fivedrs_i );
+	$fivedrs_step = fivedrs_content( 'tips', 'step_' . $fivedrs_i );
 
 	if ( '' !== $fivedrs_step ) {
 		$fivedrs_steps[ $fivedrs_i ] = $fivedrs_step;

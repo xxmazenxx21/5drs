@@ -10,8 +10,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$fivedrs_heading = fivedrs_home( 'kids', 'heading' );
-$fivedrs_image   = (int) fivedrs_home( 'kids', 'image' );
+$fivedrs_heading = fivedrs_content( 'kids', 'heading' );
+$fivedrs_image   = (int) fivedrs_content( 'kids', 'image' );
 
 if ( '' === $fivedrs_heading && ! $fivedrs_image ) {
 	return;
@@ -19,19 +19,19 @@ if ( '' === $fivedrs_heading && ! $fivedrs_image ) {
 
 $fivedrs_bullets = array_filter(
 	array(
-		fivedrs_home( 'kids', 'bullet_1' ),
-		fivedrs_home( 'kids', 'bullet_2' ),
-		fivedrs_home( 'kids', 'bullet_3' ),
+		fivedrs_content( 'kids', 'bullet_1' ),
+		fivedrs_content( 'kids', 'bullet_2' ),
+		fivedrs_content( 'kids', 'bullet_3' ),
 	),
 	static function ( $bullet ) {
 		return '' !== $bullet;
 	}
 );
 
-$fivedrs_eyebrow = fivedrs_home( 'kids', 'eyebrow' );
-$fivedrs_text    = fivedrs_home( 'kids', 'text' );
-$fivedrs_label   = fivedrs_home( 'kids', 'button_label' );
-$fivedrs_url     = fivedrs_home_category_url( 'kids', 'button_cat' );
+$fivedrs_eyebrow = fivedrs_content( 'kids', 'eyebrow' );
+$fivedrs_text    = fivedrs_content( 'kids', 'text' );
+$fivedrs_label   = fivedrs_content( 'kids', 'button_label' );
+$fivedrs_url     = fivedrs_content_category_url( 'kids', 'button_cat' );
 ?>
 <section class="fivedrs-section fivedrs-kids" data-reveal>
 	<div class="fivedrs-container">
@@ -74,7 +74,7 @@ $fivedrs_url     = fivedrs_home_category_url( 'kids', 'button_cat' );
 			<?php if ( $fivedrs_image ) : ?>
 				<div class="fivedrs-kids__media">
 					<?php
-					fivedrs_home_image(
+					fivedrs_content_image(
 						'kids',
 						'image',
 						array(

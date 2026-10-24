@@ -7,8 +7,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$fivedrs_heading  = fivedrs_home( 'why', 'heading' );
-$fivedrs_subtitle = fivedrs_home( 'why', 'subtitle' );
+$fivedrs_heading  = fivedrs_content( 'why', 'heading' );
+$fivedrs_subtitle = fivedrs_content( 'why', 'subtitle' );
 
 $fivedrs_cards = array();
 foreach ( array(
@@ -16,8 +16,8 @@ foreach ( array(
 	2 => 'sparkle',
 	3 => 'grid',
 ) as $fivedrs_i => $fivedrs_icon ) {
-	$fivedrs_title = fivedrs_home( 'why', 'card_' . $fivedrs_i . '_title' );
-	$fivedrs_text  = fivedrs_home( 'why', 'card_' . $fivedrs_i . '_text' );
+	$fivedrs_title = fivedrs_content( 'why', 'card_' . $fivedrs_i . '_title' );
+	$fivedrs_text  = fivedrs_content( 'why', 'card_' . $fivedrs_i . '_text' );
 
 	if ( '' === $fivedrs_title && '' === $fivedrs_text ) {
 		continue;
