@@ -359,3 +359,240 @@ msgstr "كبير جدًا"
 #: theme.json
 msgid "Display"
 msgstr "عرض"
+
+msgid "From %s"
+msgstr "يبدأ من %s"
+
+msgid "Choose options"
+msgstr "اختر النوع"
+
+msgid "%s bristles"
+msgstr "شعيرات %s"
+
+msgid "Please choose a bristle type"
+msgstr "يرجى اختيار نوع الشعيرات"
+
+msgid "Decrease quantity"
+msgstr "تقليل الكمية"
+
+msgid "Increase quantity"
+msgstr "زيادة الكمية"
+
+msgid "Added to your cart"
+msgstr "تمت الإضافة إلى سلتك"
+
+msgid "View cart"
+msgstr "عرض السلة"
+
+msgid "Sorry, that could not be added to your cart."
+msgstr "عذرًا، تعذّرت إضافة المنتج إلى السلة."
+
+msgid "Dismiss"
+msgstr "إغلاق"
+
+msgid "Filter by category"
+msgstr "تصفية حسب الفئة"
+
+msgid "All"
+msgstr "الكل"
+
+msgid "5drs - Home Page"
+msgstr "5drs - الصفحة الرئيسية"
+
+msgid "5drs - Products Page"
+msgstr "5drs - صفحة المنتجات"
+
+msgid "All Home page content. Clear a section's text to hide that section entirely."
+msgstr "كل محتوى الصفحة الرئيسية. امسح نص القسم لإخفائه بالكامل."
+
+msgid "The hero on the Our Products page. Clear the text to hide it."
+msgstr "واجهة صفحة منتجاتنا. امسح النص لإخفائها."
+
+msgid "Products page - Hero"
+msgstr "صفحة المنتجات - الواجهة"
+
+msgid "Hero background image"
+msgstr "صورة خلفية الواجهة"
+
+msgid "Scrolls down to the product grid."
+msgstr "ينتقل إلى شبكة المنتجات."
+
+msgid "Shown full width behind the hero text. Leave empty for a brand gradient."
+msgstr "تظهر بعرض الشاشة خلف نص الواجهة. اتركها فارغة لاستخدام تدرّج ألوان العلامة."
+
+msgid "Home - Hero"
+msgstr "الرئيسية - الواجهة"
+
+msgid "Home - Trust bar"
+msgstr "الرئيسية - شريط الثقة"
+
+msgid "Home - Why choose us"
+msgstr "الرئيسية - لماذا تختارنا"
+
+msgid "Home - Shop by need"
+msgstr "الرئيسية - تسوّق حسب الاحتياج"
+
+msgid "Home - Featured products"
+msgstr "الرئيسية - منتجات مميزة"
+
+msgid "Home - Kids spotlight"
+msgstr "الرئيسية - ركن الأطفال"
+
+msgid "Home - Healthy smile tips"
+msgstr "الرئيسية - نصائح لابتسامة صحية"
+
+msgid "Home - FAQ"
+msgstr "الرئيسية - الأسئلة الشائعة"
+
+msgid "Home - Closing call to action"
+msgstr "الرئيسية - دعوة ختامية"
+
+msgid "Eyebrow"
+msgstr "نص تمهيدي"
+
+msgid "Heading"
+msgstr "العنوان"
+
+msgid "Subtitle"
+msgstr "العنوان الفرعي"
+
+msgid "Button label"
+msgstr "نص الزر"
+
+msgid "Link label"
+msgstr "نص الرابط"
+
+msgid "Card link label"
+msgstr "نص رابط البطاقة"
+
+msgid "Primary button label"
+msgstr "نص الزر الأساسي"
+
+msgid "Secondary button label"
+msgstr "نص الزر الثانوي"
+
+msgid "Primary button links to"
+msgstr "رابط الزر الأساسي"
+
+msgid "Secondary button links to"
+msgstr "رابط الزر الثانوي"
+
+msgid "Button links to"
+msgstr "رابط الزر"
+
+msgid "Button links to category"
+msgstr "رابط الزر إلى الفئة"
+
+msgid "Link goes to"
+msgstr "الرابط يؤدي إلى"
+
+msgid "Hero image"
+msgstr "صورة الواجهة"
+
+msgid "Banner image"
+msgstr "صورة البانر"
+
+msgid "How many products"
+msgstr "عدد المنتجات"
+
+msgid "- none -"
+msgstr "- بدون -"
+
+msgid "Item 1"
+msgstr "العنصر 1"
+
+msgid "Item 2"
+msgstr "العنصر 2"
+
+msgid "Item 3"
+msgstr "العنصر 3"
+
+msgid "Item 4"
+msgstr "العنصر 4"
+
+msgid "Bullet 1"
+msgstr "نقطة 1"
+
+msgid "Bullet 2"
+msgstr "نقطة 2"
+
+msgid "Bullet 3"
+msgstr "نقطة 3"
+
+msgid "Step 1"
+msgstr "الخطوة 1"
+
+msgid "Step 2"
+msgstr "الخطوة 2"
+
+msgid "Step 3"
+msgstr "الخطوة 3"
+
+msgid "Question 1"
+msgstr "سؤال 1"
+
+msgid "Question 2"
+msgstr "سؤال 2"
+
+msgid "Question 3"
+msgstr "سؤال 3"
+
+msgid "Question 4"
+msgstr "سؤال 4"
+
+msgid "Answer 1"
+msgstr "إجابة 1"
+
+msgid "Answer 2"
+msgstr "إجابة 2"
+
+msgid "Answer 3"
+msgstr "إجابة 3"
+
+msgid "Answer 4"
+msgstr "إجابة 4"
+
+msgid "Card 1 title"
+msgstr "عنوان البطاقة 1"
+
+msgid "Card 2 title"
+msgstr "عنوان البطاقة 2"
+
+msgid "Card 3 title"
+msgstr "عنوان البطاقة 3"
+
+msgid "Card 1 text"
+msgstr "نص البطاقة 1"
+
+msgid "Card 2 text"
+msgstr "نص البطاقة 2"
+
+msgid "Card 3 text"
+msgstr "نص البطاقة 3"
+
+msgid "Card 4 text"
+msgstr "نص البطاقة 4"
+
+msgid "Card 1 category"
+msgstr "فئة البطاقة 1"
+
+msgid "Card 2 category"
+msgstr "فئة البطاقة 2"
+
+msgid "Card 3 category"
+msgstr "فئة البطاقة 3"
+
+msgid "Card 4 category"
+msgstr "فئة البطاقة 4"
+
+msgid "Card 1 image"
+msgstr "صورة البطاقة 1"
+
+msgid "Card 2 image"
+msgstr "صورة البطاقة 2"
+
+msgid "Card 3 image"
+msgstr "صورة البطاقة 3"
+
+msgid "Card 4 image"
+msgstr "صورة البطاقة 4"

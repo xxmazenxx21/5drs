@@ -27,8 +27,15 @@ PATHS=(
 	"cart/"
 	"checkout/"
 	"my-account/"
-	"product/test-product-one/"
-	"?s=test"
+	"product-category/classic/"
+	"product-category/premium/"
+	"product-category/charcoal/"
+	"product-category/kids/"
+	"product/classic-toothbrush/"
+	"product/premium-toothbrush/"
+	"product/charcoal-soft-toothbrush/"
+	"product/kids-fun-toothbrush/"
+	"?s=toothbrush"
 	"no-such-page-404/"
 )
 

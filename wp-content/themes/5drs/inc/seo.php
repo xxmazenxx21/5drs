@@ -174,3 +174,117 @@ function fivedrs_filter_seo_description( $description ) {
 add_filter( 'rank_math/frontend/description', 'fivedrs_filter_seo_description' );
 add_filter( 'rank_math/opengraph/facebook/og_description', 'fivedrs_filter_seo_description' );
 add_filter( 'rank_math/opengraph/twitter/twitter_description', 'fivedrs_filter_seo_description' );
+/*
+ * Arabic product metadata.
+ *
+ * TranslatePress swaps text nodes, which covers the visible product copy. Three
+ * things escape it, all handled here:
+ *
+ *   - the WooCommerce breadcrumb, whose last crumb shares a text node with the
+ *     separator, so it never matches a dictionary entry;
+ *   - og:title and twitter:title, which Rank Math writes into attributes;
+ *   - the Product JSON-LD, which lives inside a <script>.
+ */
+
+/**
+ * Translate the final WooCommerce breadcrumb crumb.
+ *
+ * @param array $crumbs Breadcrumb trail, each entry [ label, url ].
+ * @return array
+ */
+function fivedrs_translate_breadcrumb( $crumbs ) {
+	if ( ! fivedrs_is_arabic() || ! is_array( $crumbs ) ) {
+		return $crumbs;
+	}
+
+	foreach ( $crumbs as $index => $crumb ) {
+		if ( isset( $crumb[0] ) && is_string( $crumb[0] ) ) {
+			$crumbs[ $index ][0] = fivedrs_translate( $crumb[0] );
+		}
+	}
+
+	return $crumbs;
+}
+add_filter( 'woocommerce_get_breadcrumb', 'fivedrs_translate_breadcrumb' );
+
+/**
+ * The current singular object's title, translated when one exists.
+ *
+ * @return array{original:string,translated:string} Empty strings when not applicable.
+ */
+function fivedrs_arabic_post_title() {
+	$empty = array(
+		'original'   => '',
+		'translated' => '',
+	);
+
+	if ( ! fivedrs_is_arabic() || is_admin() || ! is_singular() ) {
+		return $empty;
+	}
+
+	$original = get_the_title( get_queried_object_id() );
+
+	if ( '' === $original ) {
+		return $empty;
+	}
+
+	$translated = fivedrs_translate( $original );
+
+	return $translated === $original ? $empty : array(
+		'original'   => $original,
+		'translated' => $translated,
+	);
+}
+
+/**
+ * Swap the product name inside Rank Math's composed titles.
+ *
+ * Rank Math builds "%title% %sep% %sitename%", so the whole string never
+ * matches a dictionary entry - only the title portion is replaced.
+ *
+ * @param string $title Composed title.
+ * @return string
+ */
+function fivedrs_translate_composed_title( $title ) {
+	$name = fivedrs_arabic_post_title();
+
+	if ( '' === $name['original'] || ! is_string( $title ) ) {
+		return $title;
+	}
+
+	return str_replace( $name['original'], $name['translated'], $title );
+}
+add_filter( 'rank_math/frontend/title', 'fivedrs_translate_composed_title', 20 );
+add_filter( 'rank_math/opengraph/facebook/og_title', 'fivedrs_translate_composed_title', 20 );
+add_filter( 'rank_math/opengraph/twitter/twitter_title', 'fivedrs_translate_composed_title', 20 );
+
+/**
+ * Translate the Product entity in Rank Math's JSON-LD.
+ *
+ * @param array $data Rank Math JSON-LD entities.
+ * @return array
+ */
+function fivedrs_translate_product_schema( $data ) {
+	if ( ! fivedrs_is_arabic() || ! is_array( $data ) ) {
+		return $data;
+	}
+
+	foreach ( $data as $key => $entity ) {
+		if ( ! is_array( $entity ) || ! isset( $entity['@type'] ) || 'Product' !== $entity['@type'] ) {
+			continue;
+		}
+
+		foreach ( array( 'name', 'description' ) as $field ) {
+			if ( ! empty( $entity[ $field ] ) && is_string( $entity[ $field ] ) ) {
+				// Rank Math composes these from templates, so translate the
+				// product name inside them rather than the whole string.
+				$data[ $key ][ $field ] = fivedrs_translate_composed_title(
+					fivedrs_translate( $entity[ $field ] )
+				);
+			}
+		}
+	}
+
+	return $data;
+}
+add_filter( 'rank_math/json_ld', 'fivedrs_translate_product_schema', 20 );

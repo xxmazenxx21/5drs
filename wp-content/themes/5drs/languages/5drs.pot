@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-23T19:33:49+00:00\n"
+"POT-Creation-Date: 2026-10-24T00:12:07+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: 5drs\n"
@@ -66,31 +66,6 @@ msgstr ""
 msgid "&copy; %1$s %2$s. All rights reserved."
 msgstr ""
 
-#: front-page.php:26
-msgid "Hero - brand statement, product shot, primary call to action"
-msgstr ""
-
-#: front-page.php:37
-msgid "Featured products"
-msgstr ""
-
-#: front-page.php:47
-msgid "Why 5drs - benefits and trust signals"
-msgstr ""
-
-#: front-page.php:58
-msgid "Product range by category"
-msgstr ""
-
-#: front-page.php:68
-msgid "Customer reviews"
-msgstr ""
-
-#: front-page.php:79
-#: page-about.php:65
-msgid "Closing call to action"
-msgstr ""
-
 #: header.php:24
 msgid "Skip to content"
 msgstr ""
@@ -105,6 +80,297 @@ msgstr ""
 
 #: inc/assets.php:168
 msgid "5drs theme assets are not built yet. Run \"make theme-build\" (or \"npm run build\" in the theme folder)."
+msgstr ""
+
+#: inc/customizer-content.php:32
+msgid "Home - Hero"
+msgstr ""
+
+#: inc/customizer-content.php:37
+#: inc/customizer-content.php:262
+#: inc/customizer-content.php:390
+msgid "Eyebrow"
+msgstr ""
+
+#: inc/customizer-content.php:42
+#: inc/customizer-content.php:109
+#: inc/customizer-content.php:155
+#: inc/customizer-content.php:231
+#: inc/customizer-content.php:267
+#: inc/customizer-content.php:313
+#: inc/customizer-content.php:339
+#: inc/customizer-content.php:395
+#: inc/customizer-content.php:424
+msgid "Heading"
+msgstr ""
+
+#: inc/customizer-content.php:47
+#: inc/customizer-content.php:272
+#: inc/customizer-content.php:400
+#: inc/customizer-content.php:429
+msgid "Text"
+msgstr ""
+
+#: inc/customizer-content.php:52
+msgid "Primary button label"
+msgstr ""
+
+#: inc/customizer-content.php:57
+msgid "Primary button links to"
+msgstr ""
+
+#: inc/customizer-content.php:62
+msgid "Secondary button label"
+msgstr ""
+
+#: inc/customizer-content.php:67
+msgid "Secondary button links to"
+msgstr ""
+
+#: inc/customizer-content.php:72
+msgid "Hero image"
+msgstr ""
+
+#: inc/customizer-content.php:78
+msgid "Home - Trust bar"
+msgstr ""
+
+#: inc/customizer-content.php:83
+msgid "Item 1"
+msgstr ""
+
+#: inc/customizer-content.php:88
+msgid "Item 2"
+msgstr ""
+
+#: inc/customizer-content.php:93
+msgid "Item 3"
+msgstr ""
+
+#: inc/customizer-content.php:98
+msgid "Item 4"
+msgstr ""
+
+#: inc/customizer-content.php:104
+msgid "Home - Why choose us"
+msgstr ""
+
+#: inc/customizer-content.php:114
+#: inc/customizer-content.php:236
+msgid "Subtitle"
+msgstr ""
+
+#: inc/customizer-content.php:119
+msgid "Card 1 title"
+msgstr ""
+
+#: inc/customizer-content.php:124
+#: inc/customizer-content.php:170
+msgid "Card 1 text"
+msgstr ""
+
+#: inc/customizer-content.php:129
+msgid "Card 2 title"
+msgstr ""
+
+#: inc/customizer-content.php:134
+#: inc/customizer-content.php:185
+msgid "Card 2 text"
+msgstr ""
+
+#: inc/customizer-content.php:139
+msgid "Card 3 title"
+msgstr ""
+
+#: inc/customizer-content.php:144
+#: inc/customizer-content.php:200
+msgid "Card 3 text"
+msgstr ""
+
+#: inc/customizer-content.php:150
+msgid "Home - Shop by need"
+msgstr ""
+
+#: inc/customizer-content.php:160
+msgid "Card link label"
+msgstr ""
+
+#: inc/customizer-content.php:165
+msgid "Card 1 category"
+msgstr ""
+
+#: inc/customizer-content.php:175
+msgid "Card 1 image"
+msgstr ""
+
+#: inc/customizer-content.php:180
+msgid "Card 2 category"
+msgstr ""
+
+#: inc/customizer-content.php:190
+msgid "Card 2 image"
+msgstr ""
+
+#: inc/customizer-content.php:195
+msgid "Card 3 category"
+msgstr ""
+
+#: inc/customizer-content.php:205
+msgid "Card 3 image"
+msgstr ""
+
+#: inc/customizer-content.php:210
+msgid "Card 4 category"
+msgstr ""
+
+#: inc/customizer-content.php:215
+msgid "Card 4 text"
+msgstr ""
+
+#: inc/customizer-content.php:220
+msgid "Card 4 image"
+msgstr ""
+
+#: inc/customizer-content.php:226
+msgid "Home - Featured products"
+msgstr ""
+
+#: inc/customizer-content.php:241
+msgid "How many products"
+msgstr ""
+
+#: inc/customizer-content.php:246
+msgid "Link label"
+msgstr ""
+
+#: inc/customizer-content.php:251
+msgid "Link goes to"
+msgstr ""
+
+#: inc/customizer-content.php:257
+msgid "Home - Kids spotlight"
+msgstr ""
+
+#: inc/customizer-content.php:277
+msgid "Bullet 1"
+msgstr ""
+
+#: inc/customizer-content.php:282
+msgid "Bullet 2"
+msgstr ""
+
+#: inc/customizer-content.php:287
+msgid "Bullet 3"
+msgstr ""
+
+#: inc/customizer-content.php:292
+#: inc/customizer-content.php:405
+#: inc/customizer-content.php:434
+msgid "Button label"
+msgstr ""
+
+#: inc/customizer-content.php:297
+msgid "Button links to category"
+msgstr ""
+
+#: inc/customizer-content.php:302
+msgid "Banner image"
+msgstr ""
+
+#: inc/customizer-content.php:308
+msgid "Home - Healthy smile tips"
+msgstr ""
+
+#: inc/customizer-content.php:318
+msgid "Step 1"
+msgstr ""
+
+#: inc/customizer-content.php:323
+msgid "Step 2"
+msgstr ""
+
+#: inc/customizer-content.php:328
+msgid "Step 3"
+msgstr ""
+
+#: inc/customizer-content.php:334
+msgid "Home - FAQ"
+msgstr ""
+
+#: inc/customizer-content.php:344
+msgid "Question 1"
+msgstr ""
+
+#: inc/customizer-content.php:349
+msgid "Answer 1"
+msgstr ""
+
+#: inc/customizer-content.php:354
+msgid "Question 2"
+msgstr ""
+
+#: inc/customizer-content.php:359
+msgid "Answer 2"
+msgstr ""
+
+#: inc/customizer-content.php:364
+msgid "Question 3"
+msgstr ""
+
+#: inc/customizer-content.php:369
+msgid "Answer 3"
+msgstr ""
+
+#: inc/customizer-content.php:374
+msgid "Question 4"
+msgstr ""
+
+#: inc/customizer-content.php:379
+msgid "Answer 4"
+msgstr ""
+
+#: inc/customizer-content.php:385
+msgid "Products page - Hero"
+msgstr ""
+
+#: inc/customizer-content.php:407
+msgid "Scrolls down to the product grid."
+msgstr ""
+
+#: inc/customizer-content.php:411
+msgid "Hero background image"
+msgstr ""
+
+#: inc/customizer-content.php:413
+msgid "Shown full width behind the hero text. Leave empty for a brand gradient."
+msgstr ""
+
+#: inc/customizer-content.php:419
+msgid "Home - Closing call to action"
+msgstr ""
+
+#: inc/customizer-content.php:439
+msgid "Button links to"
+msgstr ""
+
+#: inc/customizer-content.php:610
+msgid "5drs - Home Page"
+msgstr ""
+
+#: inc/customizer-content.php:611
+msgid "All Home page content. Clear a section's text to hide that section entirely."
+msgstr ""
+
+#: inc/customizer-content.php:615
+msgid "5drs - Products Page"
+msgstr ""
+
+#: inc/customizer-content.php:616
+msgid "The hero on the Our Products page. Clear the text to hide it."
+msgstr ""
+
+#: inc/customizer-content.php:625
+msgid "- none -"
 msgstr ""
 
 #: inc/customizer.php:25
@@ -151,7 +417,7 @@ msgstr ""
 msgid "Used in the site footer. Leave a field empty to hide it."
 msgstr ""
 
-#: inc/i18n.php:126
+#: inc/i18n.php:159
 msgid "Change language"
 msgstr ""
 
@@ -175,33 +441,78 @@ msgstr ""
 msgid "Sidebar shown on WooCommerce archive pages."
 msgstr ""
 
-#: inc/template-tags.php:182
+#: inc/template-tags.php:209
 msgid "Our Goal Is Your Personal Comfort"
 msgstr ""
 
 #. translators: %s: number of items in the cart.
-#: inc/template-tags.php:236
-#: inc/woocommerce.php:131
+#: inc/template-tags.php:263
+#: inc/woocommerce.php:161
 #, php-format
 msgid "%s item in cart"
 msgid_plural "%s items in cart"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/template-tags.php:305
+#: inc/template-tags.php:332
 msgid "Facebook"
 msgstr ""
 
-#: inc/template-tags.php:309
+#: inc/template-tags.php:336
 msgid "Instagram"
 msgstr ""
 
-#: inc/template-tags.php:313
+#: inc/template-tags.php:340
 msgid "TikTok"
 msgstr ""
 
-#: inc/template-tags.php:321
+#: inc/template-tags.php:348
 msgid "WhatsApp"
+msgstr ""
+
+#. translators: %s: the lowest price among a product's variations.
+#: inc/woocommerce.php:262
+#, php-format
+msgid "From %s"
+msgstr ""
+
+#: inc/woocommerce.php:309
+msgid "Choose options"
+msgstr ""
+
+#. translators: %s: bristle type, e.g. "Soft".
+#: inc/woocommerce.php:390
+#, php-format
+msgid "%s bristles"
+msgstr ""
+
+#: inc/woocommerce.php:415
+#: inc/woocommerce.php:470
+msgid "Please choose a bristle type"
+msgstr ""
+
+#: inc/woocommerce.php:430
+msgid "Decrease quantity"
+msgstr ""
+
+#: inc/woocommerce.php:442
+msgid "Increase quantity"
+msgstr ""
+
+#: inc/woocommerce.php:466
+msgid "Added to your cart"
+msgstr ""
+
+#: inc/woocommerce.php:467
+msgid "View cart"
+msgstr ""
+
+#: inc/woocommerce.php:468
+msgid "Sorry, that could not be added to your cart."
+msgstr ""
+
+#: inc/woocommerce.php:469
+msgid "Dismiss"
 msgstr ""
 
 #. translators: %s: search query.
@@ -232,6 +543,10 @@ msgstr ""
 
 #: page-about.php:55
 msgid "What we make - product philosophy"
+msgstr ""
+
+#: page-about.php:65
+msgid "Closing call to action"
 msgstr ""
 
 #: page-contact.php:39
@@ -276,6 +591,14 @@ msgstr ""
 
 #: template-parts/nav/offcanvas.php:30
 msgid "Close menu"
+msgstr ""
+
+#: template-parts/products/filter.php:36
+msgid "Filter by category"
+msgstr ""
+
+#: template-parts/products/filter.php:44
+msgid "All"
 msgstr ""
 
 #. translators: %s: name of the page section.
