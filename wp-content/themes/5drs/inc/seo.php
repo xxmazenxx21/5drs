@@ -174,6 +174,7 @@ function fivedrs_filter_seo_description( $description ) {
 add_filter( 'rank_math/frontend/description', 'fivedrs_filter_seo_description' );
 add_filter( 'rank_math/opengraph/facebook/og_description', 'fivedrs_filter_seo_description' );
 add_filter( 'rank_math/opengraph/twitter/twitter_description', 'fivedrs_filter_seo_description' );
+
 /*
  * Arabic product metadata.
  *
