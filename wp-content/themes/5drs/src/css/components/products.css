@@ -1,0 +1,364 @@
+/* ---------------------------------------------------------------------------
+ * Our Products page: full-bleed hero, category pills, add-to-cart notice.
+ * ---------------------------------------------------------------------------
+ * Theme-owned components only. Anything that has to outrank WooCommerce's own
+ * stylesheet lives in woocommerce.css, which is unlayered on purpose - see
+ * CLAUDE.md 4.7.
+ * ------------------------------------------------------------------------ */
+
+@layer components {
+
+	/* --- full-bleed hero ---------------------------------------------------- */
+
+	.fivedrs-phero {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+		min-height: 50vh;
+		background-color: var(--color-primary);
+		color: var(--color-ink-invert);
+		isolation: isolate;
+	}
+
+	@media (width >= 48rem) {
+		.fivedrs-phero {
+			min-height: 65vh;
+		}
+	}
+
+	.fivedrs-phero--compact {
+		min-height: 0;
+		padding-block: var(--fivedrs-section-y);
+	}
+
+	@media (width >= 48rem) {
+		.fivedrs-phero--compact {
+			min-height: 0;
+		}
+	}
+
+	.fivedrs-phero__media {
+		position: absolute;
+		inset: 0;
+		z-index: -2;
+	}
+
+	.fivedrs-phero__image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		/* The brushes sit along the bottom of the frame, so keep that edge in
+		   view as the crop tightens on small screens. */
+		object-position: center 70%;
+	}
+
+	/*
+	 * Readability veil. The photograph contains pure white highlights behind
+	 * the text, so the centre needs to reach 0.72 opacity for white body text
+	 * to clear WCAG AA (measured: 5.8:1). It thins towards the edges so the
+	 * product shots there stay visible.
+	 */
+	.fivedrs-phero__veil {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background:
+			radial-gradient(
+				ellipse 70% 80% at 50% 50%,
+				color-mix(in srgb, var(--color-navy-900) 72%, transparent) 0%,
+				color-mix(in srgb, var(--color-navy-900) 58%, transparent) 55%,
+				color-mix(in srgb, var(--color-navy-900) 42%, transparent) 100%
+			);
+	}
+
+	.fivedrs-phero--plain .fivedrs-phero__veil {
+		/* No photograph: a plain brand gradient carries the section instead. */
+		background: linear-gradient(135deg, var(--color-navy-900) 0%, var(--color-primary) 55%, var(--color-navy-700) 100%);
+	}
+
+	.fivedrs-phero__inner {
+		position: relative;
+		z-index: 1;
+		max-width: 48rem;
+		padding-block: var(--fivedrs-section-y);
+		text-align: center;
+	}
+
+	.fivedrs-phero__eyebrow {
+		display: block;
+		margin-block-end: 0.75rem;
+		color: var(--color-gold);
+		font-size: 0.8125rem;
+		font-weight: 600;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+	}
+
+	body.lang-ar .fivedrs-phero__eyebrow {
+		letter-spacing: normal;
+		text-transform: none;
+		font-size: 0.9375rem;
+	}
+
+	.fivedrs-phero__title {
+		margin-block-end: 1rem;
+		color: var(--color-ink-invert);
+		font-size: clamp(1.875rem, 1.2rem + 3vw, 3.25rem);
+		text-wrap: balance;
+	}
+
+	body.lang-ar .fivedrs-phero__title {
+		line-height: 1.45;
+	}
+
+	.fivedrs-phero--compact .fivedrs-phero__title {
+		font-size: clamp(1.625rem, 1.2rem + 2vw, 2.5rem);
+	}
+
+	.fivedrs-phero__text {
+		max-width: 38rem;
+		margin-inline: auto;
+		margin-block-end: 1.75rem;
+		color: var(--color-navy-100);
+		font-size: 1.0625rem;
+	}
+
+	.fivedrs-phero__actions {
+		margin-block-end: 0;
+	}
+
+	.fivedrs-phero__actions .fivedrs-btn {
+		background-color: var(--color-accent-strong);
+	}
+
+	.fivedrs-phero__actions .fivedrs-btn:hover {
+		background-color: var(--color-green-800);
+	}
+
+	/* --- hero animation ------------------------------------------------------
+	 * A slow Ken Burns push on the image plus a short stagger on the text.
+	 * Transform and opacity only, so nothing reflows.
+	 * --------------------------------------------------------------------- */
+
+	@keyframes fivedrs-kenburns {
+		from { transform: scale(1); }
+		to   { transform: scale(1.08); }
+	}
+
+	@keyframes fivedrs-rise {
+		from { opacity: 0; transform: translateY(1rem); }
+		to   { opacity: 1; transform: none; }
+	}
+
+	.fivedrs-phero__image {
+		animation: fivedrs-kenburns 18s ease-out both;
+	}
+
+	.fivedrs-phero [data-phero-item] {
+		animation: fivedrs-rise 600ms ease-out both;
+	}
+
+	.fivedrs-phero [data-phero-item]:nth-child(1) { animation-delay: 60ms; }
+	.fivedrs-phero [data-phero-item]:nth-child(2) { animation-delay: 160ms; }
+	.fivedrs-phero [data-phero-item]:nth-child(3) { animation-delay: 260ms; }
+	.fivedrs-phero [data-phero-item]:nth-child(4) { animation-delay: 360ms; }
+
+	@media (prefers-reduced-motion: reduce) {
+		.fivedrs-phero__image,
+		.fivedrs-phero [data-phero-item] {
+			animation: none;
+		}
+	}
+
+	/* --- category pills -------------------------------------------------------- */
+
+	.fivedrs-pills {
+		margin-block: var(--fivedrs-section-y) 2rem;
+		scroll-margin-block-start: calc(var(--fivedrs-header-height) + 1rem);
+	}
+
+	.fivedrs-pills__list {
+		position: relative;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.fivedrs-pills__item {
+		position: relative;
+		z-index: 1;
+		display: inline-flex;
+		align-items: center;
+		padding: 0.5625rem 1.125rem;
+		border: 1px solid var(--color-line-strong);
+		border-radius: var(--radius-full);
+		background-color: var(--color-surface);
+		color: var(--color-ink);
+		font-size: 0.9375rem;
+		font-weight: 600;
+		text-decoration: none;
+		white-space: nowrap;
+		transition: color 200ms ease, border-color 200ms ease, background-color 200ms ease, transform 200ms ease;
+	}
+
+	.fivedrs-pills__item:hover {
+		border-color: var(--color-primary);
+		color: var(--color-primary);
+		transform: translateY(-1px);
+	}
+
+	.fivedrs-pills__item.is-active {
+		background-color: var(--color-primary);
+		border-color: var(--color-primary);
+		color: var(--color-ink-invert);
+	}
+
+	.fivedrs-pills__item.is-active:hover {
+		color: var(--color-ink-invert);
+	}
+
+	/* Decorative highlight that slides between pills on hover. */
+	.fivedrs-pills__indicator {
+		position: absolute;
+		inset-block-start: 0;
+		inset-inline-start: 0;
+		z-index: 0;
+		border-radius: var(--radius-full);
+		background-color: var(--color-primary-soft);
+		opacity: 0;
+		pointer-events: none;
+		transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1), width 280ms cubic-bezier(0.22, 1, 0.36, 1), opacity 200ms ease;
+	}
+
+	.fivedrs-pills__indicator.is-ready {
+		opacity: 1;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.fivedrs-pills__indicator {
+			display: none;
+		}
+
+		.fivedrs-pills__item:hover {
+			transform: none;
+		}
+	}
+
+	/* --- add-to-cart notice ------------------------------------------------------ */
+
+	.fivedrs-notice {
+		position: fixed;
+		inset-block-end: 1rem;
+		inset-inline: 1rem auto;
+		z-index: 70;
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		max-width: min(26rem, calc(100vw - 2rem));
+		padding: 0.875rem 1rem;
+		border-radius: var(--radius-lg);
+		background-color: var(--color-primary);
+		color: var(--color-ink-invert);
+		box-shadow: var(--shadow-card);
+		opacity: 0;
+		visibility: hidden;
+		transform: translateY(0.75rem);
+		transition: opacity 250ms ease, transform 250ms ease, visibility 250ms ease;
+	}
+
+	.fivedrs-notice.is-visible {
+		opacity: 1;
+		visibility: visible;
+		transform: none;
+	}
+
+	.fivedrs-notice--error {
+		background-color: var(--color-error);
+	}
+
+	.fivedrs-notice__icon {
+		flex: none;
+		display: grid;
+		place-items: center;
+		width: 1.75rem;
+		height: 1.75rem;
+		border-radius: var(--radius-full);
+		background-color: var(--color-accent-strong);
+	}
+
+	.fivedrs-notice--error .fivedrs-notice__icon {
+		display: none;
+	}
+
+	.fivedrs-notice__icon svg {
+		width: 1rem;
+		height: 1rem;
+	}
+
+	.fivedrs-notice__text {
+		flex: 1;
+		font-size: 0.9375rem;
+		font-weight: 600;
+	}
+
+	.fivedrs-notice__link {
+		flex: none;
+		color: var(--color-gold);
+		font-size: 0.875rem;
+		font-weight: 700;
+		text-decoration: underline;
+	}
+
+	.fivedrs-notice__link:hover {
+		color: var(--color-ink-invert);
+	}
+
+	.fivedrs-notice__close {
+		flex: none;
+		display: grid;
+		place-items: center;
+		width: 1.75rem;
+		height: 1.75rem;
+		padding: 0;
+		border: 0;
+		border-radius: var(--radius-full);
+		background: transparent;
+		color: inherit;
+		cursor: pointer;
+		opacity: 0.75;
+	}
+
+	.fivedrs-notice__close:hover {
+		opacity: 1;
+	}
+
+	.fivedrs-notice__close svg {
+		width: 0.875rem;
+		height: 0.875rem;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.fivedrs-notice {
+			transition: opacity 1ms linear, visibility 1ms linear;
+			transform: none;
+		}
+	}
+
+	/* Used to retire a native control once an accessible replacement exists. */
+	.fivedrs-visually-hidden {
+		position: absolute !important;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		padding: 0;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+		border: 0;
+	}
+}
