@@ -69,6 +69,7 @@ make categories         # category card images
 make home-content       # Arabic Home copy + the Home SEO fields
 make product-content    # Arabic catalogue + Products page copy
 make about-content      # Arabic About copy + the About SEO fields
+make contact-content    # Arabic Contact copy + the Contact SEO fields
 make translations       # seed the Arabic translations TranslatePress serves
 make crawl              # request every page in both languages
 
@@ -116,6 +117,7 @@ inc/customizer.php   contact + social fields the client fills in
 inc/customizer-content.php  Home and Products page content (see 5.5)
 inc/template-tags.php  logo, SVG icons, cart button, contact and social output
 inc/seo.php          FAQ schema, Arabic SEO metadata, breadcrumb/schema translation
+inc/contact.php      contact form handling and the Messages post type
 inc/woocommerce.php  WooCommerce support, wrappers, cart fragment, shop + product hooks
 header.php footer.php front-page.php page.php page-about.php
 page-contact.php page-policies.php index.php single.php 404.php sidebar.php
@@ -128,6 +130,7 @@ template-parts/
   nav/offcanvas.php        mobile menu
   home/                    the nine Home page sections
   about/                   story, slideshow, mission, values, promise
+  contact/                 form and information card
   products/filter.php      category pill links
 woocommerce/         empty by design - read its README before adding anything
 assets/images/       logo-lockup.png, logo-full.png (generated, see below)
@@ -313,10 +316,10 @@ silently detach a template.
 
 ### 5.2 Page shells
 
-The Contact and Policies pages are still **structural shells**: a hero plus
+The Policies pages are still **structural shells**: a hero plus
 empty, named section containers rendered by
-`template-parts/section-placeholder.php`. Home (5.5), Our Products (5.6) and
-About (5.7) have real content. They emit an
+`template-parts/section-placeholder.php`. Home (5.5), Our Products (5.6),
+About (5.7) and Contact (5.8) have real content. They emit an
 `<!-- Section: ... -->` comment and a dashed box that is **visible to
 signed-in editors only** - anonymous visitors see nothing. Replace a
 `get_template_part( 'template-parts/section-placeholder', ... )` call with the
@@ -470,7 +473,59 @@ break Arabic letter joining.
 > `data-no-translation` so the plugin leaves the pieces alone. Any future
 > effect that chops text into fragments needs the same order.
 
-### 5.8 Translations — two stores, and the traps in both
+### 5.8 The Contact page
+
+A compact gradient hero, then the form on the start side and a contact card on
+the end. Page wording lives in the **"5drs — Contact Page"** Customizer panel;
+field labels and validation messages are theme strings in `languages/ar.po`,
+because they are interface text rather than copy a client re-words.
+
+**The address, email and phone are defaults in `fivedrs_option_fields()`**, not
+saved theme mods - so they are live on a fresh install, still editable in
+Appearance → Customize → Contact & Social, and the footer and the contact page
+read the same values. The address is deliberately one line: a line break would
+split it into several text nodes, each needing its own translation entry.
+
+#### How submission works
+
+The form posts to `admin-post.php`, so it works with JavaScript switched off:
+validate, then Post/Redirect/Get back to the page with a status. The script
+intercepts the same form and posts it with `fetch` to the **same handler**,
+which answers JSON when asked - so there is no second validation path that
+could drift from the first.
+
+**No submitted data ever travels in a URL.** On a failed no-JavaScript
+submission the values and errors go into a sixty-second transient keyed by a
+hash of IP and user agent; the redirect carries only `?fivedrs_contact=error`.
+
+Spam defences, all server-side: nonce, a honeypot field, and a **signed**
+timestamp (`wp_hash`, so the minimum-time check cannot be back-dated), plus a
+per-IP rate limit of five submissions per ten minutes.
+
+`fivedrs_contact_validate()` is deliberately pure - it sends nothing, stores
+nothing and reads no request state - so the rules can be exercised directly.
+`make verify` does exactly that rather than submitting the form.
+
+**Every accepted message is stored before the email is attempted**, as a
+private `fivedrs_message` post under the admin menu **Messages**. That post
+type is not public, not queryable, not in REST and cannot be created by hand;
+it exists so a mail failure can never lose a customer's message.
+
+#### TODO: SMTP on Hostinger
+
+`wp_mail()` sends through PHP mail by default, and the form's recipient is
+currently a Gmail address. **Mail sent "from" the server on behalf of a Gmail
+address will not pass SPF and will be filed as spam or rejected outright.**
+
+Before launch, set up real SMTP on Hostinger: create a mailbox on the site's
+own domain, then either install WP Mail SMTP and point it at that account, or
+reuse the `phpmailer_init` approach already in
+`wp-content/mu-plugins/local-mail.php` with production credentials. Send the
+notification **from** that domain mailbox and keep the Gmail address as the
+recipient. Until that is done, treat the Messages screen as the reliable
+record, not the inbox.
+
+### 5.9 Translations — two stores, and the traps in both
 
 **Theme strings** (`5drs` text domain) live in `languages/ar.po`, compiled with
 `make mo`.

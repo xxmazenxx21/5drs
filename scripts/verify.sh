@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Smoke-test the local 5drs stack. Exits non-zero if any check fails.
 set -uo pipefail
-cd "$(dirname "$0")/.."
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+cd "$SCRIPT_DIR/.."
 
 PASS=0
 FAIL=0
@@ -120,32 +121,34 @@ THEME_CSS=$(cat wp-content/themes/5drs/dist/assets/style-*.css)
 check "$(grep -q '\.woocommerce \.fivedrs-brand img' <<<"$THEME_CSS" && echo yes || echo no)" "store pages re-assert the header logo size"
 
 # --- home page ----------------------------------------------------------------
-HOME=$(curl -sL "$WP_URL/")
+# Not HOME: that is the user's home directory, and overwriting it breaks any
+# command that reads it - Docker looks for its config under $HOME.
+HOME_PAGE=$(curl -sL "$WP_URL/")
 AR_HOME=$(curl -sL "$WP_URL/ar/")
 
-check "$([ "$(grep -c '<h1' <<<"$HOME")" = "1" ] && echo yes || echo no)" "home page has exactly one h1"
+check "$([ "$(grep -c '<h1' <<<"$HOME_PAGE")" = "1" ] && echo yes || echo no)" "home page has exactly one h1"
 
 for sect in home-hero trust why cats featured kids tips faq cta; do
-	check "$(grep -q "fivedrs-$sect" <<<"$HOME" && echo yes || echo no)" "home section renders: $sect"
+	check "$(grep -q "fivedrs-$sect" <<<"$HOME_PAGE" && echo yes || echo no)" "home section renders: $sect"
 done
 
 # The hero is the LCP element: eager, prioritised, and never lazy.
-HERO_IMG=$(grep -oE '<img[^>]*fivedrs-home-hero__image[^>]*>' <<<"$HOME" | head -1)
+HERO_IMG=$(grep -oE '<img[^>]*fivedrs-home-hero__image[^>]*>' <<<"$HOME_PAGE" | head -1)
 check "$(grep -q 'fetchpriority="high"' <<<"$HERO_IMG" && echo yes || echo no)" "hero image has fetchpriority=high"
 check "$(grep -q 'loading="lazy"' <<<"$HERO_IMG" && echo no || echo yes)" "hero image is NOT lazy-loaded"
 check "$(grep -q 'srcset=' <<<"$HERO_IMG" && echo yes || echo no)" "hero image has srcset"
 
 # Every other content image below the fold must lazy-load.
-NONLAZY=$(grep -oE '<img[^>]*(cat-classic|cat-kids|kids-spotlight|test-product)[^>]*>' <<<"$HOME" | grep -cv 'loading="lazy"')
+NONLAZY=$(grep -oE '<img[^>]*(cat-classic|cat-kids|kids-spotlight|test-product)[^>]*>' <<<"$HOME_PAGE" | grep -cv 'loading="lazy"')
 check "$([ "$NONLAZY" = "0" ] && echo yes || echo no)" "all below-the-fold images lazy-load ($NONLAZY eager)"
 
-check "$([ "$(grep -c 'FAQPage' <<<"$HOME")" = "1" ] && echo yes || echo no)" "exactly one FAQPage schema (English)"
+check "$([ "$(grep -c 'FAQPage' <<<"$HOME_PAGE")" = "1" ] && echo yes || echo no)" "exactly one FAQPage schema (English)"
 check "$([ "$(grep -c 'FAQPage' <<<"$AR_HOME")" = "1" ] && echo yes || echo no)" "exactly one FAQPage schema (Arabic)"
 check "$(grep -q '"inLanguage":"ar"' <<<"$AR_HOME" && echo yes || echo no)" "Arabic FAQ schema is marked inLanguage=ar"
 
-check "$(grep -q 'product-category/classic' <<<"$HOME" && echo yes || echo no)" "category card links to the Classic archive"
+check "$(grep -q 'product-category/classic' <<<"$HOME_PAGE" && echo yes || echo no)" "category card links to the Classic archive"
 # Held out on purpose: the supplied Black Edition photo has "S55" on the handle.
-check "$(grep -q 'product-category/black-edition' <<<"$HOME" && echo no || echo yes)" "Black Edition card stays hidden until a clean image is set"
+check "$(grep -q 'product-category/black-edition' <<<"$HOME_PAGE" && echo no || echo yes)" "Black Edition card stays hidden until a clean image is set"
 
 # --- home page in Arabic --------------------------------------------------------
 check "$(grep -q 'ابتسامة أصح' <<<"$AR_HOME" && echo yes || echo no)" "Arabic hero heading renders"
@@ -162,7 +165,7 @@ check "$([ "$LEFTOVER" = "0" ] && echo yes || echo no)" "no English home copy le
 # inc/seo.php swaps in the Arabic pair instead.
 check "$(grep -qE '<title>[^<]*فرش أسنان' <<<"$AR_HOME" && echo yes || echo no)" "Arabic page title"
 check "$(grep -q 'name="description" content="اكتشف' <<<"$AR_HOME" && echo yes || echo no)" "Arabic meta description"
-check "$(grep -q '<title>5Doctors | Toothbrushes' <<<"$HOME" && echo yes || echo no)" "English page title unchanged"
+check "$(grep -q '<title>5Doctors | Toothbrushes' <<<"$HOME_PAGE" && echo yes || echo no)" "English page title unchanged"
 
 # --- our products page ----------------------------------------------------------
 PRODUCTS=$(curl -sL "$WP_URL/products/")
@@ -234,7 +237,7 @@ check "$(grep -q 'فرشاة كلاسيك' <<<"$AR_VARIABLE" && echo yes || echo
 check "$(grep -qE '<title>[^<]*فرشاة كلاسيك' <<<"$AR_VARIABLE" && echo yes || echo no)" "Arabic product page title"
 
 # --- home page categories -----------------------------------------------------------------
-CAT_CARDS=$(grep -oE 'class="fivedrs-cat-card" href=' <<<"$HOME" | wc -l)
+CAT_CARDS=$(grep -oE 'class="fivedrs-cat-card" href=' <<<"$HOME_PAGE" | wc -l)
 check "$([ "$CAT_CARDS" = "4" ] && echo yes || echo no)" "home page shows four category cards ($CAT_CARDS)"
 
 # --- about page -------------------------------------------------------------------
@@ -291,7 +294,91 @@ check "$([ "$ABOUT_LEFT" = "0" ] && echo yes || echo no)" "no English About copy
 # The closing band carries two buttons here and one on the Home page.
 ABOUT_CTA_BTNS=$(grep -oE 'fivedrs-cta__actions' <<<"$ABOUT" | wc -l)
 check "$([ "$ABOUT_CTA_BTNS" = "1" ] && grep -q 'fivedrs-cta__secondary' <<<"$ABOUT" && echo yes || echo no)" "about CTA has a secondary button"
-check "$(grep -q 'fivedrs-cta__secondary' <<<"$HOME" && echo no || echo yes)" "home CTA still has only one button"
+check "$(grep -q 'fivedrs-cta__secondary' <<<"$HOME_PAGE" && echo no || echo yes)" "home CTA still has only one button"
+
+# --- contact page ---------------------------------------------------------------
+CONTACT=$(curl -sL "$WP_URL/contact/")
+AR_CONTACT=$(curl -sL "$WP_URL/ar/contact/")
+
+check "$([ "$(grep -c '<h1' <<<"$CONTACT")" = "1" ] && echo yes || echo no)" "contact page has exactly one h1"
+check "$(grep -q 'fivedrs-hero--gradient' <<<"$CONTACT" && echo yes || echo no)" "contact hero uses the brand gradient"
+check "$(grep -q 'fivedrs-info-card' <<<"$CONTACT" && echo yes || echo no)" "contact information card renders"
+
+# Every field needs a real label, not a placeholder standing in for one.
+for field in name phone email message; do
+	check "$(grep -q "for=\"fivedrs-$field\"" <<<"$CONTACT" && echo yes || echo no)" "field has a visible label: $field"
+done
+
+check "$(grep -qE 'id="fivedrs-phone"[^>]*' <<<"$CONTACT" && grep -q 'type="tel"' <<<"$CONTACT" && echo yes || echo no)" "phone field is type=tel"
+check "$(grep -q 'inputmode="tel"' <<<"$CONTACT" && echo yes || echo no)" "phone field sets inputmode=tel"
+check "$(grep -q 'autocomplete="tel"' <<<"$CONTACT" && echo yes || echo no)" "phone field sets autocomplete=tel"
+check "$(grep -q 'autocomplete="name"' <<<"$CONTACT" && echo yes || echo no)" "name field sets autocomplete=name"
+check "$(grep -q 'type="email"' <<<"$CONTACT" && echo yes || echo no)" "email field is type=email"
+check "$(grep -q 'maxlength="2000"' <<<"$CONTACT" && echo yes || echo no)" "message field is capped at 2000 characters"
+check "$([ "$(grep -o 'required' <<<"$CONTACT" | wc -l)" -ge 3 ] && echo yes || echo no)" "name, phone and message are required"
+check "$(grep -q 'aria-describedby="fivedrs-name-error"' <<<"$CONTACT" && echo yes || echo no)" "field errors are wired with aria-describedby"
+check "$(grep -q 'aria-live="polite"' <<<"$CONTACT" && echo yes || echo no)" "status region is a polite live region"
+
+# Spam defences must be in the markup, not just in the handler.
+check "$(grep -q 'fivedrs_contact_nonce' <<<"$CONTACT" && echo yes || echo no)" "form carries a nonce"
+check "$(grep -q 'name="fivedrs_website"' <<<"$CONTACT" && echo yes || echo no)" "form carries a honeypot field"
+check "$(grep -q 'name="fivedrs_tsh"' <<<"$CONTACT" && echo yes || echo no)" "form carries a signed timestamp"
+check "$(grep -q 'admin-post.php' <<<"$CONTACT" && echo yes || echo no)" "form posts to admin-post.php so it works without JS"
+
+# Social marks show here even with no URLs, but must not be dead links.
+check "$(grep -q 'fivedrs-social__placeholder' <<<"$CONTACT" && echo yes || echo no)" "social icons render while URLs are empty"
+check "$(grep -q 'href="#"' <<<"$CONTACT" && echo no || echo yes)" "no placeholder link goes nowhere"
+
+# --- contact details are shared with the footer ---------------------------------------
+check "$(grep -q 'Fifth Settlement' <<<"$CONTACT" && echo yes || echo no)" "contact page shows the address"
+check "$(grep -q 'Fifth Settlement' <<<"$HOME_PAGE" && echo yes || echo no)" "footer shows the address"
+check "$(grep -q 'mbakr.gop@gmail.com' <<<"$HOME_PAGE" && echo yes || echo no)" "footer shows the email"
+check "$(grep -q '+20 111 156 1011' <<<"$HOME_PAGE" && echo yes || echo no)" "footer shows the phone"
+check "$(grep -q 'التجمع الخامس' <<<"$AR_HOME" && echo yes || echo no)" "Arabic footer shows the address"
+
+# --- contact page in arabic --------------------------------------------------------------
+check "$(grep -q 'أرسل لنا رسالة' <<<"$AR_CONTACT" && echo yes || echo no)" "Arabic form heading"
+check "$(grep -q 'معلومات التواصل' <<<"$AR_CONTACT" && echo yes || echo no)" "Arabic information card heading"
+check "$(grep -q 'رقم الهاتف' <<<"$AR_CONTACT" && echo yes || echo no)" "Arabic field labels"
+check "$(grep -q '<bdi dir="ltr">' <<<"$AR_CONTACT" && echo yes || echo no)" "phone is wrapped in bdi so it reads LTR"
+check "$(grep -qE '<title>[^<]*تواصل معنا' <<<"$AR_CONTACT" && echo yes || echo no)" "Arabic contact page title"
+
+# The script must carry no English of its own on /ar/.
+AR_JS=$(grep -oE 'fivedrsContact = \{.*?\};' <<<"$AR_CONTACT" | head -1)
+check "$(grep -q 'Thank you' <<<"$AR_JS" && echo no || echo yes)" "JS status strings carry no English on /ar/"
+
+# --- message storage ------------------------------------------------------------------------
+# Asserted by inspecting the registration, not by submitting anything.
+WPOUT=$(mktemp)
+"$SCRIPT_DIR/wp.sh" eval >"$WPOUT" 2>/dev/null '
+$o = get_post_type_object("fivedrs_message");
+echo $o ? sprintf("%s|%s|%s|%s", var_export($o->public,true), var_export($o->publicly_queryable,true), var_export($o->show_in_rest,true), $o->cap->create_posts) : "missing";
+'
+CPT=$(tr -d "[:space:]" < "$WPOUT")
+check "$([ "$CPT" = "false|false|false|do_not_allow" ] && echo yes || echo no)" "messages CPT is private, non-REST and read-only ($CPT)"
+
+# --- validation rules -------------------------------------------------------------------------
+# Exercises the pure validator directly: nothing is submitted, stored or emailed.
+"$SCRIPT_DIR/wp.sh" eval >"$WPOUT" 2>/dev/null '
+$cases = array(
+  array(array("name"=>"Mazen","phone"=>"+20 111 156 1011","email"=>"a@b.com","message"=>"Hello"), ""),
+  array(array("name"=>"Mazen","phone"=>"01111561011","email"=>"","message"=>"Hi"), ""),
+  array(array("name"=>"","phone"=>"01111561011","email"=>"","message"=>"Hi"), "name"),
+  array(array("name"=>"Mazen","phone"=>"12345","email"=>"","message"=>"Hi"), "phone"),
+  array(array("name"=>"Mazen","phone"=>"0111ABC1011","email"=>"","message"=>"Hi"), "phone"),
+  array(array("name"=>"Mazen","phone"=>"01111561011","email"=>"nope","message"=>"Hi"), "email"),
+  array(array("name"=>"Mazen","phone"=>"01111561011","email"=>"","message"=>""), "message"),
+);
+$bad = 0;
+foreach ($cases as $c) {
+  $got = implode(",", array_keys(fivedrs_contact_validate($c[0])["errors"]));
+  if ($got !== $c[1]) { $bad++; }
+}
+echo $bad;
+'
+RULES=$(tr -d "[:space:]" < "$WPOUT")
+rm -f "$WPOUT"
+check "$([ "$RULES" = "0" ] && echo yes || echo no)" "validator accepts and rejects the right inputs ($RULES mismatches)"
 
 # --- build ------------------------------------------------------------------
 check "$([ -f wp-content/themes/5drs/dist/.vite/manifest.json ] && echo yes || echo no)" "theme build output exists"
