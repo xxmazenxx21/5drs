@@ -334,11 +334,31 @@ function fivedrs_contact_list() {
 }
 
 /**
- * Print the social icon row, skipping anything the client has not filled.
+ * Print the social icon row.
  *
+ * By default anything without a URL is skipped, which is what the footer
+ * wants. The contact page passes 'always' so the marks are present from the
+ * start; those render as a labelled image rather than a link, because a link
+ * that goes nowhere is worse than no link.
+ *
+ * @param array $args Optional. Keys: 'only' (network keys to include, in
+ *                    order), 'always' (render networks with no URL) and
+ *                    'class' (wrapper class).
  * @return void
  */
-function fivedrs_social_links() {
+function fivedrs_social_links( $args = array() ) {
+	$args = wp_parse_args(
+		$args,
+		array(
+			// Which networks to consider, in order.
+			'only'   => array(),
+			// Render an icon even when its URL is empty. The icon is then not
+			// a link - an href="#" would be a control that goes nowhere.
+			'always' => false,
+			'class'  => 'fivedrs-social',
+		)
+	);
+
 	$networks = array(
 		'facebook'  => array(
 			'label' => __( 'Facebook', '5drs' ),
@@ -362,25 +382,45 @@ function fivedrs_social_links() {
 		);
 	}
 
-	$networks = array_filter(
-		$networks,
-		static function ( $network ) {
-			return '' !== $network['url'];
-		}
-	);
+	if ( ! empty( $args['only'] ) ) {
+		$networks = array_intersect_key( $networks, array_flip( $args['only'] ) );
+	}
+
+	if ( ! $args['always'] ) {
+		$networks = array_filter(
+			$networks,
+			static function ( $network ) {
+				return '' !== $network['url'];
+			}
+		);
+	}
 
 	if ( empty( $networks ) ) {
 		return;
 	}
 
-	echo '<div class="fivedrs-social">';
+	printf( '<div class="%s">', esc_attr( $args['class'] ) );
 
 	foreach ( $networks as $key => $network ) {
+		$icon  = wp_kses( fivedrs_icon( $key ), fivedrs_kses_svg() );
+		$label = esc_html( $network['label'] );
+
+		if ( '' !== $network['url'] ) {
+			printf(
+				'<a href="%1$s" rel="noopener" target="_blank">%2$s<span class="screen-reader-text">%3$s</span></a>',
+				esc_url( $network['url'] ),
+				$icon, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above.
+				$label // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above.
+			);
+			continue;
+		}
+
+		// No URL yet: show the mark, but not as something clickable.
 		printf(
-			'<a href="%1$s" rel="noopener" target="_blank">%2$s<span class="screen-reader-text">%3$s</span></a>',
-			esc_url( $network['url'] ),
-			wp_kses( fivedrs_icon( $key ), fivedrs_kses_svg() ),
-			esc_html( $network['label'] )
+			'<span class="fivedrs-social__placeholder" role="img" aria-label="%3$s">%2$s</span>',
+			'',
+			$icon, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above.
+			$label // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above.
 		);
 	}
 

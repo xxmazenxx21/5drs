@@ -11,6 +11,8 @@
  *     @type string $lead    Short paragraph under the heading.
  *     @type bool   $center  Centre the block. Default true.
  *     @type bool   $crumbs  Show the parent-page breadcrumb. Default false.
+ *     @type string $variant '' for the soft tint, 'gradient' for the brand
+ *                           navy gradient with inverted text.
  * }
  *
  * @package 5drs
@@ -26,10 +28,11 @@ $fivedrs_hero = wp_parse_args(
 		'lead'    => '',
 		'center'  => true,
 		'crumbs'  => false,
+		'variant' => '',
 	)
 );
 ?>
-<section class="fivedrs-hero<?php echo $fivedrs_hero['center'] ? ' fivedrs-hero--center' : ''; ?>">
+<section class="fivedrs-hero<?php echo $fivedrs_hero['center'] ? ' fivedrs-hero--center' : ''; ?><?php echo 'gradient' === $fivedrs_hero['variant'] ? ' fivedrs-hero--gradient' : ''; ?>" data-reveal>
 	<div class="fivedrs-container">
 		<div class="fivedrs-hero__inner">
 

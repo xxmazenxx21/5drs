@@ -656,6 +656,67 @@ function fivedrs_content_config() {
 			),
 		),
 
+		'contact'       => array(
+			'title'  => __( 'Contact page', '5drs' ),
+			'panel'  => 'contact',
+			'fields' => array(
+				'heading'       => array(
+					'type'    => 'text',
+					'label'   => __( 'Hero heading', '5drs' ),
+					'default' => 'Contact Us',
+				),
+				'text'          => array(
+					'type'    => 'textarea',
+					'label'   => __( 'Hero text', '5drs' ),
+					'default' => 'Have a question about our products or your order? Send us a message and our team will get back to you as soon as possible.',
+				),
+				'form_heading'  => array(
+					'type'    => 'text',
+					'label'   => __( 'Form heading', '5drs' ),
+					'default' => 'Send Us a Message',
+				),
+				'submit_label'  => array(
+					'type'    => 'text',
+					'label'   => __( 'Submit button label', '5drs' ),
+					'default' => 'Send Message',
+				),
+				'success'       => array(
+					'type'    => 'textarea',
+					'label'   => __( 'Success message', '5drs' ),
+					'default' => "Thank you! Your message has been sent. We'll get back to you soon.",
+				),
+				'error'         => array(
+					'type'    => 'textarea',
+					'label'   => __( 'Error message', '5drs' ),
+					'default' => 'Something went wrong. Please try again or call us directly.',
+				),
+				'info_heading'  => array(
+					'type'    => 'text',
+					'label'   => __( 'Information card heading', '5drs' ),
+					'default' => 'Contact Information',
+				),
+				'label_address' => array(
+					'type'    => 'text',
+					'label'   => __( 'Address label', '5drs' ),
+					'default' => 'Address',
+				),
+				'label_email'   => array(
+					'type'    => 'text',
+					'label'   => __( 'Email label', '5drs' ),
+					'default' => 'Email Us',
+				),
+				'label_phone'   => array(
+					'type'    => 'text',
+					'label'   => __( 'Phone label', '5drs' ),
+					'default' => 'Call Us',
+				),
+				'label_social'  => array(
+					'type'    => 'text',
+					'label'   => __( 'Social label', '5drs' ),
+					'default' => 'Follow Us',
+				),
+			),
+		),
 		'cta'           => array(
 			'title'  => __( 'Home - Closing call to action', '5drs' ),
 			'panel'  => 'home',
@@ -861,6 +922,11 @@ function fivedrs_customize_register_content( $wp_customize ) {
 			'title'       => __( '5drs - About Page', '5drs' ),
 			'description' => __( 'All About page content. Clear a section\'s text to hide that section entirely.', '5drs' ),
 			'priority'    => 32,
+		),
+		'contact'  => array(
+			'title'       => __( '5drs - Contact Page', '5drs' ),
+			'description' => __( 'Contact page wording. Field labels and validation messages are theme strings, translated in languages/ar.po.', '5drs' ),
+			'priority'    => 33,
 		),
 	);
 
