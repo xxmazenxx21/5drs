@@ -596,3 +596,108 @@ msgstr "صورة البطاقة 3"
 
 msgid "Card 4 image"
 msgstr "صورة البطاقة 4"
+
+msgid "Slideshow"
+msgstr "عرض شرائح"
+
+msgid "Our products"
+msgstr "منتجاتنا"
+
+msgid "Pause slideshow"
+msgstr "إيقاف العرض"
+
+msgid "Show image %1$s of %2$s"
+msgstr "عرض الصورة %1$s من %2$s"
+
+msgid "5drs - About Page"
+msgstr "5drs - صفحة من نحن"
+
+msgid "All About page content. Clear a section's text to hide that section entirely."
+msgstr "كل محتوى صفحة من نحن. امسح نص القسم لإخفائه بالكامل."
+
+msgid "About page - Hero"
+msgstr "صفحة من نحن - الواجهة"
+
+msgid "About page - Our story"
+msgstr "صفحة من نحن - قصتنا"
+
+msgid "About page - Mission and vision"
+msgstr "صفحة من نحن - الرسالة والرؤية"
+
+msgid "About page - Our values"
+msgstr "صفحة من نحن - قيمنا"
+
+msgid "About page - Our range"
+msgstr "صفحة من نحن - تشكيلتنا"
+
+msgid "About page - Our promise"
+msgstr "صفحة من نحن - وعدنا"
+
+msgid "About page - Closing call to action"
+msgstr "صفحة من نحن - دعوة ختامية"
+
+msgid "Scrolls down to the Our Story section."
+msgstr "ينتقل إلى قسم قصتنا."
+
+msgid "Paragraph 1"
+msgstr "الفقرة 1"
+
+msgid "Paragraph 2"
+msgstr "الفقرة 2"
+
+msgid "Statement"
+msgstr "العبارة"
+
+msgid "Mission title"
+msgstr "عنوان الرسالة"
+
+msgid "Mission text"
+msgstr "نص الرسالة"
+
+msgid "Vision title"
+msgstr "عنوان الرؤية"
+
+msgid "Vision text"
+msgstr "نص الرؤية"
+
+msgid "Slideshow image 1"
+msgstr "صورة العرض 1"
+
+msgid "Slideshow image 2"
+msgstr "صورة العرض 2"
+
+msgid "Slideshow image 3"
+msgstr "صورة العرض 3"
+
+msgid "Slideshow image 4"
+msgstr "صورة العرض 4"
+
+msgid "Slideshow image 5"
+msgstr "صورة العرض 5"
+
+msgid "Slideshow image 6"
+msgstr "صورة العرض 6"
+
+msgid "Value 1 title"
+msgstr "عنوان القيمة 1"
+
+msgid "Value 1 text"
+msgstr "نص القيمة 1"
+
+msgid "Value 2 title"
+msgstr "عنوان القيمة 2"
+
+msgid "Value 2 text"
+msgstr "نص القيمة 2"
+
+msgid "Value 3 title"
+msgstr "عنوان القيمة 3"
+
+msgid "Value 3 text"
+msgstr "نص القيمة 3"
+
+msgid "Value 4 title"
+msgstr "عنوان القيمة 4"
+
+msgid "Value 4 text"
+msgstr "نص القيمة 4"
