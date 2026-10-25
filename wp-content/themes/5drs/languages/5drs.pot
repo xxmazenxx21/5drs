@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-24T19:10:49+00:00\n"
+"POT-Creation-Date: 2026-10-25T01:19:26+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: 5drs\n"
@@ -50,6 +50,7 @@ msgstr ""
 msgid "Quick Links"
 msgstr ""
 
+#. Template Name of the theme
 #: footer.php:45
 #: footer.php:46
 msgid "Policies"
@@ -89,7 +90,7 @@ msgstr ""
 
 #: inc/contact.php:40
 #: inc/contact.php:80
-#: inc/contact.php:272
+#: inc/contact.php:278
 #: template-parts/contact/form.php:151
 msgid "Message"
 msgstr ""
@@ -107,7 +108,7 @@ msgid "No messages yet."
 msgstr ""
 
 #: inc/contact.php:77
-#: inc/contact.php:268
+#: inc/contact.php:274
 #: template-parts/contact/form.php:88
 msgid "Name"
 msgstr ""
@@ -140,21 +141,21 @@ msgstr ""
 msgid "Please write your message."
 msgstr ""
 
-#: inc/contact.php:134
+#: inc/contact.php:140
 msgid "Sending..."
 msgstr ""
 
-#: inc/contact.php:269
+#: inc/contact.php:275
 #: template-parts/contact/form.php:108
 msgid "Phone Number"
 msgstr ""
 
-#: inc/contact.php:270
+#: inc/contact.php:276
 #: template-parts/contact/form.php:131
 msgid "Email Address"
 msgstr ""
 
-#: inc/contact.php:285
+#: inc/contact.php:291
 msgid "New contact message — 5drs"
 msgstr ""
 
@@ -719,86 +720,108 @@ msgstr ""
 msgid "Footer - Policies"
 msgstr ""
 
-#: inc/setup.php:75
-msgid "Shop Sidebar"
-msgstr ""
-
-#: inc/setup.php:77
-msgid "Sidebar shown on WooCommerce archive pages."
-msgstr ""
-
-#: inc/template-tags.php:221
+#: inc/template-tags.php:224
 msgid "Our Goal Is Your Personal Comfort"
 msgstr ""
 
 #. translators: %s: number of items in the cart.
-#: inc/template-tags.php:275
-#: inc/woocommerce.php:161
+#: inc/template-tags.php:278
+#: inc/woocommerce.php:203
 #, php-format
 msgid "%s item in cart"
 msgid_plural "%s items in cart"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/template-tags.php:364
+#: inc/template-tags.php:367
 msgid "Facebook"
 msgstr ""
 
-#: inc/template-tags.php:368
+#: inc/template-tags.php:371
 msgid "Instagram"
 msgstr ""
 
-#: inc/template-tags.php:372
+#: inc/template-tags.php:375
 msgid "TikTok"
 msgstr ""
 
-#: inc/template-tags.php:380
+#: inc/template-tags.php:383
 msgid "WhatsApp"
 msgstr ""
 
+#. translators: %s: the search term.
+#: inc/woocommerce.php:86
+#, php-format
+msgid "Results for “%s”"
+msgstr ""
+
+#: inc/woocommerce.php:87
+msgid "Every brush matching your search."
+msgstr ""
+
 #. translators: %s: the lowest price among a product's variations.
-#: inc/woocommerce.php:262
+#: inc/woocommerce.php:304
 #, php-format
 msgid "From %s"
 msgstr ""
 
-#: inc/woocommerce.php:309
+#: inc/woocommerce.php:351
 msgid "Choose options"
 msgstr ""
 
 #. translators: %s: bristle type, e.g. "Soft".
-#: inc/woocommerce.php:390
+#: inc/woocommerce.php:432
 #, php-format
 msgid "%s bristles"
 msgstr ""
 
-#: inc/woocommerce.php:415
-#: inc/woocommerce.php:470
+#: inc/woocommerce.php:457
+#: inc/woocommerce.php:512
 msgid "Please choose a bristle type"
 msgstr ""
 
-#: inc/woocommerce.php:430
+#: inc/woocommerce.php:472
 msgid "Decrease quantity"
 msgstr ""
 
-#: inc/woocommerce.php:442
+#: inc/woocommerce.php:484
 msgid "Increase quantity"
 msgstr ""
 
-#: inc/woocommerce.php:466
+#: inc/woocommerce.php:508
 msgid "Added to your cart"
 msgstr ""
 
-#: inc/woocommerce.php:467
+#: inc/woocommerce.php:509
 msgid "View cart"
 msgstr ""
 
-#: inc/woocommerce.php:468
+#: inc/woocommerce.php:510
 msgid "Sorry, that could not be added to your cart."
 msgstr ""
 
-#: inc/woocommerce.php:469
+#: inc/woocommerce.php:511
 msgid "Dismiss"
+msgstr ""
+
+#: inc/woocommerce.php:568
+msgid "No products matched your search"
+msgstr ""
+
+#: inc/woocommerce.php:569
+msgid "Try a shorter word, or browse the full range below."
+msgstr ""
+
+#: inc/woocommerce.php:571
+msgid "Nothing here yet"
+msgstr ""
+
+#: inc/woocommerce.php:572
+msgid "There are no products in this category at the moment."
+msgstr ""
+
+#: inc/woocommerce.php:582
+msgid "View all products"
 msgstr ""
 
 #. translators: %s: search query.
@@ -817,22 +840,6 @@ msgstr ""
 
 #. Template Name of the theme
 msgid "About Us"
-msgstr ""
-
-#. Template Name of the theme
-msgid "Policies hub"
-msgstr ""
-
-#: page-policies.php:49
-msgid "Read more"
-msgstr ""
-
-#: page-policies.php:61
-msgid "Policy pages - add child pages under Policies"
-msgstr ""
-
-#: sidebar.php:18
-msgid "Sidebar"
 msgstr ""
 
 #: template-parts/about/slideshow.php:37
@@ -879,6 +886,18 @@ msgstr ""
 
 #: template-parts/products/filter.php:44
 msgid "All"
+msgstr ""
+
+#: template-parts/products/search.php:24
+msgid "Search products"
+msgstr ""
+
+#: template-parts/products/search.php:33
+msgid "Search products…"
+msgstr ""
+
+#: template-parts/products/search.php:40
+msgid "Search"
 msgstr ""
 
 #. translators: %s: name of the page section.

@@ -71,7 +71,23 @@ function fivedrs_wc_wrapper_start() {
 	 * run edge to edge. Category archives get the compact variant, built from
 	 * the term's own name and description.
 	 */
-	if ( is_shop() ) {
+	if ( fivedrs_is_product_search() ) {
+		/*
+		 * This branch comes first: WordPress treats ?s=x&post_type=product as a
+		 * post type archive as well as a search, so is_shop() is true here too
+		 * and would otherwise print the catalogue hero over the results.
+		 */
+		get_template_part(
+			'template-parts/hero-banner',
+			null,
+			array(
+				'compact' => true,
+				/* translators: %s: the search term. */
+				'heading' => sprintf( __( 'Results for “%s”', '5drs' ), get_search_query() ),
+				'text'    => __( 'Every brush matching your search.', '5drs' ),
+			)
+		);
+	} elseif ( is_shop() ) {
 		get_template_part( 'template-parts/hero-banner', null, array( 'section' => 'products' ) );
 	} elseif ( is_product_taxonomy() ) {
 		get_template_part( 'template-parts/hero-banner', null, array( 'compact' => true ) );
@@ -79,9 +95,22 @@ function fivedrs_wc_wrapper_start() {
 
 	echo '<div class="fivedrs-container"><main id="main" class="site-main fivedrs-main">';
 
-	if ( is_shop() || is_product_taxonomy() ) {
-		get_template_part( 'template-parts/products/filter' );
+	if ( is_shop() || is_product_taxonomy() || fivedrs_is_product_search() ) {
+		get_template_part( 'template-parts/products/toolbar' );
 	}
+}
+
+/**
+ * Is this request a product search?
+ *
+ * A search for ?post_type=product is neither is_shop() nor a taxonomy archive,
+ * but WooCommerce renders it with archive-product.php - so the hero, the
+ * toolbar and the empty state all have to recognise it.
+ *
+ * @return bool
+ */
+function fivedrs_is_product_search() {
+	return is_search() && 'product' === get_query_var( 'post_type' );
 }
 
 /**
@@ -108,9 +137,22 @@ function fivedrs_wc_layout_hooks() {
 	// The hero above already prints it.
 	add_filter( 'woocommerce_show_page_title', '__return_false' );
 
+	// No sidebar anywhere in the design, so the store pages must not ask for
+	// one - WooCommerce calls get_sidebar() on every archive by default.
+	remove_action( 'woocommerce_sidebar', 'woocommerce_get_sidebar', 10 );
+
 	// "Showing 1-4 of 4 results" above a four-item grid is noise; the sorting
 	// control stays.
 	remove_action( 'woocommerce_before_shop_loop', 'woocommerce_result_count', 20 );
+
+	// WooCommerce's empty state is a bare info notice. Ours explains what
+	// happened and offers a way back to the full catalogue.
+	remove_action( 'woocommerce_no_products_found', 'wc_no_products_found', 10 );
+	add_action( 'woocommerce_no_products_found', 'fivedrs_no_products_found', 10 );
+
+	// The sorting control moves into the toolbar row beside the search field;
+	// template-parts/products/toolbar.php prints it.
+	remove_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 30 );
 
 	// The loop price is replaced so variable products can say "From ..." only
 	// when their variations actually differ in price.
@@ -512,3 +554,33 @@ function fivedrs_translate_attribute_label( $label ) {
 	return fivedrs_translate( $label );
 }
 add_filter( 'woocommerce_attribute_label', 'fivedrs_translate_attribute_label' );
+
+/**
+ * Empty state for the shop, a category archive and a product search.
+ *
+ * @return void
+ */
+function fivedrs_no_products_found() {
+	$shop_id  = (int) wc_get_page_id( 'shop' );
+	$shop_url = $shop_id > 0 ? get_permalink( $shop_id ) : home_url( '/' );
+
+	if ( fivedrs_is_product_search() ) {
+		$title = __( 'No products matched your search', '5drs' );
+		$text  = __( 'Try a shorter word, or browse the full range below.', '5drs' );
+	} else {
+		$title = __( 'Nothing here yet', '5drs' );
+		$text  = __( 'There are no products in this category at the moment.', '5drs' );
+	}
+	?>
+	<div class="fivedrs-empty">
+		<span class="fivedrs-empty__icon" aria-hidden="true">
+			<?php echo fivedrs_icon( 'search' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- inline SVG from a fixed list. ?>
+		</span>
+		<h2 class="fivedrs-empty__title"><?php echo esc_html( $title ); ?></h2>
+		<p class="fivedrs-empty__text"><?php echo esc_html( $text ); ?></p>
+		<a class="fivedrs-btn fivedrs-btn--accent" href="<?php echo esc_url( $shop_url ); ?>">
+			<?php esc_html_e( 'View all products', '5drs' ); ?>
+		</a>
+	</div>
+	<?php
+}

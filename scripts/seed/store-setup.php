@@ -213,4 +213,47 @@ foreach ( array( 'Soft' => 'soft', 'Medium' => 'medium', 'Hard' => 'hard' ) as $
 
 delete_transient( 'wc_attribute_taxonomies' );
 
+// --- 4. clear the widgets WordPress left behind -----------------------------
+
+/*
+ * A fresh install creates Search, Recent Posts and Recent Comments widgets.
+ * As soon as a theme registers a sidebar, retrieve_widgets() moves them into
+ * it, and they render on every shop and category page. The theme registers no
+ * widget areas any more (see inc/setup.php), but the rows an earlier install
+ * wrote are still in the database, so clear them here too - re-running this
+ * script is how a site that already has them gets clean.
+ */
+$sidebars = (array) get_option( 'sidebars_widgets', array() );
+$orphans  = array();
+
+foreach ( $sidebars as $slug => $widgets ) {
+	if ( 'array_version' === $slug || ! is_array( $widgets ) ) {
+		continue;
+	}
+	if ( 'wp_inactive_widgets' === $slug ) {
+		$orphans = array_merge( $orphans, $widgets );
+		continue;
+	}
+	$orphans            = array_merge( $orphans, $widgets );
+	$sidebars[ $slug ] = array();
+}
+
+$sidebars['wp_inactive_widgets'] = array();
+update_option( 'sidebars_widgets', $sidebars );
+
+// Drop the instances as well, so nothing can be re-assigned by hand later.
+foreach ( array_unique( $orphans ) as $widget_id ) {
+	if ( ! preg_match( '/^(.+)-(\d+)$/', (string) $widget_id, $m ) ) {
+		continue;
+	}
+	$option    = 'widget_' . $m[1];
+	$instances = get_option( $option );
+	if ( is_array( $instances ) && isset( $instances[ (int) $m[2] ] ) ) {
+		unset( $instances[ (int) $m[2] ] );
+		update_option( $option, $instances );
+	}
+}
+
+WP_CLI::log( sprintf( '  cleared %d leftover widget(s)', count( array_unique( $orphans ) ) ) );
+
 WP_CLI::success( 'Store taxonomy ready.' );

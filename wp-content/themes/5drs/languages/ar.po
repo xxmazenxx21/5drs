@@ -809,3 +809,35 @@ msgstr "يظهر في تذييل الموقع وصفحة التواصل، ويُ
 
 msgid "One line, so it stays a single translatable string."
 msgstr "سطر واحد، ليبقى نصًا واحدًا قابلًا للترجمة."
+
+# --- shop toolbar: product search and the empty states ---------------------
+
+msgid "Search products"
+msgstr "ابحث عن منتج"
+
+msgid "Search products…"
+msgstr "ابحث عن منتج…"
+
+msgid "Search"
+msgstr "بحث"
+
+msgid "Results for “%s”"
+msgstr "نتائج البحث عن ”%s“"
+
+msgid "Every brush matching your search."
+msgstr "كل الفرش المطابقة لبحثك."
+
+msgid "No products matched your search"
+msgstr "لا توجد منتجات مطابقة لبحثك"
+
+msgid "Try a shorter word, or browse the full range below."
+msgstr "جرّب كلمة أقصر، أو تصفّح المجموعة كاملة بالأسفل."
+
+msgid "Nothing here yet"
+msgstr "لا يوجد شيء هنا بعد"
+
+msgid "There are no products in this category at the moment."
+msgstr "لا توجد منتجات في هذه الفئة حاليًا."
+
+msgid "View all products"
+msgstr "عرض كل المنتجات"

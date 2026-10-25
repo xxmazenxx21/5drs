@@ -153,6 +153,9 @@ function fivedrs_icon( $name ) {
 		case 'eye':
 			return '<svg ' . $stroke . '><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3.2"/></svg>';
 
+		case 'search':
+			return '<svg ' . $stroke . '><circle cx="11" cy="11" r="6.5"/><line x1="15.8" y1="15.8" x2="20.5" y2="20.5"/></svg>';
+
 		case 'chevron':
 			return '<svg ' . $stroke . '><polyline points="6,9.5 12,15.5 18,9.5"/></svg>';
 

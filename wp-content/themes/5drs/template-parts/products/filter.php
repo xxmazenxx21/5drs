@@ -33,7 +33,7 @@ if ( is_product_taxonomy() ) {
 	$fivedrs_current = ( $fivedrs_queried && isset( $fivedrs_queried->term_id ) ) ? (int) $fivedrs_queried->term_id : 0;
 }
 ?>
-<nav class="fivedrs-pills" id="products" aria-label="<?php esc_attr_e( 'Filter by category', '5drs' ); ?>" data-pills>
+<nav class="fivedrs-pills" aria-label="<?php esc_attr_e( 'Filter by category', '5drs' ); ?>" data-pills>
 	<ul class="fivedrs-pills__list">
 		<li>
 			<a

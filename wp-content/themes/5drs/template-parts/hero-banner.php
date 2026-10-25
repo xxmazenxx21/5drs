@@ -9,8 +9,9 @@
  *
  * @param array $args    Optional. Keys: 'section' (content config section to
  *                       read, default 'products'), 'anchor' (href for the
- *                       button, default '#products') and 'compact' (render the
- *                       short category-archive variant).
+ *                       button, default '#products'), 'compact' (render the
+ *                       short category-archive variant) and 'heading' / 'text'
+ *                       (override the copy, used by the search results page).
  *
  * @package 5drs
  */
@@ -23,6 +24,8 @@ $fivedrs_hero = wp_parse_args(
 		'section' => 'products',
 		'anchor'  => '#products',
 		'compact' => false,
+		'heading' => '',
+		'text'    => '',
 	)
 );
 
@@ -41,6 +44,14 @@ if ( $fivedrs_hero['compact'] ) {
 	$fivedrs_text     = fivedrs_content( $fivedrs_section, 'text' );
 	$fivedrs_label    = fivedrs_content( $fivedrs_section, 'button_label' );
 	$fivedrs_image_id = (int) fivedrs_content( $fivedrs_section, 'image' );
+}
+
+// An explicit heading or text wins, so a caller can build its own hero copy.
+if ( '' !== $fivedrs_hero['heading'] ) {
+	$fivedrs_heading = $fivedrs_hero['heading'];
+}
+if ( '' !== $fivedrs_hero['text'] ) {
+	$fivedrs_text = $fivedrs_hero['text'];
 }
 
 if ( '' === $fivedrs_heading && '' === $fivedrs_text && ! $fivedrs_image_id ) {

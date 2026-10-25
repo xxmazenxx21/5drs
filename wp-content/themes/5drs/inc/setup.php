@@ -64,25 +64,19 @@ function fivedrs_setup() {
 }
 add_action( 'after_setup_theme', 'fivedrs_setup' );
 
-/**
- * Register widget areas.
+/*
+ * No widget areas, on purpose.
  *
- * @return void
+ * The design has no sidebar on any page, and a registered-but-empty area is
+ * not harmless: when a theme registers its first sidebar, WordPress moves the
+ * widgets left over from installation - Search, Recent Posts, Recent Comments
+ * - into it, and they then render on every shop and category page.
+ *
+ * Registering none is the fix: retrieve_widgets() has nowhere to put those
+ * orphans, so they stay inactive however often the theme is switched.
+ * scripts/seed/store-setup.php clears the rows an earlier install wrote, and
+ * sidebar.php stays as a no-op stub because WordPress still calls it.
  */
-function fivedrs_widgets_init() {
-	register_sidebar(
-		array(
-			'name'          => __( 'Shop Sidebar', '5drs' ),
-			'id'            => 'fivedrs-shop-sidebar',
-			'description'   => __( 'Sidebar shown on WooCommerce archive pages.', '5drs' ),
-			'before_widget' => '<section id="%1$s" class="widget %2$s">',
-			'after_widget'  => '</section>',
-			'before_title'  => '<h2 class="widget-title">',
-			'after_title'   => '</h2>',
-		)
-	);
-}
-add_action( 'widgets_init', 'fivedrs_widgets_init' );
 
 /**
  * Mark the current menu item for assistive technology.

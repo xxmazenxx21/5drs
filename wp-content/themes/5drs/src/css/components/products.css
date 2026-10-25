@@ -172,6 +172,145 @@
 		}
 	}
 
+	/* --- shop toolbar ----------------------------------------------------------
+	 * Category pills on the start side, search and sorting on the end side.
+	 * Below 56rem the three stack, and the search field goes full width.
+	 * -------------------------------------------------------------------------- */
+
+	.fivedrs-shop-toolbar {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-block: var(--fivedrs-section-y) 2rem;
+		scroll-margin-block-start: calc(var(--fivedrs-header-height) + 1rem);
+	}
+
+	/* The pills own their spacing on their own; inside the row the row sets it. */
+	.fivedrs-shop-toolbar .fivedrs-pills {
+		margin-block: 0;
+		flex: 1 1 18rem;
+	}
+
+	.fivedrs-shop-toolbar__tools {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.75rem;
+	}
+
+	@media (width < 56rem) {
+		.fivedrs-shop-toolbar__tools {
+			flex: 1 1 100%;
+		}
+	}
+
+	/* --- product search --------------------------------------------------------- */
+
+	.fivedrs-shop-search {
+		position: relative;
+		display: flex;
+		align-items: center;
+		flex: 1 1 15rem;
+		min-width: 0;
+	}
+
+	.fivedrs-shop-search__field {
+		width: 100%;
+		min-width: 0;
+		padding-block: 0.625rem;
+		/* Room for the submit button on the end side. */
+		padding-inline: 1.125rem 3rem;
+		border: 1px solid var(--color-line-strong);
+		border-radius: var(--radius-full);
+		background-color: var(--color-surface);
+		color: var(--color-ink);
+		font-size: 0.9375rem;
+		transition: border-color 200ms ease, box-shadow 200ms ease;
+	}
+
+	.fivedrs-shop-search__field::placeholder {
+		color: var(--color-ink-muted);
+	}
+
+	.fivedrs-shop-search__field:focus {
+		outline: none;
+		border-color: var(--color-primary);
+		box-shadow: 0 0 0 3px var(--color-primary-soft);
+	}
+
+	.fivedrs-shop-search__submit {
+		position: absolute;
+		inset-inline-end: 0.3125rem;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.25rem;
+		height: 2.25rem;
+		border: 0;
+		border-radius: var(--radius-full);
+		background-color: var(--color-primary);
+		color: var(--color-ink-invert);
+		cursor: pointer;
+		transition: background-color 200ms ease;
+	}
+
+	.fivedrs-shop-search__submit:hover {
+		background-color: var(--color-navy-900);
+	}
+
+	.fivedrs-shop-search__submit svg {
+		width: 1.125rem;
+		height: 1.125rem;
+	}
+
+	/* --- empty state ------------------------------------------------------------- */
+
+	.fivedrs-empty {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.75rem;
+		margin-block: 2rem 4rem;
+		padding: 3rem 1.5rem;
+		border: 1px dashed var(--color-line-strong);
+		border-radius: var(--radius-lg);
+		background-color: var(--color-surface);
+		text-align: center;
+	}
+
+	.fivedrs-empty__icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 3rem;
+		height: 3rem;
+		border-radius: var(--radius-full);
+		background-color: var(--color-accent-soft);
+		color: var(--color-accent-strong);
+	}
+
+	.fivedrs-empty__icon svg {
+		width: 1.5rem;
+		height: 1.5rem;
+	}
+
+	.fivedrs-empty__title {
+		margin: 0;
+		font-size: 1.375rem;
+	}
+
+	.fivedrs-empty__text {
+		margin: 0;
+		max-width: 36rem;
+		color: var(--color-ink-muted);
+	}
+
+	.fivedrs-empty .fivedrs-btn {
+		margin-block-start: 0.5rem;
+	}
+
 	/* --- category pills -------------------------------------------------------- */
 
 	.fivedrs-pills {
