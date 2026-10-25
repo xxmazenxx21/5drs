@@ -15,13 +15,30 @@
  * currentColor, so it follows the label automatically.
  * ------------------------------------------------------------------------ */
 
-.fivedrs-btn,
-.fivedrs-btn:link,
-.fivedrs-btn:visited,
-.fivedrs-btn:hover,
-.fivedrs-btn:focus,
-.fivedrs-btn:focus-visible,
-.fivedrs-btn:active {
+/* The outline and ghost variants are transparent - they sit on whatever is
+   behind them, so they take their colour from the rules further down rather
+   than from this blanket one. */
+.fivedrs-btn:not(.fivedrs-btn--outline, .fivedrs-btn--ghost),
+.fivedrs-btn:not(.fivedrs-btn--outline, .fivedrs-btn--ghost):link,
+.fivedrs-btn:not(.fivedrs-btn--outline, .fivedrs-btn--ghost):visited,
+.fivedrs-btn:not(.fivedrs-btn--outline, .fivedrs-btn--ghost):hover,
+.fivedrs-btn:not(.fivedrs-btn--outline, .fivedrs-btn--ghost):focus,
+.fivedrs-btn:not(.fivedrs-btn--outline, .fivedrs-btn--ghost):focus-visible,
+.fivedrs-btn:not(.fivedrs-btn--outline, .fivedrs-btn--ghost):active {
+	color: var(--color-ink-invert);
+}
+
+/* On a light background the outline button keeps the brand navy, and its
+   hover fill is navy, so the label flips to white then. */
+.fivedrs-btn--outline,
+.fivedrs-btn--outline:link,
+.fivedrs-btn--outline:visited {
+	color: var(--color-primary);
+}
+
+.fivedrs-btn--outline:hover,
+.fivedrs-btn--outline:focus-visible,
+.fivedrs-btn--outline:active {
 	color: var(--color-ink-invert);
 }
 

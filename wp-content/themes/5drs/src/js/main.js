@@ -16,6 +16,7 @@ import initProduct from './modules/product.js';
 import initSlideshow from './modules/slideshow.js';
 import initParallax from './modules/parallax.js';
 import initContact from './modules/contact.js';
+import initFaq from './modules/faq.js';
 
 /**
  * Current document direction. Prefer CSS logical properties over branching on
@@ -38,6 +39,7 @@ function boot() {
 	initSlideshow();
 	initParallax();
 	initContact();
+	initFaq();
 }
 
 if ( document.readyState === 'loading' ) {

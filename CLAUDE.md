@@ -132,13 +132,17 @@ template-parts/
   home/                    the nine Home page sections
   about/                   story, slideshow, mission, values, promise
   contact/                 form and information card
+  products/toolbar.php     pills + search + sorting, one row
   products/filter.php      category pill links
+  products/search.php      product search form (post_type=product)
 woocommerce/         empty by design - read its README before adding anything
 assets/images/       logo-lockup.png, logo-full.png (generated, see below)
 languages/           5drs.pot, ar.po, ar.mo
 src/css/             tokens.css, base.css, components/, woocommerce.css
+                     components/on-dark.css is UNLAYERED - see 4.7
+                     components/home-motion.css holds every Home animation
 src/js/              main.js + modules/ (offcanvas, header, cart, reveal,
-                     shop, product, cart-notice, slideshow, parallax)
+                     shop, product, cart-notice, slideshow, parallax, faq)
 dist/                build output, gitignored
 ```
 
@@ -267,7 +271,16 @@ So the split is:
 - The theme's own components stay in `@layer components`, so Tailwind utilities
   can still override them when pages get built.
 
-`python3 scripts/check-css-layers.py` asserts both halves and runs inside
+Text on dark surfaces is the second case. `src/css/components/on-dark.css` is
+unlayered too, because button labels and footer links have to beat the base
+layer's `a { color: ... }` as well as any plugin rule - a layered
+`.fivedrs-btn { color: white }` lost to it, and the Home page's "Shop Now"
+label rendered in link blue on its navy pill. The one thing that file must not
+do is paint the transparent variants: `--outline` and `--ghost` sit on whatever
+is behind them, so they are excluded from the blanket rule and coloured per
+context.
+
+`python3 scripts/check-css-layers.py` asserts all of this and runs inside
 `make verify`. The failure mode is silent - valid CSS that simply loses - so
 check it rather than eyeballing the page.
 
@@ -285,10 +298,10 @@ PHPCS with WordPress Coding Standards + PHPCompatibilityWP, targeting PHP 8.2
 and WordPress 6.5+. `make lint` must pass before committing. Suppressions need a
 comment saying why (see `inc/assets.php` for the pattern).
 
-`sidebar.php` exists even though the design has no sidebar yet: WordPress and
+`sidebar.php` exists even though the design has no sidebar: WordPress and
 WooCommerce both call `get_sidebar()`, and a theme without the file logs a
-deprecation notice on every request. It renders nothing unless the
-`fivedrs-shop-sidebar` widget area has widgets.
+deprecation notice on every request. It is an empty stub - the theme registers
+no widget areas at all. See 5.6 for why that matters.
 
 ---
 
@@ -381,6 +394,38 @@ The hero is the LCP element: `fetchpriority="high"`, no lazy-loading.
 Everything else lazy-loads. All of it goes through `wp_get_attachment_image()`,
 so srcset and sizes come from WordPress.
 
+#### Motion
+
+Every Home animation lives in `src/css/components/home-motion.css`, one block
+per section, with the reduced-motion opt-out collected at the bottom of the
+file rather than scattered through it. Three rules hold:
+
+- **Only `opacity`, `transform` and `clip-path` are animated**, so nothing can
+  move the layout. The FAQ is the single exception - there the height change
+  *is* the effect, and `src/js/modules/faq.js` owns it.
+- **Everything is gated behind a class JavaScript adds**: `js` for the hero,
+  which plays on load because it is above the fold, and `fivedrs-reveal-ready`
+  for anything waiting on the scroll observer. With JavaScript off the page is
+  simply there, fully visible.
+- **Two ambient loops only** - the hero image's drift and the CTA band's sheen.
+  Both are slow, both are decorative, and both stop under reduced motion.
+
+The FAQ keeps its native `<details>`/`<summary>`: the module animates the
+panel's height and bottom padding with the Web Animations API and holds `open`
+on until a close finishes. Without JavaScript the accordion still works.
+
+Featured products are *not* in that file. That section carries WooCommerce's
+own `woocommerce` class, so `src/js/modules/shop.js` already staggers the cards
+through the unlayered rules in `woocommerce.css` - and a layered rule would
+lose to them anyway (4.7).
+
+The tips list fixes its column count at the breakpoints rather than leaving it
+to `auto-fit`, because the connector between the steps has to know which way to
+point: vertical when stacked, horizontal when three across. `transform-origin`
+takes no logical keyword, so the edge it grows from is carried in a custom
+property and flipped once for RTL - one of the handful of documented direction
+exceptions.
+
 #### TODO: placeholder prices
 
 The four products carry **placeholder prices** agreed as a stand-in:
@@ -408,6 +453,30 @@ it drives the variations; on the simple ones it is display-only and renders as
 a badge instead of a selector. Its terms are ordered Soft → Medium → Hard via
 the plain `order` term meta - **not** `order_pa_bristle`, which is the key older
 guides suggest and which WooCommerce ignores.
+
+**The shop toolbar** is one row: the category pills on the start side, a
+product search and WooCommerce's sort control on the end
+(`template-parts/products/toolbar.php`, which prints
+`woocommerce_catalog_ordering()` itself - the hook is removed in
+`inc/woocommerce.php`). The search is a plain GET form carrying a hidden
+`post_type=product`, so it works with JavaScript off and WooCommerce renders
+the result with the shop layout.
+
+> **WordPress treats `?s=…&post_type=product` as a post type archive as well as
+> a search, so `is_shop()` is true on it.** `fivedrs_is_product_search()` exists
+> for that reason, and the hero branch tests it *first* - otherwise the
+> catalogue hero prints over the search results.
+
+The empty state is ours (`fivedrs_no_products_found()`), replacing WooCommerce's
+bare info notice for both a search that found nothing and an empty category.
+
+**There are no widget areas.** The theme registers none, on purpose: the moment
+a theme registers its first sidebar, WordPress moves the widgets a fresh
+install created - Search, Recent Posts, Recent Comments - into it, and they
+render on every shop and category page. With none registered the orphans have
+nowhere to go; `make store-setup` clears the rows an older install wrote, and
+WooCommerce's `get_sidebar()` call is unhooked. `sidebar.php` survives as an
+empty stub only because WordPress logs a deprecation notice without it.
 
 **The shop hero** is printed before the theme container so it can run edge to
 edge, and is the LCP element. Its veil reaches 0.72 opacity at the centre

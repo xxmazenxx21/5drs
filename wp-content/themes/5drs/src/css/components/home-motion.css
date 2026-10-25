@@ -1,0 +1,529 @@
+/* ---------------------------------------------------------------------------
+ * Home page motion.
+ * ---------------------------------------------------------------------------
+ * Three rules hold throughout:
+ *
+ *   1. Only opacity, transform and clip-path are animated, so nothing here can
+ *      move the layout or trigger a reflow. The one exception is the FAQ, where
+ *      the height change IS the effect; src/js/modules/faq.js owns that.
+ *   2. Everything is gated behind a class JavaScript adds - `js` for the hero,
+ *      which plays on load, and `fivedrs-reveal-ready` for anything that waits
+ *      for the scroll observer. With JavaScript off the page is simply there.
+ *   3. Every block ends up disabled by the prefers-reduced-motion query at the
+ *      bottom of this file. Nothing loops, floats or shines under it.
+ *
+ * Entrance animations use `animation-fill-mode: both` and run once. The two
+ * ambient loops - the hero image float and the CTA shine - are slow, small and
+ * purely decorative.
+ * ------------------------------------------------------------------------ */
+
+@layer components {
+
+	/* --- shared keyframes -------------------------------------------------- */
+
+	@keyframes fivedrs-rise {
+		from {
+			opacity: 0;
+			transform: translateY(1.25rem);
+		}
+		to {
+			opacity: 1;
+			transform: none;
+		}
+	}
+
+	@keyframes fivedrs-zoom-in {
+		from {
+			opacity: 0;
+			transform: scale(0.94);
+		}
+		to {
+			opacity: 1;
+			transform: none;
+		}
+	}
+
+	@keyframes fivedrs-pop {
+		0% {
+			opacity: 0;
+			transform: scale(0.4);
+		}
+		70% {
+			opacity: 1;
+			transform: scale(1.12);
+		}
+		100% {
+			opacity: 1;
+			transform: none;
+		}
+	}
+
+	/* --- 1. hero ------------------------------------------------------------
+	 * Plays on load rather than on scroll - it is above the fold, so an
+	 * IntersectionObserver would only delay it. The copy rises in sequence and
+	 * the image fades and scales in, then drifts.
+	 * --------------------------------------------------------------------- */
+
+	.js .fivedrs-home-hero [data-hero-item] {
+		animation: fivedrs-rise 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+	}
+
+	.js .fivedrs-home-hero [data-hero-item]:nth-child(1) { animation-delay: 80ms; }
+	.js .fivedrs-home-hero [data-hero-item]:nth-child(2) { animation-delay: 200ms; }
+	.js .fivedrs-home-hero [data-hero-item]:nth-child(3) { animation-delay: 320ms; }
+	.js .fivedrs-home-hero [data-hero-item]:nth-child(4) { animation-delay: 440ms; }
+
+	/*
+	 * Two animations on one element: the entrance runs once, then the float
+	 * takes over. The float's delay is the entrance's duration plus its own
+	 * delay, so they never overlap and the image never jumps.
+	 */
+	.js .fivedrs-home-hero [data-hero-media] {
+		animation:
+			fivedrs-zoom-in 900ms cubic-bezier(0.22, 1, 0.36, 1) 160ms both,
+			fivedrs-float 7s ease-in-out 1100ms infinite;
+	}
+
+	@keyframes fivedrs-float {
+		0%, 100% {
+			transform: none;
+		}
+		50% {
+			transform: translateY(-0.625rem);
+		}
+	}
+
+	/* --- 2. trust bar -------------------------------------------------------
+	 * The section itself carries [data-reveal]; the items stagger inside it and
+	 * the icons pop a beat later.
+	 * --------------------------------------------------------------------- */
+
+	.fivedrs-reveal-ready [data-reveal] .fivedrs-trust__item {
+		opacity: 0;
+		transform: translateY(0.75rem);
+		transition: opacity 450ms ease, transform 450ms ease;
+	}
+
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-trust__item {
+		opacity: 1;
+		transform: none;
+	}
+
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-trust__item:nth-child(1) { transition-delay: 60ms; }
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-trust__item:nth-child(2) { transition-delay: 160ms; }
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-trust__item:nth-child(3) { transition-delay: 260ms; }
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-trust__item:nth-child(4) { transition-delay: 360ms; }
+
+	.fivedrs-reveal-ready [data-reveal] .fivedrs-trust__icon {
+		opacity: 0;
+		transform: scale(0.5);
+	}
+
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-trust__icon {
+		animation: fivedrs-pop 480ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+	}
+
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-trust__item:nth-child(1) .fivedrs-trust__icon { animation-delay: 160ms; }
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-trust__item:nth-child(2) .fivedrs-trust__icon { animation-delay: 260ms; }
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-trust__item:nth-child(3) .fivedrs-trust__icon { animation-delay: 360ms; }
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-trust__item:nth-child(4) .fivedrs-trust__icon { animation-delay: 460ms; }
+
+	/* --- 3. why-choose cards ------------------------------------------------
+	 * Cards stagger in; each icon then wipes in from its start edge, which is
+	 * the closest a CSS-only effect gets to drawing the stroke without adding
+	 * a pathLength to every icon in inc/template-tags.php.
+	 * --------------------------------------------------------------------- */
+
+	.fivedrs-reveal-ready [data-reveal] .fivedrs-why__card {
+		opacity: 0;
+		transform: translateY(1rem);
+		transition: opacity 500ms ease, transform 500ms ease;
+	}
+
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-why__card {
+		opacity: 1;
+		transform: none;
+	}
+
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-why__card:nth-child(1) { transition-delay: 60ms; }
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-why__card:nth-child(2) { transition-delay: 180ms; }
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-why__card:nth-child(3) { transition-delay: 300ms; }
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-why__card:nth-child(4) { transition-delay: 420ms; }
+
+	.fivedrs-reveal-ready [data-reveal] .fivedrs-why__icon svg {
+		clip-path: inset(0 100% 0 0);
+	}
+
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-why__icon svg {
+		animation: fivedrs-draw 600ms ease both;
+	}
+
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-why__card:nth-child(1) .fivedrs-why__icon svg { animation-delay: 260ms; }
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-why__card:nth-child(2) .fivedrs-why__icon svg { animation-delay: 380ms; }
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-why__card:nth-child(3) .fivedrs-why__icon svg { animation-delay: 500ms; }
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-why__card:nth-child(4) .fivedrs-why__icon svg { animation-delay: 620ms; }
+
+	@keyframes fivedrs-draw {
+		from {
+			clip-path: inset(0 100% 0 0);
+		}
+		to {
+			clip-path: inset(0 0 0 0);
+		}
+	}
+
+	/* The card lifts on hover; the icon tile lifts a little further. */
+	.fivedrs-why__card {
+		transition: box-shadow 220ms ease, transform 220ms ease, border-color 220ms ease;
+	}
+
+	.fivedrs-why__card:hover {
+		box-shadow: var(--shadow-card);
+		transform: translateY(-4px);
+	}
+
+	.fivedrs-why__icon {
+		transition: transform 220ms ease;
+	}
+
+	.fivedrs-why__card:hover .fivedrs-why__icon {
+		transform: translateY(-2px) scale(1.06);
+	}
+
+	/* --- 4. category cards --------------------------------------------------- */
+
+	.fivedrs-reveal-ready [data-reveal] .fivedrs-cat-card {
+		opacity: 0;
+		transform: translateY(1rem);
+		transition: opacity 500ms ease, transform 500ms ease, box-shadow 200ms ease, border-color 200ms ease;
+	}
+
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-cat-card {
+		opacity: 1;
+		transform: none;
+	}
+
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-cat-card:nth-child(1) { transition-delay: 60ms; }
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-cat-card:nth-child(2) { transition-delay: 170ms; }
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-cat-card:nth-child(3) { transition-delay: 280ms; }
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-cat-card:nth-child(4) { transition-delay: 390ms; }
+
+	/* Hovering must not re-apply the entrance delay, or the lift stalls. */
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-cat-card:hover {
+		transition-delay: 0s;
+	}
+
+	/* The media box already clips (`overflow: hidden` on the card), so the
+	   image can scale inside it without touching the layout. */
+	.fivedrs-cat-card__image {
+		transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.fivedrs-cat-card:hover .fivedrs-cat-card__image,
+	.fivedrs-cat-card:focus-visible .fivedrs-cat-card__image {
+		transform: scale(1.06);
+	}
+
+	/*
+	 * DIRECTION EXCEPTION: the "shop now" arrow slides toward the end edge, and
+	 * a translate cannot be written logically. The glyph itself is already
+	 * mirrored by the stylesheet's arrow rules; only the sign of the nudge is
+	 * flipped here.
+	 */
+	.fivedrs-card__more svg {
+		transition: transform 220ms ease;
+	}
+
+	.fivedrs-cat-card:hover .fivedrs-card__more svg,
+	.fivedrs-cat-card:focus-visible .fivedrs-card__more svg {
+		transform: translateX(0.3125rem);
+	}
+
+	[dir="rtl"] .fivedrs-cat-card:hover .fivedrs-card__more svg,
+	[dir="rtl"] .fivedrs-cat-card:focus-visible .fivedrs-card__more svg {
+		transform: translateX(-0.3125rem);
+	}
+
+	/*
+	 * Featured products are not listed here: the section carries WooCommerce's
+	 * own `woocommerce` class, so src/js/modules/shop.js already staggers the
+	 * cards through the unlayered rules in woocommerce.css. A layered rule here
+	 * would lose to those anyway - see CLAUDE.md 4.7.
+	 */
+
+	/* --- 6. kids spotlight ---------------------------------------------------
+	 * The panel's two halves slide in from opposite edges - the directional
+	 * [data-reveal="start"] / [data-reveal="end"] pair defined in about.css -
+	 * and the bullet checkmarks pop in afterwards.
+	 * ---------------------------------------------------------------------- */
+
+	.fivedrs-reveal-ready [data-reveal] .fivedrs-kids__bullets svg {
+		opacity: 0;
+		transform: scale(0.4);
+	}
+
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-kids__bullets svg {
+		animation: fivedrs-pop 420ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+	}
+
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-kids__bullets li:nth-child(1) svg { animation-delay: 300ms; }
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-kids__bullets li:nth-child(2) svg { animation-delay: 400ms; }
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-kids__bullets li:nth-child(3) svg { animation-delay: 500ms; }
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-kids__bullets li:nth-child(4) svg { animation-delay: 600ms; }
+
+	/* --- 7. tips: the steps, and the line that joins them --------------------
+	 * The column count is fixed at the two breakpoints rather than left to
+	 * auto-fit, so the connector always knows which way to point: stacked and
+	 * vertical below 64rem, three across and horizontal above it.
+	 * ---------------------------------------------------------------------- */
+
+	.fivedrs-tips__list {
+		/*
+		 * DIRECTION EXCEPTION: transform-origin takes no logical keyword, so
+		 * the edge the connector grows from is carried in a custom property
+		 * and flipped once, here.
+		 */
+		--fivedrs-line-origin: left;
+
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	[dir="rtl"] .fivedrs-tips__list {
+		--fivedrs-line-origin: right;
+	}
+
+	@media (width >= 64rem) {
+		.fivedrs-tips__list {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	.fivedrs-tips__item {
+		position: relative;
+	}
+
+	.fivedrs-reveal-ready [data-reveal] .fivedrs-tips__item {
+		opacity: 0;
+		transform: translateY(1rem);
+		transition: opacity 500ms ease, transform 500ms ease;
+	}
+
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-tips__item {
+		opacity: 1;
+		transform: none;
+	}
+
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-tips__item:nth-child(1) { transition-delay: 60ms; }
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-tips__item:nth-child(2) { transition-delay: 260ms; }
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-tips__item:nth-child(3) { transition-delay: 460ms; }
+
+	/*
+	 * The connector lives in the grid gap, so it is absolutely positioned and
+	 * can never add to the item's box. It is decorative, so no ARIA. Without
+	 * the reveal class it is simply drawn.
+	 */
+	.fivedrs-tips__item::after {
+		content: "";
+		position: absolute;
+		background-color: var(--color-line-strong);
+		/* Lines up with the middle of the 2.5rem number badge. */
+		inset-block-start: calc(1.5rem + 1.25rem - 1px);
+		inset-inline-start: calc(1.5rem + 1.25rem - 1px);
+		width: 2px;
+		height: 1.5rem;
+		transform-origin: top;
+		transition: transform 450ms ease;
+	}
+
+	.fivedrs-tips__item:last-child::after {
+		content: none;
+	}
+
+	.fivedrs-reveal-ready [data-reveal] .fivedrs-tips__item::after {
+		transform: scaleY(0);
+	}
+
+	.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-tips__item::after {
+		transform: scaleY(1);
+		transition-delay: 460ms;
+	}
+
+	@media (width >= 64rem) {
+		.fivedrs-tips__item::after {
+			inset-inline-start: auto;
+			inset-inline-end: -1.5rem;
+			width: 1.5rem;
+			height: 2px;
+			transform-origin: var(--fivedrs-line-origin);
+		}
+
+		.fivedrs-reveal-ready [data-reveal] .fivedrs-tips__item::after {
+			transform: scaleX(0);
+		}
+
+		.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-tips__item::after {
+			transform: scaleX(1);
+		}
+	}
+
+	/* --- 8. faq -------------------------------------------------------------
+	 * src/js/modules/faq.js animates the panel's height; the native <details>
+	 * is untouched, so the accordion still works with JavaScript off. The
+	 * answer fades as it grows.
+	 * ---------------------------------------------------------------------- */
+
+	.js .fivedrs-faq__item[open] .fivedrs-faq__answer {
+		animation: fivedrs-fade-in 320ms ease both;
+	}
+
+	@keyframes fivedrs-fade-in {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+
+	/* --- 9. closing CTA ------------------------------------------------------ */
+
+	.fivedrs-reveal-ready [data-reveal].fivedrs-cta .fivedrs-cta__inner > * {
+		opacity: 0;
+		transform: translateY(1rem);
+		transition: opacity 550ms ease, transform 550ms ease;
+	}
+
+	.fivedrs-reveal-ready [data-reveal].fivedrs-cta.is-revealed .fivedrs-cta__inner > * {
+		opacity: 1;
+		transform: none;
+	}
+
+	.fivedrs-reveal-ready [data-reveal].fivedrs-cta.is-revealed .fivedrs-cta__inner > *:nth-child(1) { transition-delay: 80ms; }
+	.fivedrs-reveal-ready [data-reveal].fivedrs-cta.is-revealed .fivedrs-cta__inner > *:nth-child(2) { transition-delay: 200ms; }
+	.fivedrs-reveal-ready [data-reveal].fivedrs-cta.is-revealed .fivedrs-cta__inner > *:nth-child(3) { transition-delay: 320ms; }
+
+	/*
+	 * A slow sheen crossing the band. The element is wider than the band and
+	 * sits behind the content (the band already clips), so the transform can
+	 * never produce horizontal scrolling.
+	 */
+	.fivedrs-cta::before {
+		content: "";
+		position: absolute;
+		inset-block: 0;
+		inset-inline-start: -60%;
+		z-index: 0;
+		width: 60%;
+		background: linear-gradient(
+			100deg,
+			transparent 0%,
+			color-mix(in srgb, var(--color-gold) 18%, transparent) 50%,
+			transparent 100%
+		);
+		pointer-events: none;
+	}
+
+	.js .fivedrs-cta::before {
+		animation: fivedrs-sheen 9s ease-in-out 1.5s infinite;
+	}
+
+	.fivedrs-cta__inner {
+		position: relative;
+		z-index: 1;
+	}
+
+	@keyframes fivedrs-sheen {
+		0% {
+			transform: translateX(0);
+			opacity: 0;
+		}
+		12% {
+			opacity: 1;
+		}
+		58% {
+			opacity: 1;
+		}
+		70%, 100% {
+			transform: translateX(280%);
+			opacity: 0;
+		}
+	}
+
+	/* DIRECTION EXCEPTION: the sheen sweeps toward the end edge either way. */
+	[dir="rtl"] .fivedrs-cta::before {
+		inset-inline-start: auto;
+		inset-inline-end: -60%;
+	}
+
+	@keyframes fivedrs-sheen-rtl {
+		0% {
+			transform: translateX(0);
+			opacity: 0;
+		}
+		12% {
+			opacity: 1;
+		}
+		58% {
+			opacity: 1;
+		}
+		70%, 100% {
+			transform: translateX(-280%);
+			opacity: 0;
+		}
+	}
+
+	[dir="rtl"] .js .fivedrs-cta::before,
+	.js [dir="rtl"] .fivedrs-cta::before {
+		animation-name: fivedrs-sheen-rtl;
+	}
+
+	/* --- reduced motion -------------------------------------------------------
+	 * One place, covering everything above. Nothing here moves, loops or waits.
+	 * ------------------------------------------------------------------------ */
+
+	@media (prefers-reduced-motion: reduce) {
+		.js .fivedrs-home-hero [data-hero-item],
+		.js .fivedrs-home-hero [data-hero-media],
+		.fivedrs-reveal-ready [data-reveal] .fivedrs-trust__item,
+		.fivedrs-reveal-ready [data-reveal] .fivedrs-trust__icon,
+		.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-trust__icon,
+		.fivedrs-reveal-ready [data-reveal] .fivedrs-why__card,
+		.fivedrs-reveal-ready [data-reveal] .fivedrs-why__icon svg,
+		.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-why__icon svg,
+		.fivedrs-reveal-ready [data-reveal] .fivedrs-cat-card,
+		.fivedrs-reveal-ready [data-reveal] .fivedrs-kids__bullets svg,
+		.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-kids__bullets svg,
+		.fivedrs-reveal-ready [data-reveal] .fivedrs-tips__item,
+		.fivedrs-reveal-ready [data-reveal].fivedrs-cta .fivedrs-cta__inner > *,
+		.js .fivedrs-faq__item[open] .fivedrs-faq__answer {
+			opacity: 1;
+			transform: none;
+			clip-path: none;
+			animation: none;
+			transition: none;
+		}
+
+		.fivedrs-tips__item::after,
+		.fivedrs-reveal-ready [data-reveal] .fivedrs-tips__item::after,
+		.fivedrs-reveal-ready [data-reveal].is-revealed .fivedrs-tips__item::after {
+			transform: none;
+			transition: none;
+		}
+
+		.fivedrs-why__card:hover,
+		.fivedrs-why__card:hover .fivedrs-why__icon,
+		.fivedrs-cat-card:hover .fivedrs-cat-card__image,
+		.fivedrs-cat-card:focus-visible .fivedrs-cat-card__image,
+		.fivedrs-cat-card:hover .fivedrs-card__more svg,
+		.fivedrs-cat-card:focus-visible .fivedrs-card__more svg {
+			transform: none;
+		}
+
+		.js .fivedrs-cta::before,
+		[dir="rtl"] .js .fivedrs-cta::before,
+		.js [dir="rtl"] .fivedrs-cta::before {
+			animation: none;
+			opacity: 0;
+		}
+	}
+}

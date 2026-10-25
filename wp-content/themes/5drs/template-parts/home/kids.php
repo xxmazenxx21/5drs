@@ -37,7 +37,7 @@ $fivedrs_url     = fivedrs_content_category_url( 'kids', 'button_cat' );
 	<div class="fivedrs-container">
 		<div class="fivedrs-kids__panel">
 
-			<div class="fivedrs-kids__text">
+			<div class="fivedrs-kids__text" data-reveal="start">
 				<?php if ( '' !== $fivedrs_eyebrow ) : ?>
 					<span class="fivedrs-section__eyebrow"><?php echo esc_html( $fivedrs_eyebrow ); ?></span>
 				<?php endif; ?>
@@ -72,7 +72,7 @@ $fivedrs_url     = fivedrs_content_category_url( 'kids', 'button_cat' );
 			</div>
 
 			<?php if ( $fivedrs_image ) : ?>
-				<div class="fivedrs-kids__media">
+				<div class="fivedrs-kids__media" data-reveal="end">
 					<?php
 					fivedrs_content_image(
 						'kids',

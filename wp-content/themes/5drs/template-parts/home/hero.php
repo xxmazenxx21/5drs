@@ -24,24 +24,24 @@ $fivedrs_secondary = fivedrs_content( 'hero', 'secondary_label' );
 $fivedrs_url_1     = fivedrs_content_page_url( 'hero', 'primary_page' );
 $fivedrs_url_2     = fivedrs_content_page_url( 'hero', 'secondary_page' );
 ?>
-<section class="fivedrs-home-hero">
+<section class="fivedrs-home-hero" data-home-hero>
 	<div class="fivedrs-container fivedrs-home-hero__inner">
 
 		<div class="fivedrs-home-hero__text">
 			<?php if ( '' !== $fivedrs_eyebrow ) : ?>
-				<span class="fivedrs-section__eyebrow"><?php echo esc_html( $fivedrs_eyebrow ); ?></span>
+				<span class="fivedrs-section__eyebrow" data-hero-item><?php echo esc_html( $fivedrs_eyebrow ); ?></span>
 			<?php endif; ?>
 
 			<?php if ( '' !== $fivedrs_heading ) : ?>
-				<h1 class="fivedrs-home-hero__title"><?php echo esc_html( $fivedrs_heading ); ?></h1>
+				<h1 class="fivedrs-home-hero__title" data-hero-item><?php echo esc_html( $fivedrs_heading ); ?></h1>
 			<?php endif; ?>
 
 			<?php if ( '' !== $fivedrs_text ) : ?>
-				<p class="fivedrs-home-hero__lead"><?php echo esc_html( $fivedrs_text ); ?></p>
+				<p class="fivedrs-home-hero__lead" data-hero-item><?php echo esc_html( $fivedrs_text ); ?></p>
 			<?php endif; ?>
 
 			<?php if ( ( '' !== $fivedrs_primary && '' !== $fivedrs_url_1 ) || ( '' !== $fivedrs_secondary && '' !== $fivedrs_url_2 ) ) : ?>
-				<p class="fivedrs-home-hero__actions">
+				<p class="fivedrs-home-hero__actions" data-hero-item>
 					<?php if ( '' !== $fivedrs_primary && '' !== $fivedrs_url_1 ) : ?>
 						<a class="fivedrs-btn fivedrs-btn--lg" href="<?php echo esc_url( $fivedrs_url_1 ); ?>">
 							<?php echo esc_html( $fivedrs_primary ); ?>
@@ -59,7 +59,7 @@ $fivedrs_url_2     = fivedrs_content_page_url( 'hero', 'secondary_page' );
 		</div>
 
 		<?php if ( $fivedrs_image ) : ?>
-			<div class="fivedrs-home-hero__media">
+			<div class="fivedrs-home-hero__media" data-hero-media>
 				<?php
 				fivedrs_content_image(
 					'hero',

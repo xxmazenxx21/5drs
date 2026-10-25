@@ -123,6 +123,8 @@ def main():
         ("white on gold button",       "#FFFFFF", scales["gold"][700], 4.5),
         ("white on gold button hover", "#FFFFFF", scales["gold"][800], 4.5),
         ("outline button on dark",     "#FFFFFF", scales["navy"][800], 4.5),
+        ("outline button on bg",       scales["navy"][800], BG, 4.5),
+        ("outline button hover fill",  "#FFFFFF", scales["navy"][800], 4.5),
         ("focus ring on dark",         scales["gold"][400], scales["navy"][800], 3.0),
     ]
 
