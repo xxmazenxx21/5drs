@@ -1062,3 +1062,12 @@ body.lang-ar .fivedrs-single__cat {
 .woocommerce div.product form.cart .quantity input.qty:focus {
 	box-shadow: none;
 }
+
+/*
+ * With no privacy page set, WooCommerce still prints the wrapper - empty, but
+ * carrying the surrounding margin. Collapse it rather than leave a gap above
+ * the terms checkbox.
+ */
+.woocommerce-privacy-policy-text:empty {
+	display: none;
+}

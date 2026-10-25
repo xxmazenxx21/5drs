@@ -1,10 +1,11 @@
 <?php
 /**
- * Template Name: Policies hub
+ * Template Name: Policies
  *
- * Lists the policy pages that sit beneath this one. The listing is generated
- * from the page tree rather than hardcoded, so adding a policy page in
- * wp-admin is enough to surface it here.
+ * The Policies page carries the return and exchange policy itself. It used to
+ * be a hub listing four child pages; those were replaced by this single page,
+ * so there is no listing here any more - just the page's own content, written
+ * in the editor as core blocks.
  *
  * @package 5drs
  */
@@ -19,52 +20,29 @@ while ( have_posts() ) :
 	get_template_part(
 		'template-parts/page-hero',
 		null,
-		array( 'title' => get_the_title() )
-	);
-
-	$fivedrs_children = get_pages(
 		array(
-			'parent'      => get_the_ID(),
-			'sort_column' => 'menu_order,post_title',
-			'post_status' => 'publish',
+			'title'   => get_the_title(),
+			'variant' => 'gradient',
 		)
 	);
 	?>
 
-	<main id="main" class="site-main">
+	<main id="main" class="site-main fivedrs-policy">
 		<div class="fivedrs-container fivedrs-section">
+			<article id="post-<?php the_ID(); ?>" <?php post_class( 'fivedrs-policy__body' ); ?>>
+				<div class="entry-content">
+					<?php
+					the_content();
 
-			<?php if ( get_the_content() ) : ?>
-				<div class="entry-content fivedrs-container--prose fivedrs-section__head">
-					<?php the_content(); ?>
+					wp_link_pages(
+						array(
+							'before' => '<nav class="page-links">',
+							'after'  => '</nav>',
+						)
+					);
+					?>
 				</div>
-			<?php endif; ?>
-
-			<?php if ( $fivedrs_children ) : ?>
-				<div class="fivedrs-grid fivedrs-grid--2">
-					<?php foreach ( $fivedrs_children as $fivedrs_child ) : ?>
-						<a class="fivedrs-card" href="<?php echo esc_url( get_permalink( $fivedrs_child ) ); ?>">
-							<h2 class="fivedrs-card__title"><?php echo esc_html( get_the_title( $fivedrs_child ) ); ?></h2>
-							<span class="fivedrs-card__more">
-								<?php esc_html_e( 'Read more', '5drs' ); ?>
-								<?php echo wp_kses( fivedrs_icon( 'arrow' ), fivedrs_kses_svg() ); ?>
-							</span>
-						</a>
-					<?php endforeach; ?>
-				</div>
-			<?php else : ?>
-				<?php
-				get_template_part(
-					'template-parts/section-placeholder',
-					null,
-					array(
-						'label'  => __( 'Policy pages - add child pages under Policies', '5drs' ),
-						'height' => '10rem',
-					)
-				);
-				?>
-			<?php endif; ?>
-
+			</article>
 		</div>
 	</main>
 

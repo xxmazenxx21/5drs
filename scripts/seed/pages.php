@@ -83,24 +83,38 @@ $contact = fivedrs_seed_page(
 
 $policies = fivedrs_seed_page(
 	array(
-		'title'    => 'Policies',
+		// The page carries the policy itself, so its title is the policy's
+		// name; the menus below keep the shorter "Policies" label.
+		'title'    => 'Return & Exchange Policy',
 		'slug'     => 'policies',
 		'template' => 'page-policies.php',
 		'order'    => 40,
 	)
 );
 
-$policy_pages = array();
-$policy_specs = array(
-	array( 'title' => 'Privacy Policy',      'slug' => 'privacy-policy',     'order' => 10 ),
-	array( 'title' => 'Shipping & Delivery', 'slug' => 'shipping-delivery',  'order' => 20 ),
-	array( 'title' => 'Returns & Refunds',   'slug' => 'returns-refunds',    'order' => 30 ),
-	array( 'title' => 'Terms & Conditions',  'slug' => 'terms-conditions',   'order' => 40 ),
-);
+/*
+ * Policies is a single page now. The four child pages it used to list were
+ * removed once the client supplied one combined return and exchange policy;
+ * delete any that survive from an older run so this stays idempotent.
+ */
+foreach ( array( 'privacy-policy', 'shipping-delivery', 'returns-refunds', 'terms-conditions' ) as $slug ) {
+	// Matched by slug rather than path: these were children of Policies, so
+	// get_page_by_path() would need the full "policies/<slug>" and silently
+	// find nothing if the parent ever changed.
+	$stale = get_posts(
+		array(
+			'name'        => $slug,
+			'post_type'   => 'page',
+			'post_status' => 'any',
+			'numberposts' => 1,
+			'fields'      => 'ids',
+		)
+	);
 
-foreach ( $policy_specs as $spec ) {
-	$spec['parent']              = $policies;
-	$policy_pages[ $spec['slug'] ] = fivedrs_seed_page( $spec );
+	if ( $stale ) {
+		wp_delete_post( (int) $stale[0], true );
+		WP_CLI::log( sprintf( '  %-9s %-28s #%d', 'deleted', $slug, (int) $stale[0] ) );
+	}
 }
 
 // --- the WooCommerce shop page becomes "Our Products" -----------------------
@@ -132,9 +146,15 @@ WP_CLI::log( "  front page set to #{$home}" );
 
 // --- policy page options ------------------------------------------------------
 
-update_option( 'wp_page_for_privacy_policy', $policy_pages['privacy-policy'] );
-update_option( 'woocommerce_terms_page_id', $policy_pages['terms-conditions'] );
-WP_CLI::log( '  privacy + terms options wired to their policy pages' );
+/*
+ * The checkout "I have read and agree to the terms" checkbox links to whatever
+ * woocommerce_terms_page_id points at, so it now points at the Policies page.
+ * There is no separate privacy page any more, and leaving the option set to a
+ * deleted post would make WordPress render a link to nothing.
+ */
+update_option( 'woocommerce_terms_page_id', $policies );
+update_option( 'wp_page_for_privacy_policy', 0 );
+WP_CLI::log( '  terms checkbox -> Policies; privacy page unset' );
 
 // WooCommerce ships a draft "Refund and Returns Policy" placeholder; the real
 // page is now policies/returns-refunds.
@@ -152,9 +172,11 @@ if ( $stale ) {
  * @param string $name     Menu name.
  * @param string $location Theme location slug.
  * @param array  $page_ids Page IDs in order.
+ * @param array  $labels   Optional. Page ID => link text, where the menu
+ *                         should not simply repeat the page title.
  * @return void
  */
-function fivedrs_seed_menu( $name, $location, array $page_ids ) {
+function fivedrs_seed_menu( $name, $location, array $page_ids, array $labels = array() ) {
 	$menu = wp_get_nav_menu_object( $name );
 
 	if ( ! $menu ) {
@@ -173,17 +195,19 @@ function fivedrs_seed_menu( $name, $location, array $page_ids ) {
 	$position = 0;
 	foreach ( $page_ids as $page_id ) {
 		$position++;
-		wp_update_nav_menu_item(
-			$menu_id,
-			0,
-			array(
-				'menu-item-object-id' => $page_id,
-				'menu-item-object'    => 'page',
-				'menu-item-type'      => 'post_type',
-				'menu-item-status'    => 'publish',
-				'menu-item-position'  => $position,
-			)
+		$item = array(
+			'menu-item-object-id' => $page_id,
+			'menu-item-object'    => 'page',
+			'menu-item-type'      => 'post_type',
+			'menu-item-status'    => 'publish',
+			'menu-item-position'  => $position,
 		);
+
+		if ( isset( $labels[ $page_id ] ) ) {
+			$item['menu-item-title'] = $labels[ $page_id ];
+		}
+
+		wp_update_nav_menu_item( $menu_id, 0, $item );
 	}
 
 	$locations              = get_theme_mod( 'nav_menu_locations', array() );
@@ -195,22 +219,37 @@ function fivedrs_seed_menu( $name, $location, array $page_ids ) {
 
 WP_CLI::log( 'menus' );
 
+$menu_labels = array( $policies => 'Policies' );
+
 fivedrs_seed_menu(
 	'Primary',
 	'primary',
-	array_filter( array( $home, $shop_id, $about, $contact, $policies ) )
+	array_filter( array( $home, $shop_id, $about, $contact, $policies ) ),
+	$menu_labels
 );
 
 fivedrs_seed_menu(
 	'Footer - Quick Links',
 	'footer-quick',
-	array_filter( array( $home, $shop_id, $about, $contact ) )
+	array_filter( array( $home, $shop_id, $about, $contact, $policies ) ),
+	$menu_labels
 );
 
-fivedrs_seed_menu(
-	'Footer - Policies',
-	'footer-policies',
-	array_values( $policy_pages )
-);
+/*
+ * The footer's policies column listed the four child pages. With a single
+ * Policies page it would be a heading above one link that repeats it, so the
+ * link moved into Quick Links and this menu is retired. The footer skips the
+ * column when no menu is assigned to the location.
+ */
+$legacy = wp_get_nav_menu_object( 'Footer - Policies' );
+
+if ( $legacy ) {
+	wp_delete_nav_menu( $legacy->term_id );
+	WP_CLI::log( '  removed the Footer - Policies menu' );
+}
+
+$locations = get_theme_mod( 'nav_menu_locations', array() );
+unset( $locations['footer-policies'] );
+set_theme_mod( 'nav_menu_locations', $locations );
 
 WP_CLI::success( 'Pages, templates and menus are in place.' );

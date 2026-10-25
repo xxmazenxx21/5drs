@@ -70,6 +70,7 @@ make home-content       # Arabic Home copy + the Home SEO fields
 make product-content    # Arabic catalogue + Products page copy
 make about-content      # Arabic About copy + the About SEO fields
 make contact-content    # Arabic Contact copy + the Contact SEO fields
+make policies-content   # the policy text, its Arabic and the Policies SEO fields
 make translations       # seed the Arabic translations TranslatePress serves
 make crawl              # request every page in both languages
 
@@ -303,12 +304,18 @@ deprecation notice on every request. It renders nothing unless the
 | Our Products | `products` | the WooCommerce shop page, renamed from "Shop" |
 | About Us | `about` | `page-about.php` |
 | Contact Us | `contact` | `page-contact.php` |
-| Policies | `policies` | `page-policies.php` (lists its children automatically) |
-| ↳ Privacy Policy / Shipping & Delivery / Returns & Refunds / Terms & Conditions | children of `policies` | `page.php` |
+| Policies | `policies` | `page-policies.php` |
 
-Privacy is wired to `wp_page_for_privacy_policy` and Terms to
-`woocommerce_terms_page_id`. **`woocommerce_shop_page_id` still points at the
-renamed page** - do not create a second shop page.
+Policies is a **single page** - see 5.9. It is titled "Return & Exchange
+Policy", while both menus label the link "Policies"; `make pages` sets that
+label explicitly rather than letting it inherit the page title.
+
+`woocommerce_terms_page_id` points at Policies, so the checkout "I have read and
+agree to the terms" checkbox opens the return and exchange policy.
+`wp_page_for_privacy_policy` is **deliberately unset** - there is no separate
+privacy page, and leaving it pointing at a deleted post would render a link to
+nothing. **`woocommerce_shop_page_id` still points at the renamed shop page** -
+do not create a second shop page.
 
 Each template has both a `Template Name:` header and the `page-{slug}.php`
 filename, and `_wp_page_template` is set explicitly, so renaming a slug cannot
@@ -316,19 +323,25 @@ silently detach a template.
 
 ### 5.2 Page shells
 
-The Policies pages are still **structural shells**: a hero plus
-empty, named section containers rendered by
-`template-parts/section-placeholder.php`. Home (5.5), Our Products (5.6),
-About (5.7) and Contact (5.8) have real content. They emit an
-`<!-- Section: ... -->` comment and a dashed box that is **visible to
-signed-in editors only** - anonymous visitors see nothing. Replace a
+Every page now carries real content: Home (5.5), Our Products (5.6),
+About (5.7), Contact (5.8) and Policies (5.9).
+
+`template-parts/section-placeholder.php` is still available for building the
+next page: it emits an `<!-- Section: ... -->` comment and a dashed box that is
+**visible to signed-in editors only**, so visitors see nothing. Replace a
 `get_template_part( 'template-parts/section-placeholder', ... )` call with the
 real markup when that section is built.
 
 ### 5.3 Menus
 
-Three locations, all built by `make pages`: `primary`, `footer-quick`,
-`footer-policies`. The client edits them in Appearance → Menus.
+Two locations, both built by `make pages`: `primary` and `footer-quick`. The
+client edits them in Appearance → Menus.
+
+A third location, `footer-policies`, still exists in the theme but has no menu
+assigned: it used to list the four policy child pages, and with one Policies
+page it would be a heading above a link repeating it. The footer skips that
+column when nothing is assigned, and its grid sizes itself to however many
+columns are present.
 
 ### 5.4 Contact details and social links
 
@@ -525,7 +538,38 @@ notification **from** that domain mailbox and keep the Gmail address as the
 recipient. Until that is done, treat the Messages screen as the reliable
 record, not the inbox.
 
-### 5.9 Translations — two stores, and the traps in both
+### 5.9 The Policies page
+
+One page at `/policies/`, titled **Return & Exchange Policy**, carrying the
+whole policy. It replaced a hub that listed four child pages - Privacy Policy,
+Shipping & Delivery, Returns & Refunds and Terms & Conditions - which were
+deleted once the client supplied a single combined policy. `make pages` deletes
+any that reappear, so the removal survives a re-run.
+
+The text lives in the **page's own post content as core blocks**, so the client
+edits it in the normal WordPress editor rather than in a template.
+`make policies-content` writes it and seeds the Arabic; re-running it overwrites
+the page content, so edit in wp-admin unless you mean to reset it.
+
+`page-policies.php` renders the content at a ~70ch measure with styled lists,
+numbered steps for the request process, and the hygiene rule in a highlighted
+notice - the one rule customers most need to see before buying.
+
+> **Bold lead-ins are separate text nodes.** Each bullet is
+> `<strong>Lead:</strong> sentence`, which TranslatePress sees as two strings,
+> not one. They are seeded separately in `scripts/seed/policies-content.php`;
+> seeding the combined sentence would never match. This is the same rule as
+> Trap 5 below.
+
+#### TODO: WhatsApp number
+
+Step 1 of the request process says "email or WhatsApp" and links to the Contact
+page. **The client has not supplied a WhatsApp number**, so none is shown
+anywhere and none was invented. Once there is one, put it in Appearance →
+Customize → Contact & Social, where the footer and contact page already read
+it, and the link here can point at it directly.
+
+### 5.10 Translations — two stores, and the traps in both
 
 **Theme strings** (`5drs` text domain) live in `languages/ar.po`, compiled with
 `make mo`.

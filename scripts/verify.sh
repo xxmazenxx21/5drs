@@ -70,7 +70,7 @@ check "$(grep -q 'fivedrs-langs__item' <<<"$home" && echo yes || echo no)" "lang
 check "$(grep -q 'logo-lockup.png\|custom-logo' <<<"$home" && echo yes || echo no)" "logo renders"
 
 # --- pages --------------------------------------------------------------------
-for page in products about contact policies policies/privacy-policy; do
+for page in products about contact policies; do
 	code=$(curl -sL -o /dev/null -w '%{http_code}' "$WP_URL/$page/")
 	check "$([ "$code" = "200" ] && echo yes || echo no)" "/$page/ returns 200 (got $code)"
 done
@@ -379,6 +379,37 @@ echo $bad;
 RULES=$(tr -d "[:space:]" < "$WPOUT")
 rm -f "$WPOUT"
 check "$([ "$RULES" = "0" ] && echo yes || echo no)" "validator accepts and rejects the right inputs ($RULES mismatches)"
+
+# --- policies page ----------------------------------------------------------------
+POLICY=$(curl -sL "$WP_URL/policies/")
+AR_POLICY=$(curl -sL "$WP_URL/ar/policies/")
+
+check "$([ "$(grep -c '<h1' <<<"$POLICY")" = "1" ] && echo yes || echo no)" "policies page has exactly one h1"
+check "$(grep -q 'Return &#038; Exchange Policy' <<<"$POLICY" && echo yes || echo no)" "policies h1 is the policy name"
+check "$([ "$(grep -c '<h2' <<<"$POLICY")" -ge 4 ] && echo yes || echo no)" "policy has its four sections"
+check "$(grep -q 'fivedrs-policy-notice' <<<"$POLICY" && echo yes || echo no)" "the hygiene rule is highlighted"
+check "$(grep -q 'سياسة الاسترجاع والاستبدال' <<<"$AR_POLICY" && echo yes || echo no)" "Arabic policy heading"
+check "$(grep -q 'أولًا: شروط' <<<"$AR_POLICY" && echo yes || echo no)" "Arabic section headings"
+
+POLICY_LEFT=0
+for phrase in "General Return" "Unopened products" "Refund Process" "How to Request"; do
+	grep -q "$phrase" <<<"$AR_POLICY" && POLICY_LEFT=$((POLICY_LEFT+1))
+done
+check "$([ "$POLICY_LEFT" = "0" ] && echo yes || echo no)" "no English policy copy left on /ar/ ($POLICY_LEFT found)"
+
+# The four child pages were deleted; nothing may still link to them.
+DEAD=0
+for page in "$HOME_PAGE" "$POLICY" "$CONTACT" "$AR_HOME" "$AR_POLICY"; do
+	grep -qE 'href="[^"]*(privacy-policy|shipping-delivery|returns-refunds|terms-conditions)' <<<"$page" && DEAD=$((DEAD+1))
+done
+check "$([ "$DEAD" = "0" ] && echo yes || echo no)" "nothing links to the deleted policy pages ($DEAD)"
+check "$([ "$(curl -s -o /dev/null -w '%{http_code}' "$WP_URL/policies/privacy-policy/")" = "404" ] && echo yes || echo no)" "old policy URLs are gone"
+
+# Checkout's terms checkbox must open the policy, not a deleted page.
+TERMS=$(./scripts/wp.sh option get woocommerce_terms_page_id 2>/dev/null | tr -d "[:space:]")
+POLICY_ID=$(./scripts/wp.sh eval 'echo ( get_page_by_path("policies") ? get_page_by_path("policies")->ID : 0 );' 2>/dev/null | tr -d "[:space:]")
+check "$([ -n "$TERMS" ] && [ "$TERMS" = "$POLICY_ID" ] && echo yes || echo no)" "checkout terms page points at Policies ($TERMS)"
+check "$([ "$(./scripts/wp.sh option get wp_page_for_privacy_policy 2>/dev/null | tr -d '[:space:]')" = "0" ] && echo yes || echo no)" "privacy page option is unset"
 
 # --- build ------------------------------------------------------------------
 check "$([ -f wp-content/themes/5drs/dist/.vite/manifest.json ] && echo yes || echo no)" "theme build output exists"
