@@ -90,7 +90,22 @@ function fivedrs_wc_wrapper_start() {
 	} elseif ( is_shop() ) {
 		get_template_part( 'template-parts/hero-banner', null, array( 'section' => 'products' ) );
 	} elseif ( is_product_taxonomy() ) {
-		get_template_part( 'template-parts/hero-banner', null, array( 'compact' => true ) );
+		/*
+		 * The same hero as the Our Products page - same classes, same height,
+		 * same photograph - with only the heading and the body text swapped
+		 * for the term's own name and description.
+		 */
+		$fivedrs_term = get_queried_object();
+
+		get_template_part(
+			'template-parts/hero-banner',
+			null,
+			array(
+				'section' => 'products',
+				'heading' => ( $fivedrs_term && isset( $fivedrs_term->name ) ) ? $fivedrs_term->name : '',
+				'text'    => ( $fivedrs_term && isset( $fivedrs_term->description ) ) ? wp_strip_all_tags( $fivedrs_term->description ) : '',
+			)
+		);
 	}
 
 	echo '<div class="fivedrs-container"><main id="main" class="site-main fivedrs-main">';

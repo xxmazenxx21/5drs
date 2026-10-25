@@ -237,6 +237,24 @@ p.no-comments {
 	position: relative;
 }
 
+/* --- page hero ------------------------------------------------------------------
+ * UNLAYERED on purpose - see CLAUDE.md 4.7. WooCommerce's plugin stylesheets
+ * carry `.woocommerce img { height: auto }`, which is unlayered AND more
+ * specific than a single class, so on every store page the hero photograph was
+ * sized from its own aspect ratio instead of covering the section - and the
+ * navy background showed through beneath it on narrow screens. Two classes are
+ * what it takes to win.
+ * ------------------------------------------------------------------------------ */
+
+.fivedrs-phero .fivedrs-phero__image {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center bottom;
+}
+
 /* --- archive header ------------------------------------------------------------ */
 
 .woocommerce .woocommerce-products-header__title {
