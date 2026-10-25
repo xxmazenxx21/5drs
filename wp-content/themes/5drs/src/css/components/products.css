@@ -28,15 +28,25 @@
 		}
 	}
 
+	/*
+	 * Shorter than the Our Products hero but still tall enough to show the
+	 * photograph - at a min-height of 0 the image was cropped to a band.
+	 */
 	.fivedrs-phero--compact {
-		min-height: 0;
+		min-height: 40vh;
 		padding-block: var(--fivedrs-section-y);
 	}
 
 	@media (width >= 48rem) {
 		.fivedrs-phero--compact {
-			min-height: 0;
+			min-height: 50vh;
 		}
+	}
+
+	/* The products sit along the bottom edge of the photograph, and this crop
+	   is tighter than the full hero's, so keep that edge in frame. */
+	.fivedrs-phero--compact .fivedrs-phero__image {
+		object-position: center bottom;
 	}
 
 	.fivedrs-phero__media {
