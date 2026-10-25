@@ -36,7 +36,14 @@ if ( $fivedrs_hero['compact'] ) {
 	$fivedrs_heading  = ( $fivedrs_term && isset( $fivedrs_term->name ) ) ? $fivedrs_term->name : '';
 	$fivedrs_text     = ( $fivedrs_term && isset( $fivedrs_term->description ) ) ? $fivedrs_term->description : '';
 	$fivedrs_label    = '';
-	$fivedrs_image_id = 0;
+
+	/*
+	 * The compact variant carries the same photograph as the Our Products
+	 * hero, read from the section this part was called with (products by
+	 * default), so a category archive gets the same image, veil and white
+	 * text rather than the bare gradient.
+	 */
+	$fivedrs_image_id = (int) fivedrs_content( $fivedrs_hero['section'], 'image' );
 } else {
 	$fivedrs_section  = $fivedrs_hero['section'];
 	$fivedrs_eyebrow  = fivedrs_content( $fivedrs_section, 'eyebrow' );
