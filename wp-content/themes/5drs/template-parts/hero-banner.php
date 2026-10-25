@@ -32,10 +32,10 @@ $fivedrs_hero = wp_parse_args(
 if ( $fivedrs_hero['compact'] ) {
 	$fivedrs_term = get_queried_object();
 
-	$fivedrs_eyebrow  = '';
-	$fivedrs_heading  = ( $fivedrs_term && isset( $fivedrs_term->name ) ) ? $fivedrs_term->name : '';
-	$fivedrs_text     = ( $fivedrs_term && isset( $fivedrs_term->description ) ) ? $fivedrs_term->description : '';
-	$fivedrs_label    = '';
+	$fivedrs_eyebrow = '';
+	$fivedrs_heading = ( $fivedrs_term && isset( $fivedrs_term->name ) ) ? $fivedrs_term->name : '';
+	$fivedrs_text    = ( $fivedrs_term && isset( $fivedrs_term->description ) ) ? $fivedrs_term->description : '';
+	$fivedrs_label   = '';
 
 	/*
 	 * The compact variant carries the same photograph as the Our Products
