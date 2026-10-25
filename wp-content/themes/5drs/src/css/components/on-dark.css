@@ -1,0 +1,182 @@
+/* ---------------------------------------------------------------------------
+ * Text on dark surfaces.
+ * ---------------------------------------------------------------------------
+ * UNLAYERED on purpose - see CLAUDE.md 4.7. Buttons and dark-background text
+ * must outrank the base layer's element rules (a { color: ... }) and any
+ * unlayered plugin stylesheet. Keeping these in @layer components left the
+ * primary button rendering its label in link blue on a navy pill.
+ *
+ * Everything here is driven by tokens, and every pair is checked by
+ * scripts/brand/tokens.py --check.
+ * ------------------------------------------------------------------------ */
+
+/* --- buttons ---------------------------------------------------------------
+ * The label and the arrow are white in every state. The arrow inherits
+ * currentColor, so it follows the label automatically.
+ * ------------------------------------------------------------------------ */
+
+.fivedrs-btn,
+.fivedrs-btn:link,
+.fivedrs-btn:visited,
+.fivedrs-btn:hover,
+.fivedrs-btn:focus,
+.fivedrs-btn:focus-visible,
+.fivedrs-btn:active {
+	color: var(--color-ink-invert);
+}
+
+.fivedrs-btn--accent,
+.fivedrs-btn--accent:link,
+.fivedrs-btn--accent:visited,
+.fivedrs-btn--accent:hover,
+.fivedrs-btn--accent:focus,
+.fivedrs-btn--accent:active {
+	color: var(--color-ink-invert);
+}
+
+/* A gold surface needs the deeper gold before it can carry a white label.
+   No template uses --gold yet; this is here so one can be added safely. */
+.fivedrs-btn--gold,
+.fivedrs-btn--gold:link,
+.fivedrs-btn--gold:visited {
+	background-color: var(--color-gold-700);
+	color: var(--color-ink-invert);
+}
+
+.fivedrs-btn--gold:hover,
+.fivedrs-btn--gold:focus,
+.fivedrs-btn--gold:active {
+	background-color: var(--color-gold-800);
+	color: var(--color-ink-invert);
+}
+
+/* Outline buttons sitting on a dark band read as white-on-dark. */
+.fivedrs-cta .fivedrs-btn--outline,
+.fivedrs-phero .fivedrs-btn--outline,
+.fivedrs-hero--gradient .fivedrs-btn--outline,
+.fivedrs-footer .fivedrs-btn--outline {
+	border-color: color-mix(in srgb, var(--color-ink-invert) 60%, transparent);
+	color: var(--color-ink-invert);
+}
+
+.fivedrs-cta .fivedrs-btn--outline:hover,
+.fivedrs-phero .fivedrs-btn--outline:hover,
+.fivedrs-hero--gradient .fivedrs-btn--outline:hover,
+.fivedrs-footer .fivedrs-btn--outline:hover {
+	background-color: var(--color-ink-invert);
+	border-color: var(--color-ink-invert);
+	color: var(--color-primary);
+}
+
+/* --- dark heroes -------------------------------------------------------------
+ * Both the full-bleed hero-banner and the gradient page-hero variant. Every
+ * piece of text on them is white or near-white.
+ * -------------------------------------------------------------------------- */
+
+.fivedrs-phero,
+.fivedrs-hero--gradient {
+	color: var(--color-ink-invert);
+}
+
+.fivedrs-phero .fivedrs-phero__title,
+.fivedrs-phero h1,
+.fivedrs-phero h2,
+.fivedrs-hero--gradient .fivedrs-hero__title,
+.fivedrs-hero--gradient h1 {
+	color: var(--color-ink-invert);
+}
+
+.fivedrs-phero .fivedrs-phero__text,
+.fivedrs-phero p,
+.fivedrs-hero--gradient .fivedrs-hero__lead,
+.fivedrs-hero--gradient p {
+	color: var(--color-navy-100);
+}
+
+/* The eyebrow is the one that was still dark: .fivedrs-section__eyebrow is
+   green by default, which is unreadable on a navy hero. */
+.fivedrs-phero .fivedrs-phero__eyebrow,
+.fivedrs-phero .fivedrs-section__eyebrow,
+.fivedrs-hero--gradient .fivedrs-section__eyebrow {
+	color: var(--color-gold-200);
+}
+
+/* --- closing CTA band ---------------------------------------------------------- */
+
+.fivedrs-cta,
+.fivedrs-cta .fivedrs-cta__title,
+.fivedrs-cta h2 {
+	color: var(--color-ink-invert);
+}
+
+.fivedrs-cta .fivedrs-cta__text,
+.fivedrs-cta p {
+	color: var(--color-navy-100);
+}
+
+/* --- footer ---------------------------------------------------------------------
+ * Everything in the footer is white or near-white: headings, menu links,
+ * contact details, icons, the tagline and the copyright line.
+ * ------------------------------------------------------------------------------ */
+
+.fivedrs-footer,
+.fivedrs-footer p,
+.fivedrs-footer li,
+.fivedrs-footer span,
+.fivedrs-footer .fivedrs-footer__title,
+.fivedrs-footer .fivedrs-info-row__label {
+	color: var(--color-ink-invert);
+}
+
+.fivedrs-footer a,
+.fivedrs-footer a:link,
+.fivedrs-footer a:visited {
+	color: var(--color-ink-invert);
+	text-decoration: none;
+}
+
+/* Hover stays white and gains an underline rather than changing to a colour
+   that would have to be re-checked for contrast. */
+.fivedrs-footer a:hover,
+.fivedrs-footer a:focus-visible {
+	color: var(--color-ink-invert);
+	text-decoration: underline;
+	text-underline-offset: 0.25em;
+}
+
+/* The current page is marked by weight and an underline, not a dark colour. */
+.fivedrs-footer [aria-current="page"] {
+	font-weight: 700;
+	text-decoration: underline;
+	text-underline-offset: 0.25em;
+}
+
+.fivedrs-footer .fivedrs-footer__tagline,
+.fivedrs-footer .fivedrs-footer__bottom,
+.fivedrs-footer .fivedrs-footer__bottom p {
+	color: var(--color-navy-50);
+}
+
+.fivedrs-footer svg {
+	color: var(--color-ink-invert);
+}
+
+.fivedrs-footer .fivedrs-social a,
+.fivedrs-footer .fivedrs-social a:visited {
+	color: var(--color-ink-invert);
+}
+
+.fivedrs-footer .fivedrs-social a:hover {
+	background-color: var(--color-ink-invert);
+	border-color: var(--color-ink-invert);
+	color: var(--color-primary);
+}
+
+/* A focus ring that is actually visible against navy. */
+.fivedrs-footer :focus-visible,
+.fivedrs-cta :focus-visible,
+.fivedrs-phero :focus-visible,
+.fivedrs-hero--gradient :focus-visible {
+	outline: 2px solid var(--color-gold);
+	outline-offset: 2px;
+}

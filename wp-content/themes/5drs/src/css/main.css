@@ -21,4 +21,7 @@
 @import "./components/about.css";
 @import "./components/contact.css";
 @import "./components/policy.css";
+
+/* Unlayered, and last: text on dark surfaces must outrank everything above. */
+@import "./components/on-dark.css";
 @import "./woocommerce.css";

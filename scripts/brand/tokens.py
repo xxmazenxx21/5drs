@@ -108,6 +108,22 @@ def main():
         ("gold accent on navy (large)", scales["gold"][400], scales["navy"][800], 3.0),
         ("error on surface",           "#B3261E", SURFACE, 4.5),
         ("success on surface",         "#2E6B3E", SURFACE, 4.5),
+
+        # --- text on dark surfaces (src/css/components/on-dark.css) ---------
+        # The gradient hero runs navy-900 -> navy-800 -> navy-700, so every
+        # pair is measured against navy-700, its lightest stop and worst case.
+        ("white title on dark hero",   "#FFFFFF", scales["navy"][700], 4.5),
+        ("hero lead on dark hero",     scales["navy"][100], scales["navy"][700], 4.5),
+        ("hero eyebrow on dark hero",  scales["gold"][200], scales["navy"][700], 4.5),
+        ("white on CTA band",          "#FFFFFF", scales["navy"][800], 4.5),
+        ("CTA body on CTA band",       scales["navy"][100], scales["navy"][800], 4.5),
+        ("footer text on footer",      "#FFFFFF", scales["navy"][800], 4.5),
+        ("footer links on footer",     "#FFFFFF", scales["navy"][800], 4.5),
+        ("footer tagline on footer",   scales["navy"][50], scales["navy"][800], 4.5),
+        ("white on gold button",       "#FFFFFF", scales["gold"][700], 4.5),
+        ("white on gold button hover", "#FFFFFF", scales["gold"][800], 4.5),
+        ("outline button on dark",     "#FFFFFF", scales["navy"][800], 4.5),
+        ("focus ring on dark",         scales["gold"][400], scales["navy"][800], 3.0),
     ]
 
     print("\nWCAG audit")

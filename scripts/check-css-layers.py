@@ -26,6 +26,10 @@ MUST_BE_UNLAYERED = [
     ".woocommerce ul.products li.product{",
     ".woocommerce .fivedrs-brand img",
     ".woocommerce table.shop_table",
+    # Text on dark surfaces has to beat the base layer's `a { color }` as well
+    # as any unlayered plugin rule - see src/css/components/on-dark.css.
+    ".fivedrs-btn:visited",
+    ".fivedrs-footer a:link",
 ]
 MUST_BE_LAYERED = [
     ".fivedrs-nav a{",
